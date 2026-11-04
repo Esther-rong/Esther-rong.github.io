@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#FF8233" />
-  <meta name="description" content="Esther's personal website – about me, projects, and reviews. Let's explore together." />
+  <meta name="description" content="Esther's personal website – about me, projects, programs, reviews, FAQ, and contacts." />
   <title>Esther · Personal Site</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -32,8 +32,8 @@
     .logo { display: inline-flex; align-items: center; gap: 9px; color: #fff; font-size: 20px; font-weight: 700; white-space: nowrap; }
     .logo-mark { display: grid; grid-template-columns: repeat(2,12px); gap: 2px; }
     .logo-mark span { width: 12px; height: 12px; background: white; border-radius: 50%; }
-    .desktop-links { display: flex; gap: 4px; align-items: center; margin-left: auto; }
-    .desktop-links a { background: #fff; color: var(--orange); padding: 7px 16px; border-radius: 999px; font-size: 14px; font-weight: 500; transition: opacity .2s; }
+    .desktop-links { display: flex; gap: 4px; align-items: center; margin-left: auto; flex-wrap: wrap; }
+    .desktop-links a { background: #fff; color: var(--orange); padding: 7px 16px; border-radius: 999px; font-size: 14px; font-weight: 500; transition: opacity .2s; white-space: nowrap; }
     .desktop-links a:hover { opacity: .9; }
     .menu-btn { display: inline-flex; gap: 9px; align-items: center; justify-content: center; padding: 10px 20px; background: var(--orange); color: white; border-radius: 999px; font-size: 14px; font-weight: 500; transition: opacity .2s; }
     .menu-btn:hover { opacity: .9; }
@@ -70,6 +70,24 @@
     .review-author .info strong { display: block; color: #2d1f15; font-weight: 600; }
     .review-author .info span { color: #8a7866; font-size: 13px; }
 
+    /* FAQ */
+    .faq-list { display: flex; flex-direction: column; gap: 12px; }
+    .faq-item { background: rgba(255,255,255,0.95); border-radius: 18px; padding: 20px 24px; box-shadow: 0 6px 18px rgba(0,0,0,0.05); }
+    .faq-item h3 { font-size: 17px; font-weight: 700; color: #2d1f15; margin-bottom: 6px; display: flex; align-items: center; gap: 10px; }
+    .faq-item h3 .q-mark { display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; background: var(--orange-light); color: #fff; border-radius: 50%; font-size: 14px; font-weight: 700; flex: none; }
+    .faq-item p { font-size: 15px; line-height: 1.65; color: #5b4b3e; margin-left: 36px; }
+
+    /* CONTACTS */
+    .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+    .contact-card { background: rgba(255,255,255,0.95); border-radius: 24px; padding: 28px 24px; text-align: center; box-shadow: 0 8px 24px rgba(0,0,0,0.06); transition: transform .25s, box-shadow .25s; }
+    .contact-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.10); }
+    .contact-card .contact-icon { width: 52px; height: 52px; border-radius: 50%; background: var(--orange-light); display: grid; place-items: center; color: #fff; margin: 0 auto 16px; }
+    .contact-card .contact-icon svg { width: 24px; height: 24px; }
+    .contact-card h3 { font-size: 17px; font-weight: 700; color: #2d1f15; margin-bottom: 6px; }
+    .contact-card p { font-size: 14px; color: #5b4b3e; line-height: 1.5; word-break: break-word; }
+    .contact-card p a { color: var(--orange); font-weight: 600; }
+    .contact-card p a:hover { text-decoration: underline; }
+
     .footer-note { text-align: center; color: rgba(255,255,255,.8); font-size: 14px; padding: 24px 16px 40px; position: relative; z-index: 10; }
     .footer-note a { color: #fff; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
 
@@ -91,12 +109,15 @@
     .overlay.open .panel-cta { opacity: 1; transform: translateY(0); transition-delay: .45s; }
     .panel-cta:hover { transform: scale(1.02) !important; }
 
+    @media (max-width: 1023px) {
+      .desktop-links { display: none; }
+    }
     @media (max-width: 767px) {
       .navbar { padding: 16px 24px; }
-      .desktop-links { display: none; }
       .hero h1 { font-size: clamp(36px, 8vw, 52px); }
       .hero p { font-size: 16px; }
       .card-grid.three, .card-grid.two { grid-template-columns: 1fr; }
+      .contact-grid { grid-template-columns: 1fr; }
     }
     @media (max-width: 639px) {
       .navbar { padding: 16px; }
@@ -109,6 +130,7 @@
       .panel { width: 100%; }
       .main-content { padding: 12px 16px 60px; }
       .card { padding: 22px 18px; }
+      .faq-item p { margin-left: 0; }
     }
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
@@ -135,7 +157,10 @@
       <nav class="desktop-links" aria-label="Main navigation">
         <a href="#about">About Me</a>
         <a href="#projects">Projects</a>
+        <a href="#programs">Programs</a>
         <a href="#reviews">Reviews</a>
+        <a href="#faq">FAQ</a>
+        <a href="#contacts">Contacts</a>
       </nav>
       <button class="menu-btn" id="menuOpen" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="menuOverlay">
         <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
@@ -215,6 +240,41 @@
         </div>
       </section>
 
+      <!-- PROGRAMS -->
+      <section class="section" id="programs">
+        <div class="section-header">
+          <span class="accent-line"></span>
+          <h2>Programs</h2>
+          <span class="accent-line"></span>
+        </div>
+        <div class="card-grid three">
+          <div class="card">
+            <div class="icon-lg">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+            </div>
+            <h3>Design Mentorship</h3>
+            <p>A 1-on-1 program for junior designers who want to grow their craft. We work through real projects, portfolio reviews, and practical design thinking.</p>
+            <span class="meta">Mentorship</span>
+          </div>
+          <div class="card">
+            <div class="icon-lg">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <h3>Front-end Bootcamp</h3>
+            <p>An intensive 6-week program covering HTML, CSS, and JavaScript fundamentals. Students build and deploy a real project from scratch.</p>
+            <span class="meta">Education</span>
+          </div>
+          <div class="card">
+            <div class="icon-lg">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+            </div>
+            <h3>Community Workshops</h3>
+            <p>Free monthly workshops on topics like accessibility, design systems, and creative coding. Open to everyone curious about building for the web.</p>
+            <span class="meta">Community</span>
+          </div>
+        </div>
+      </section>
+
       <!-- REVIEWS -->
       <section class="section" id="reviews">
         <div class="section-header">
@@ -270,85 +330,62 @@
         </div>
       </section>
 
-      <div class="footer-note">
-        <p>Let's build something together. <a href="mailto:hello@esther.design">hello@esther.design</a></p>
-      </div>
-    </div>
-  </main>
+      <!-- FAQ -->
+      <section class="section" id="faq">
+        <div class="section-header">
+          <span class="accent-line"></span>
+          <h2>FAQ</h2>
+          <span class="accent-line"></span>
+        </div>
+        <div class="faq-list">
+          <div class="faq-item">
+            <h3><span class="q-mark">Q</span> What kind of projects do you take on?</h3>
+            <p>I enjoy working on product design, front-end development, and content strategy for small teams and independent creators. If you have a project that needs a thoughtful, hands-on approach, I'd love to hear about it.</p>
+          </div>
+          <div class="faq-item">
+            <h3><span class="q-mark">Q</span> How can I start a collaboration with you?</h3>
+            <p>The best way is to send me an email at <a href="mailto:hello@esther.design" style="color: var(--orange); font-weight: 600;">hello@esther.design</a> with a short description of your project and timeline. I'll get back to you within 2–3 business days.</p>
+          </div>
+          <div class="faq-item">
+            <h3><span class="q-mark">Q</span> Do you offer mentoring or teaching?</h3>
+            <p>Yes! I run a design mentorship program and a front-end bootcamp. I also host free community workshops. Check the <a href="#programs" style="color: var(--orange); font-weight: 600;">Programs</a> section above for more details.</p>
+          </div>
+          <div class="faq-item">
+            <h3><span class="q-mark">Q</span> Are you available for freelance work?</h3>
+            <p>I take on a limited number of freelance projects each quarter. Feel free to reach out — even if I'm booked, I'm happy to point you to someone great.</p>
+          </div>
+        </div>
+      </section>
 
-  <!-- OVERLAY MENU -->
-  <div class="overlay" id="menuOverlay" role="dialog" aria-modal="true" aria-label="Navigation menu" aria-hidden="true">
-    <div class="backdrop" id="menuBackdrop"></div>
-    <aside class="panel">
-      <div class="panel-header">
-        <a class="logo" href="/">
-          <span class="logo-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
-          <span>Esther</span>
-        </a>
-        <button class="close-btn" id="menuClose" type="button" aria-label="Close menu">
-          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
-        </button>
-      </div>
-      <nav class="panel-links" aria-label="Mobile navigation">
-        <a style="--i:0" href="#about">About Me</a>
-        <a style="--i:1" href="#projects">Projects</a>
-        <a style="--i:2" href="#reviews">Reviews</a>
-      </nav>
-      <a class="panel-cta" href="/">
-        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 19-7-7 7-7M5 12h14"/></svg>
-        Back to Home
-      </a>
-    </aside>
-  </div>
-
-  <script>
-    (() => {
-      const overlay = document.getElementById('menuOverlay');
-      const openBtn = document.getElementById('menuOpen');
-      const closeBtn = document.getElementById('menuClose');
-      const backdrop = document.getElementById('menuBackdrop');
-
-      function setMenu(open) {
-        overlay.classList.toggle('open', open);
-        overlay.setAttribute('aria-hidden', String(!open));
-        openBtn.setAttribute('aria-expanded', String(open));
-        document.body.style.overflow = open ? 'hidden' : '';
-        if (open) closeBtn.focus(); else openBtn.focus();
-      }
-
-      openBtn.addEventListener('click', () => setMenu(true));
-      closeBtn.addEventListener('click', () => setMenu(false));
-      backdrop.addEventListener('click', () => setMenu(false));
-
-      overlay.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => setMenu(false));
-      });
-
-      document.addEventListener('keydown', e => {
-        if (e.key === 'Escape' && overlay.classList.contains('open')) setMenu(false);
-        if (e.key === 'Tab' && overlay.classList.contains('open')) {
-          const focusables = [...overlay.querySelectorAll('a,button')];
-          const first = focusables[0], last = focusables[focusables.length - 1];
-          if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-          else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
-        }
-      });
-
-      // smooth scroll for internal links (closes menu first)
-      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-          const targetId = this.getAttribute('href');
-          if (targetId.length > 1) {
-            const target = document.querySelector(targetId);
-            if (target) {
-              e.preventDefault();
-              if (overlay.classList.contains('open')) setMenu(false);
-              target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-          }
-        });
-      });
-    })();
-  </script>
-</body>
-</html>
+      <!-- CONTACTS -->
+      <section class="section" id="contacts">
+        <div class="section-header">
+          <span class="accent-line"></span>
+          <h2>Contacts</h2>
+          <span class="accent-line"></span>
+        </div>
+        <div class="contact-grid">
+          <div class="contact-card">
+            <div class="contact-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m22 7-10 7L2 7"/></svg>
+            </div>
+            <h3>Email</h3>
+            <p><a href="mailto:hello@esther.design">hello@esther.design</a></p>
+          </div>
+          <div class="contact-card">
+            <div class="contact-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            </div>
+            <h3>Phone</h3>
+            <p>+1 (555) 123-4567</p>
+          </div>
+          <div class="contact-card">
+            <div class="contact-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </div>
+            <h3>Location</h3>
+            <p>Portland, Oregon<br />Available remotely worldwide</p>
+          </div>
+          <div class="contact-card">
+            <div class="contact-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0
