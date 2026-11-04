@@ -1,69 +1,464 @@
-:root{--orange:#F16524;--orange-light:#FF8233}
-*{margin:0;padding:0;box-sizing:border-box}
-html,body{height:100%}
-body{font-family:Inter,sans-serif;-webkit-font-smoothing:antialiased;background:linear-gradient(to bottom,#FF8233,#FDAC55);min-height:100vh;display:flex;flex-direction:column}
-a{text-decoration:none}
-button{font:inherit;cursor:pointer;border:none}
-button:focus-visible,a:focus-visible{outline:3px solid #fff;outline-offset:4px}
-.bg-deco{position:fixed;inset:0;pointer-events:none;overflow:hidden;opacity:.55;z-index:0}
-.bg-deco .blob{position:absolute;border-radius:50%;background:rgba(255,255,255,.16)}
-.bg-deco .b1{width:420px;height:420px;top:-150px;right:-120px}
-.bg-deco .b2{width:280px;height:280px;bottom:-130px;left:-120px}
-.bg-deco .ring{position:absolute;border:2px solid rgba(255,255,255,.22);border-radius:50%}
-.bg-deco .r1{width:220px;height:220px;bottom:6%;right:5%}
-.navbar{position:relative;z-index:20;display:flex;align-items:center;justify-content:space-between;padding:20px 48px;gap:16px}
-.logo{display:inline-flex;align-items:center;gap:9px;color:#fff;font-size:20px;font-weight:700}
-.logo-mark{display:grid;grid-template-columns:repeat(2,12px);gap:2px}
-.logo-mark span{width:12px;height:12px;background:#fff;border-radius:50%}
-.back-home{display:inline-flex;align-items:center;gap:9px;background:#fff;color:var(--orange);padding:8px 18px;border-radius:999px;font-size:14px;font-weight:600;transition:opacity .2s}
-.back-home:hover{opacity:.9}
-.icon{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.wrap{position:relative;z-index:10;flex:1;display:flex;align-items:center;justify-content:center;padding:40px 24px 80px}
-.card{max-width:720px;width:100%;background:rgba(255,255,255,.96);border-radius:32px;padding:52px 48px;box-shadow:0 20px 50px rgba(0,0,0,.08)}
-.eyebrow{display:inline-block;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--orange);background:#fff3ec;padding:6px 14px;border-radius:999px;margin-bottom:20px}
-.card h1{font-size:clamp(32px,5vw,46px);font-weight:800;color:#2d1f15;line-height:1.1;letter-spacing:-.02em;margin-bottom:24px}
-.card h1 .name{color:var(--orange)}
-.card p{font-size:17px;line-height:1.8;color:#4a3a2e;margin-bottom:18px}
-.card p:last-of-type{margin-bottom:0}
-.card strong{color:#2d1f15;font-weight:700}
-.divider{height:1px;background:#f0e4da;margin:32px 0}
-.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:36px}
-.actions a{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:999px;font-size:14px;font-weight:600;transition:transform .2s,background .2s}
-.actions .primary{background:var(--orange-light);color:#fff}
-.actions .primary:hover{background:var(--orange);transform:translateY(-2px)}
-.actions .secondary{background:#fff3ec;color:var(--orange)}
-.actions .secondary:hover{background:#ffe6d8;transform:translateY(-2px)}
-.actions .icon{width:16px;height:16px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:8px}
-.mini{background:#fff7f1;border-radius:18px;padding:22px 20px}
-.mini .tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--orange);background:#ffe6d8;padding:3px 10px;border-radius:999px;margin-bottom:10px}
-.mini h3{font-size:17px;color:#2d1f15;margin-bottom:6px;font-weight:700}
-.mini p{font-size:14px;line-height:1.6;color:#5b4b3e;margin:0}
-.review{background:#fff7f1;border-radius:18px;padding:22px 20px}
-.review .stars{color:#f5a623;font-size:16px;letter-spacing:2px;margin-bottom:10px}
-.review blockquote{font-size:14.5px;line-height:1.65;color:#3d2e23;font-style:italic;margin-bottom:14px}
-.review .who{font-size:13px;color:#8a7866}
-.review .who strong{color:#2d1f15;display:block;font-weight:600;font-size:14px}
-.faq{display:flex;flex-direction:column;gap:12px}
-.faq .item{background:#fff7f1;border-radius:16px;padding:18px 20px}
-.faq .q{font-size:15.5px;font-weight:700;color:#2d1f15;margin-bottom:6px;display:flex;gap:10px;align-items:flex-start}
-.faq .q .qm{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;background:var(--orange-light);color:#fff;border-radius:50%;font-size:13px;flex:none;margin-top:1px}
-.faq .a{font-size:14.5px;line-height:1.65;color:#5b4b3e;margin-left:34px}
-.contact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px}
-.contact-item{background:#fff7f1;border-radius:18px;padding:22px 18px;text-align:center}
-.contact-item .ci{width:44px;height:44px;border-radius:50%;background:var(--orange-light);color:#fff;display:grid;place-items:center;margin:0 auto 12px}
-.contact-item .ci .icon{width:20px;height:20px}
-.contact-item h3{font-size:15px;color:#2d1f15;margin-bottom:6px;font-weight:700}
-.contact-item p{font-size:14px;color:#5b4b3e;line-height:1.5;margin:0;word-break:break-word}
-.contact-item p a{color:var(--orange);font-weight:600}
-@media(max-width:639px){
-.navbar{padding:16px}
-.logo{font-size:18px}
-.logo-mark{grid-template-columns:repeat(2,10px)}
-.logo-mark span{width:10px;height:10px}
-.card{padding:34px 26px;border-radius:24px}
-.wrap{padding:24px 16px 60px}
-.card h1{font-size:32px}
-.card p{font-size:16px}
-.faq .a{margin-left:0}
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#FF8233" />
+  <meta name="description" content="Esther's personal website. Explore about me, projects, programs, reviews, FAQ, and contacts." />
+  <title>Esther · Personal Site</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root { color-scheme: light; --orange: #F16524; --orange-light: #FF8233; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; }
+    body { font-family: Inter, sans-serif; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+    a { text-decoration: none; }
+    button { font: inherit; cursor: pointer; border: none; }
+    button:focus-visible, a:focus-visible { outline: 3px solid #fff; outline-offset: 4px; }
+
+    /* ---------- 原有页面样式（完全保留） ---------- */
+    .page { height: 100vh; height: 100dvh; width: 100%; overflow: hidden; position: relative; display: flex; flex-direction: column; isolation: isolate; background: linear-gradient(to bottom, #FF8233, #FDAC55); }
+    .background-art { position: absolute; inset: 0; pointer-events: none; opacity: .8; overflow: hidden; -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 95%); mask-image: linear-gradient(to bottom, black 40%, transparent 95%); }
+    .background-center { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+    .giant-404 { color: #fff; font-size: clamp(200px,48vw,800px); line-height: 1; letter-spacing: -.075em; font-weight: 900; white-space: nowrap; user-select: none; transform-origin: center center; }
+    .white-oval { position: absolute; background: #fff; border-radius: 9999px; width: clamp(120px,20vw,400px); height: 50vh; transform-origin: center; }
+    .navbar { position: relative; z-index: 20; display: flex; align-items: center; justify-content: space-between; padding: 20px 48px; gap: 16px; }
+    .logo { display: inline-flex; align-items: center; gap: 9px; color: #fff; font-size: 20px; font-weight: 700; white-space: nowrap; }
+    .logo-mark { display: grid; grid-template-columns: repeat(2,12px); gap: 2px; }
+    .logo-mark span { width: 12px; height: 12px; background: white; border-radius: 50%; }
+    .desktop-links { display: flex; gap: 4px; align-items: center; margin-left: auto; flex-wrap: wrap; }
+    .desktop-links a, .desktop-links button { background: #fff; color: var(--orange); padding: 7px 16px; border-radius: 999px; font-size: 14px; font-weight: 500; transition: opacity .2s; white-space: nowrap; border: none; cursor: pointer; }
+    .desktop-links a:hover, .desktop-links button:hover { opacity: .9; }
+    .menu-btn { display: inline-flex; gap: 9px; align-items: center; justify-content: center; padding: 10px 20px; background: var(--orange); color: white; border-radius: 999px; font-size: 14px; font-weight: 500; transition: opacity .2s; }
+    .menu-btn:hover { opacity: .9; }
+    .icon { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+    .video-layer { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; margin-top: calc(-6vh - 40px); pointer-events: none; }
+    .video-box { width: 62vw; height: 78vh; position: relative; display: grid; place-items: center; }
+    .fox-fallback { position: absolute; inset: 0; display: grid; place-items: center; opacity: 1; transition: opacity .45s ease; }
+    .fox-illustration { width: min(68%, 440px); max-height: 74%; overflow: visible; filter: drop-shadow(0 20px 12px #a8431533); animation: fox-bob 3.5s ease-in-out infinite; }
+    .fox-tail { transform-origin: 75% 73%; animation: fox-wag 2.4s ease-in-out infinite; }
+    .fox-eye { transform-origin: center; animation: fox-blink 5s ease-in-out infinite; }
+    @keyframes fox-bob { 0%,100% { transform: translateY(6px) rotate(-1deg); } 50% { transform: translateY(-13px) rotate(1deg); } }
+    @keyframes fox-wag { 0%,100% { transform: rotate(-5deg); } 50% { transform: rotate(9deg); } }
+    @keyframes fox-blink { 0%,43%,47%,100% { transform: scaleY(1); } 45% { transform: scaleY(.10); } }
+    .video-box.video-playing .fox-fallback { opacity: 0; }
+    .video-box video { opacity: 0; transition: opacity .45s ease; position: relative; z-index: 1; }
+    .video-box.video-playing video { opacity: 1; }
+    @media (prefers-reduced-motion: reduce) { .fox-illustration,.fox-tail,.fox-eye { animation: none; } }
+    .video-box video { width: 100%; height: 100%; object-fit: contain; mix-blend-mode: darken; pointer-events: none; }
+    .bottom { position: relative; z-index: 30; margin-top: auto; padding: 0 16px 64px; display: flex; flex-direction: column; align-items: center; text-align: center; }
+    .bottom h1 { color: #fff; font-weight: 500; font-size: 24px; line-height: 1.4; margin-bottom: 16px; }
+    .home-link { display: inline-flex; align-items: center; justify-content: center; gap: 9px; border-radius: 999px; padding: 16px 32px; background: var(--orange); color: #fff; font-size: 16px; font-weight: 600; transition: transform .25s, box-shadow .25s; }
+    .home-link:hover { transform: scale(1.05); box-shadow: 0 12px 30px #9d411e40; }
+
+    /* ---------- 内容面板（新加，覆盖在 404 之上） ---------- */
+    .content-overlay {
+      position: fixed; inset: 0; z-index: 60;
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px;
+      background: linear-gradient(to bottom, #FF8233, #FDAC55);
+      opacity: 0; visibility: hidden; pointer-events: none;
+      transition: opacity .3s ease, visibility 0s linear .3s;
+      overflow-y: auto;
+    }
+    .content-overlay.open {
+      opacity: 1; visibility: visible; pointer-events: auto;
+      transition: opacity .3s ease, visibility 0s linear 0s;
+    }
+    .content-card {
+      background: rgba(255,255,255,0.97);
+      border-radius: 32px;
+      max-width: 780px; width: 100%;
+      padding: 48px 44px;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.15);
+      position: relative;
+      margin: auto;
+    }
+    .content-close {
+      position: absolute; top: 18px; right: 18px;
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--orange-light); color: #fff;
+      display: grid; place-items: center;
+      transition: background .2s, transform .2s;
+      z-index: 2;
+    }
+    .content-close:hover { background: var(--orange); transform: rotate(90deg); }
+    .content-card .eyebrow {
+      display: inline-block; font-size: 13px; font-weight: 700;
+      letter-spacing: .08em; text-transform: uppercase;
+      color: var(--orange); background: #fff3ec;
+      padding: 6px 14px; border-radius: 999px; margin-bottom: 20px;
+    }
+    .content-card h1 {
+      font-size: clamp(30px, 4.5vw, 42px); font-weight: 800;
+      color: #2d1f15; line-height: 1.15; letter-spacing: -0.02em;
+      margin-bottom: 24px;
+    }
+    .content-card h1 .name { color: var(--orange); }
+    .content-card p { font-size: 16px; line-height: 1.8; color: #4a3a2e; margin-bottom: 16px; }
+    .content-card p:last-of-type { margin-bottom: 0; }
+    .content-card strong { color: #2d1f15; font-weight: 700; }
+    .content-card .divider { height: 1px; background: #f0e4da; margin: 28px 0; }
+    .content-card .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 20px 0 8px; }
+    .content-card .mini { background: #fff7f1; border-radius: 18px; padding: 22px 20px; }
+    .content-card .mini .tag { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--orange); background: #ffe6d8; padding: 3px 10px; border-radius: 999px; margin-bottom: 10px; }
+    .content-card .mini h3 { font-size: 17px; color: #2d1f15; margin-bottom: 6px; font-weight: 700; }
+    .content-card .mini p { font-size: 14px; line-height: 1.6; color: #5b4b3e; margin: 0; }
+    .content-card .review { background: #fff7f1; border-radius: 18px; padding: 22px 20px; }
+    .content-card .review .stars { color: #f5a623; font-size: 16px; letter-spacing: 2px; margin-bottom: 10px; }
+    .content-card .review blockquote { font-size: 14.5px; line-height: 1.65; color: #3d2e23; font-style: italic; margin-bottom: 14px; }
+    .content-card .review .who { font-size: 13px; color: #8a7866; }
+    .content-card .review .who strong { color: #2d1f15; display: block; font-weight: 600; font-size: 14px; }
+    .content-card .faq { display: flex; flex-direction: column; gap: 12px; margin: 16px 0; }
+    .content-card .faq .item { background: #fff7f1; border-radius: 16px; padding: 18px 20px; }
+    .content-card .faq .q { font-size: 15.5px; font-weight: 700; color: #2d1f15; margin-bottom: 6px; display: flex; gap: 10px; align-items: flex-start; }
+    .content-card .faq .q .qm { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; background: var(--orange-light); color: #fff; border-radius: 50%; font-size: 13px; flex: none; margin-top: 1px; }
+    .content-card .faq .a { font-size: 14.5px; line-height: 1.65; color: #5b4b3e; margin-left: 34px; }
+    .content-card .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin: 20px 0 8px; }
+    .content-card .contact-item { background: #fff7f1; border-radius: 18px; padding: 22px 18px; text-align: center; }
+    .content-card .contact-item .ci { width: 44px; height: 44px; border-radius: 50%; background: var(--orange-light); color: #fff; display: grid; place-items: center; margin: 0 auto 12px; }
+    .content-card .contact-item .ci .icon { width: 20px; height: 20px; }
+    .content-card .contact-item h3 { font-size: 15px; color: #2d1f15; margin-bottom: 6px; font-weight: 700; }
+    .content-card .contact-item p { font-size: 14px; color: #5b4b3e; line-height: 1.5; margin: 0; word-break: break-word; }
+    .content-card .contact-item p a { color: var(--orange); font-weight: 600; }
+    .content-card .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; padding-top: 24px; border-top: 1px solid #f0e4da; }
+    .content-card .actions a { display: inline-flex; align-items: center; gap: 8px; padding: 12px 22px; border-radius: 999px; font-size: 14px; font-weight: 600; transition: transform .2s, background .2s; }
+    .content-card .actions .primary { background: var(--orange-light); color: #fff; }
+    .content-card .actions .primary:hover { background: var(--orange); transform: translateY(-2px); }
+    .content-card .actions .secondary { background: #fff3ec; color: var(--orange); }
+    .content-card .actions .secondary:hover { background: #ffe6d8; transform: translateY(-2px); }
+    .content-card .actions .icon { width: 16px; height: 16px; }
+
+    /* 移动端菜单覆盖层（原有） */
+    .overlay { position: fixed; inset: 0; z-index: 50; visibility: hidden; pointer-events: none; transition: visibility 0s linear .5s; }
+    .overlay.open { visibility: visible; pointer-events: auto; transition-delay: 0s; }
+    .backdrop { position: absolute; inset: 0; background: #0006; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); opacity: 0; transition: opacity .5s; }
+    .overlay.open .backdrop { opacity: 1; }
+    .panel { position: absolute; top: 0; right: 0; height: 100%; width: 380px; max-width: 100%; padding: 24px; background: linear-gradient(135deg, #FF6B1A, #FF9642); transform: translateX(100%); transition: transform .5s cubic-bezier(.16,1,.3,1); display: flex; flex-direction: column; }
+    .overlay.open .panel { transform: translateX(0); }
+    .panel-header { display: flex; justify-content: space-between; align-items: center; }
+    .close-btn { width: 40px; height: 40px; border-radius: 50%; background: #ffffff33; color: #fff; display: grid; place-items: center; transition: background .2s; }
+    .close-btn:hover { background: #ffffff55; }
+    .panel-links { display: flex; flex-direction: column; gap: 12px; margin-top: 64px; }
+    .panel-links a, .panel-links button { color: white; background: #ffffff1a; border-radius: 16px; padding: 16px 24px; font-size: 18px; font-weight: 600; opacity: 0; transform: translateY(16px); transition: opacity .3s, transform .3s, background .3s; transition-delay: 0ms; text-align: left; border: none; cursor: pointer; }
+    .panel-links a:hover, .panel-links button:hover { background: #ffffff33; }
+    .overlay.open .panel-links a, .overlay.open .panel-links button { opacity: 1; transform: translateY(0); transition-delay: calc(150ms + var(--i) * 60ms); }
+    .panel-cta { margin-top: auto; width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 16px; background: #fff; color: var(--orange); border-radius: 999px; font-size: 16px; font-weight: 600; opacity: 0; transform: translateY(12px); transition: opacity .35s, transform .35s; }
+    .overlay.open .panel-cta { opacity: 1; transform: translateY(0); transition-delay: .45s; }
+    .panel-cta:hover { transform: scale(1.02) !important; }
+
+    @media (max-width: 1023px) { .desktop-links { display: none; } }
+    @media (max-width: 767px) { .navbar { padding: 16px 24px; } .video-box { width: 70vw; height: 70vh; } .bottom h1 { font-size: 20px; } .bottom { padding-bottom: 48px; } .white-oval { height: 26vh; } .content-card { padding: 36px 26px; border-radius: 24px; } }
+    @media (max-width: 639px) { .navbar { padding: 16px; } .logo { font-size: 18px; } .logo-mark { grid-template-columns: repeat(2,10px); } .logo-mark span { width: 10px; height: 10px; } .menu-btn { padding: 9px 16px; } .menu-btn .menu-label { display: none; } .video-box { width: 120vw; height: 85vh; } .bottom { padding-bottom: 32px; } .bottom h1 { font-size: 18px; margin-bottom: 12px; } .home-link { padding: 12px 24px; font-size: 14px; } .white-oval { height: 22vh; } .panel { width: 100%; } .content-card { padding: 30px 20px; border-radius: 20px; } .content-card h1 { font-size: 28px; } .content-card .faq .a { margin-left: 0; } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; } }
+  </style>
+</head>
+<body>
+  <!-- ===== 原有 404 主界面（完全保留） ===== -->
+  <main class="page">
+    <div class="background-art" aria-hidden="true"><div class="background-center"><div class="giant-404" id="giant404">404</div><div class="white-oval" id="whiteOval"></div></div></div>
+    <header class="navbar">
+      <a class="logo" href="/" aria-label="Esther home"><span class="logo-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span><span>Esther</span></a>
+      <nav class="desktop-links" aria-label="Main navigation">
+        <button type="button" data-section="about">About Me</button>
+        <button type="button" data-section="projects">Projects</button>
+        <button type="button" data-section="programs">Programs</button>
+        <button type="button" data-section="reviews">Reviews</button>
+        <button type="button" data-section="faq">FAQ</button>
+        <button type="button" data-section="contacts">Contacts</button>
+      </nav>
+      <button class="menu-btn" id="menuOpen" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="menuOverlay"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span class="menu-label">Menu</span></button>
+    </header>
+    <div class="video-layer" aria-hidden="true"><div class="video-box" id="foxVideoBox">
+      <div class="fox-fallback">
+        <svg class="fox-illustration" viewBox="0 0 480 500" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <ellipse cx="234" cy="447" rx="160" ry="19" fill="#C75020" opacity=".15" />
+          <g class="fox-tail">
+            <path d="M302 336 C395 275 462 339 447 398 C434 447 374 453 329 421 C362 420 390 407 399 388 C354 407 310 399 284 388Z" fill="#F76B28" stroke="#B94A19" stroke-width="5" stroke-linejoin="round" />
+            <path d="M405 355 C440 364 452 390 439 411 C428 430 396 438 369 425 C402 408 412 384 405 355Z" fill="#FFFCF1" />
+          </g>
+          <path d="M158 302 C116 326 111 406 145 428 C178 447 288 447 315 415 C345 380 313 319 290 300Z" fill="#F4782F" stroke="#B94A19" stroke-width="5" />
+          <path d="M185 332 C191 374 196 417 211 435 L266 433 C290 403 294 372 290 340 C261 356 225 362 185 332Z" fill="#FFF9ED" />
+          <path d="M164 409 Q155 436 182 443 L207 443 Q226 429 209 415Z" fill="#7C402D" />
+          <path d="M265 416 Q254 436 275 444 L301 444 Q321 433 303 411Z" fill="#7C402D" />
+          <path d="M112 163 L97 54 Q96 35 116 48 L191 104Z" fill="#C75A28" stroke="#9E431F" stroke-width="7" stroke-linejoin="round" />
+          <path d="M120 142 L113 76 L168 119Z" fill="#F9B5A0" />
+          <path d="M287 111 L365 47 Q384 36 383 60 L367 183Z" fill="#C75A28" stroke="#9E431F" stroke-width="7" stroke-linejoin="round" />
+          <path d="M309 121 L366 76 L354 147Z" fill="#F9B5A0" />
+          <path d="M101 168 C110 104 174 78 240 83 C318 80 380 130 385 211 C391 278 352 345 285 368 C232 387 166 369 130 335 C93 300 79 227 101 168Z" fill="#F47730" stroke="#AD481F" stroke-width="6" />
+          <path d="M99 229 C112 276 140 305 199 314 C217 327 233 345 242 359 C253 341 275 326 291 317 C344 311 376 278 386 229 C362 245 336 257 313 258 C278 259 262 243 243 228 C218 246 206 259 173 260 C141 259 119 246 99 229Z" fill="#FFF9EE" />
+          <ellipse cx="172" cy="228" rx="14" ry="19" fill="#432A26" class="fox-eye" />
+          <ellipse cx="313" cy="228" rx="14" ry="19" fill="#432A26" class="fox-eye" />
+          <circle cx="177" cy="221" r="4" fill="white" /><circle cx="318" cy="221" r="4" fill="white" />
+          <ellipse cx="242" cy="293" rx="23" ry="17" fill="#5B3027" />
+          <path d="M242 307 L242 324 M242 324 Q225 339 213 324 M242 324 Q259 339 271 324" stroke="#6A4032" stroke-width="5" fill="none" stroke-linecap="round" />
+          <ellipse cx="140" cy="280" rx="19" ry="10" fill="#FBAB89" opacity=".68" /><ellipse cx="344" cy="280" rx="19" ry="10" fill="#FBAB89" opacity=".68" />
+        </svg>
+      </div>
+      <video id="foxVideo" autoplay loop muted playsinline preload="auto"><source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260713_234424_b1332b69-2e69-4302-8dbc-40f86846afbd.mp4" type="video/mp4" /></video>
+    </div></div>
+    <section class="bottom"><h1>Oops, something went wrong!</h1><a class="home-link" href="/"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 19-7-7 7-7M5 12h14"/></svg>Back to Home</a></section>
+  </main>
+
+  <!-- ===== 移动端菜单（原有，但链接改为触发内容面板） ===== -->
+  <div class="overlay" id="menuOverlay" role="dialog" aria-modal="true" aria-label="Navigation menu" aria-hidden="true">
+    <div class="backdrop" id="menuBackdrop"></div>
+    <aside class="panel"><div class="panel-header"><a class="logo" href="/"><span class="logo-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span><span>Esther</span></a><button class="close-btn" id="menuClose" type="button" aria-label="Close menu"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+      <nav class="panel-links" aria-label="Mobile navigation">
+        <button type="button" style="--i:0" data-section="about">About Me</button>
+        <button type="button" style="--i:1" data-section="projects">Projects</button>
+        <button type="button" style="--i:2" data-section="programs">Programs</button>
+        <button type="button" style="--i:3" data-section="reviews">Reviews</button>
+        <button type="button" style="--i:4" data-section="faq">FAQ</button>
+        <button type="button" style="--i:5" data-section="contacts">Contacts</button>
+      </nav>
+      <a class="panel-cta" href="/"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 19-7-7 7-7M5 12h14"/></svg>Back to Home</a>
+    </aside>
+  </div>
+
+  <!-- ===== 新增：内容面板（点击导航后显示） ===== -->
+  <div class="content-overlay" id="contentOverlay" role="dialog" aria-modal="true" aria-label="Content panel" aria-hidden="true">
+    <div class="content-card" id="contentCard">
+      <button class="content-close" id="contentClose" type="button" aria-label="Close content">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+      <div id="contentBody"><!-- 动态填充 --></div>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      /* ---------- 视频与背景缩放（原有逻辑） ---------- */
+      const foxVideo = document.getElementById('foxVideo');
+      const foxVideoBox = document.getElementById('foxVideoBox');
+      foxVideo.addEventListener('playing', () => { if (foxVideo.videoWidth > 0) foxVideoBox.classList.add('video-playing'); });
+      foxVideo.addEventListener('error', () => foxVideoBox.classList.remove('video-playing'));
+      foxVideo.addEventListener('stalled', () => foxVideoBox.classList.remove('video-playing'));
+      foxVideo.play().catch(() => foxVideoBox.classList.remove('video-playing'));
+
+      const giant = document.getElementById('giant404');
+      const oval = document.getElementById('whiteOval');
+      function resizeBackground() {
+        const scaleY = window.innerHeight / (giant.offsetHeight || 1);
+        giant.style.transform = `scale(1.15, ${scaleY * 1.4})`;
+        oval.style.transform = `scaleY(${scaleY})`;
+      }
+      window.addEventListener('resize', resizeBackground, { passive: true });
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(resizeBackground);
+      resizeBackground();
+
+      /* ---------- 移动端菜单（原有逻辑） ---------- */
+      const overlay = document.getElementById('menuOverlay');
+      const openBtn = document.getElementById('menuOpen');
+      const closeBtn = document.getElementById('menuClose');
+      const backdrop = document.getElementById('menuBackdrop');
+      function setMenu(open) {
+        overlay.classList.toggle('open', open);
+        overlay.setAttribute('aria-hidden', String(!open));
+        openBtn.setAttribute('aria-expanded', String(open));
+        document.body.style.overflow = open ? 'hidden' : '';
+        if (open) closeBtn.focus(); else openBtn.focus();
+      }
+      openBtn.addEventListener('click', () => setMenu(true));
+      closeBtn.addEventListener('click', () => setMenu(false));
+      backdrop.addEventListener('click', () => setMenu(false));
+      overlay.querySelectorAll('a, button').forEach(el => el.addEventListener('click', () => setMenu(false)));
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && overlay.classList.contains('open')) setMenu(false);
+        if (e.key === 'Tab' && overlay.classList.contains('open')) {
+          const focusables = [...overlay.querySelectorAll('a,button')];
+          const first = focusables[0], last = focusables[focusables.length - 1];
+          if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+          else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+        }
+      });
+
+      /* ---------- 内容面板 ---------- */
+      const contentOverlay = document.getElementById('contentOverlay');
+      const contentCard = document.getElementById('contentCard');
+      const contentBody = document.getElementById('contentBody');
+      const contentClose = document.getElementById('contentClose');
+
+      const sections = {
+        about: `
+          <span class="eyebrow">About Me</span>
+          <h1>Hi, I'm <span class="name">Esther</span>.</h1>
+          <p>I'm a student at <strong>Basis</strong>, and my birthday is <strong>December 19</strong>. I'm someone who likes to stay curious — whether that means learning something new, building a small project, or finding a better way to explain an idea.</p>
+          <p>This website is where I collect the things I'm working on: my projects, programs, reviews, and a few ways to get in touch. I enjoy design, coding, and the little details that make a website feel clear and friendly.</p>
+          <div class="divider"></div>
+          <p>When I'm not studying, you'll probably find me sketching, hiking, or spending time with friends. I like work that is honest, thoughtful, and made with care — and I'm always happy to hear about a new idea.</p>
+          <div class="actions">
+            <a class="primary" href="mailto:hello@esther.design">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m22 7-10 7L2 7"/></svg>
+              Say hello
+            </a>
+            <a class="secondary" href="/">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              Back to Home
+            </a>
+          </div>
+        `,
+        projects: `
+          <span class="eyebrow">Projects</span>
+          <h1>Things I've built</h1>
+          <p>A few projects I've worked on at school and in my free time. Some are big, some are small, but all of them taught me something.</p>
+          <div class="grid">
+            <div class="mini"><span class="tag">Science</span><h3>Science Fair Project</h3><p>A research project on water filtration using everyday materials, presented at the Basis science fair.</p></div>
+            <div class="mini"><span class="tag">Web</span><h3>Personal Website</h3><p>This site — designed and built from scratch to share my work, interests, and ways to get in touch.</p></div>
+            <div class="mini"><span class="tag">Code</span><h3>Coding Club App</h3><p>A small habit-tracking app built with my coding club using HTML, CSS, and JavaScript.</p></div>
+            <div class="mini"><span class="tag">Art</span><h3>Sketchbook Portfolio</h3><p>A digital collection of my sketches and illustrations, organized by theme and year.</p></div>
+          </div>
+          <div class="actions">
+            <a class="secondary" href="/"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Back to Home</a>
+          </div>
+        `,
+        programs: `
+          <span class="eyebrow">Programs</span>
+          <h1>Programs & activities</h1>
+          <p>Clubs, camps, and programs I've taken part in — the places where I've learned the most outside the classroom.</p>
+          <div class="grid">
+            <div class="mini"><span class="tag">Club</span><h3>Basis Robotics</h3><p>Building and programming small robots with a team, from design sketches to competition day.</p></div>
+            <div class="mini"><span class="tag">Camp</span><h3>Summer Coding Camp</h3><p>A two-week intensive where I built my first full web app and learned to debug with confidence.</p></div>
+            <div class="mini"><span class="tag">Volunteer</span><h3>Peer Tutoring</h3><p>Helping younger students with math and science, and learning how to explain ideas clearly.</p></div>
+            <div class="mini"><span class="tag">Arts</span><h3>Art Club</h3><p>Weekly sketching and illustration sessions that keep my creative side alive.</p></div>
+          </div>
+          <div class="actions">
+            <a class="secondary" href="/"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Back to Home</a>
+          </div>
+        `,
+        reviews: `
+          <span class="eyebrow">Reviews</span>
+          <h1>What people say</h1>
+          <p>Kind words from teachers, classmates, and people I've worked with.</p>
+          <div class="grid">
+            <div class="review">
+              <div class="stars">★★★★★</div>
+              <blockquote>"Esther is one of the most curious students I've taught. She asks thoughtful questions and follows through on every project she starts."</blockquote>
+              <div class="who"><strong>Ms. Rivera</strong>Science Teacher, Basis</div>
+            </div>
+            <div class="review">
+              <div class="stars">★★★★★</div>
+              <blockquote>"Working with Esther on our coding club app was great. She's patient, organized, and always willing to help the team figure things out."</blockquote>
+              <div class="who"><strong>Daniel</strong>Coding Club Member</div>
+            </div>
+            <div class="review">
+              <div class="stars">★★★★★</div>
+              <blockquote>"Esther tutored my younger brother in math for a semester. He went from dreading it to actually enjoying the subject. That says a lot."</blockquote>
+              <div class="who"><strong>Priya</strong>Parent of a Tutoring Student</div>
+            </div>
+            <div class="review">
+              <div class="stars">★★★★★</div>
+              <blockquote>"A great teammate and a thoughtful designer. Esther cares about the details and always makes the work better."</blockquote>
+              <div class="who"><strong>Alex</strong>Art Club Friend</div>
+            </div>
+          </div>
+          <div class="actions">
+            <a class="secondary" href="/"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Back to Home</a>
+          </div>
+        `,
+        faq: `
+          <span class="eyebrow">FAQ</span>
+          <h1>Frequently asked questions</h1>
+          <p>A few things people often ask me. If your question isn't here, feel free to reach out.</p>
+          <div class="faq">
+            <div class="item">
+              <div class="q"><span class="qm">Q</span>What do you enjoy working on?</div>
+              <div class="a">I like projects that mix design and code — websites, small apps, and anything where I can make an idea feel clear and friendly.</div>
+            </div>
+            <div class="item">
+              <div class="q"><span class="qm">Q</span>How can I get in touch with you?</div>
+              <div class="a">The best way is by email at <a href="mailto:hello@esther.design" style="color:var(--orange);font-weight:600">hello@esther.design</a>. I usually reply within a few days.</div>
+            </div>
+            <div class="item">
+              <div class="q"><span class="qm">Q</span>Do you take on collaborations?</div>
+              <div class="a">Yes — I'm always happy to hear about student projects, club activities, or small creative collaborations. Just send me a message.</div>
+            </div>
+            <div class="item">
+              <div class="q"><span class="qm">Q</span>What are you learning right now?</div>
+              <div class="a">I'm currently improving my JavaScript skills and exploring how to design better user interfaces. I also read a lot about science and art.</div>
+            </div>
+          </div>
+          <div class="actions">
+            <a class="secondary" href="/"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Back to Home</a>
+          </div>
+        `,
+        contacts: `
+          <span class="eyebrow">Contacts</span>
+          <h1>Get in touch</h1>
+          <p>Whether it's about a project, a collaboration, or just to say hello — I'd love to hear from you.</p>
+          <div class="contact-grid">
+            <div class="contact-item">
+              <div class="ci"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m22 7-10 7L2 7"/></svg></div>
+              <h3>Email</h3>
+              <p><a href="mailto:hello@esther.design">hello@esther.design</a></p>
+            </div>
+            <div class="contact-item">
+              <div class="ci"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg></div>
+              <h3>School</h3>
+              <p>Basis</p>
+            </div>
+            <div class="contact-item">
+              <div class="ci"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></div>
+              <h3>Instagram</h3>
+              <p><a href="#" aria-label="Instagram placeholder">@esther.creates</a></p>
+            </div>
+            <div class="contact-item">
+              <div class="ci"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+              <h3>Location</h3>
+              <p>Available online<br/>and at school</p>
+            </div>
+          </div>
+          <div class="actions">
+            <a class="primary" href="mailto:hello@esther.design"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m22 7-10 7L2 7"/></svg>Email me</a>
+            <a class="secondary" href="/"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Back to Home</a>
+          </div>
+        `
+      };
+
+      function openContent(section) {
+        if (!sections[section]) return;
+        contentBody.innerHTML = sections[section];
+        contentOverlay.classList.add('open');
+        contentOverlay.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+        setTimeout(() => contentClose.focus(), 50);
+      }
+
+      function closeContent() {
+        contentOverlay.classList.remove('open');
+        contentOverlay.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      }
+
+      // 绑定所有 data-section 按钮（桌面导航 + 移动菜单）
+      document.querySelectorAll('[data-section]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const section = btn.getAttribute('data-section');
+          // 如果移动菜单开着，先关掉
+          if (overlay.classList.contains('open')) setMenu(false);
+          openContent(section);
+        });
+      });
+
+      contentClose.addEventListener('click', closeContent);
+      contentOverlay.addEventListener('click', (e) => {
+        if (e.target === contentOverlay) closeContent();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && contentOverlay.classList.contains('open')) closeContent();
+      });
+
+      // 内容面板内的 “Back to Home” 链接点击后关闭面板（因为 href="/" 会刷新，这里改为事件关闭）
+      contentOverlay.addEventListener('click', (e) => {
+        const link = e.target.closest('a');
+        if (link && link.getAttribute('href') === '/') {
+          e.preventDefault();
+          closeContent();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
