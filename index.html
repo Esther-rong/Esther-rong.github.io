@@ -68,8 +68,8 @@
     .overlay.open .panel-cta { opacity: 1; transform: translateY(0); transition-delay: .45s; }
     .panel-cta:hover { transform: scale(1.02) !important; }
 
-    /* ===== About Me 内容面板 ===== */
-    .about-panel {
+    /* ===== 通用内容面板（About Me / Reviews） ===== */
+    .info-panel {
       position: fixed; inset: 0; z-index: 70;
       display: flex; align-items: center; justify-content: center;
       padding: 24px;
@@ -79,53 +79,65 @@
       opacity: 0; visibility: hidden; pointer-events: none;
       transition: opacity .35s ease, visibility 0s linear .35s;
     }
-    .about-panel.open {
+    .info-panel.open {
       opacity: 1; visibility: visible; pointer-events: auto;
       transition: opacity .35s ease, visibility 0s linear 0s;
     }
-    .about-card {
+    .info-card {
       background: #fff;
       border-radius: 28px;
       max-width: 560px; width: 100%;
       padding: 44px 40px;
       box-shadow: 0 24px 60px rgba(0,0,0,0.18);
       position: relative;
-      animation: aboutIn .45s cubic-bezier(.16,1,.3,1);
+      max-height: calc(100vh - 48px);
+      overflow-y: auto;
+      animation: infoIn .45s cubic-bezier(.16,1,.3,1);
     }
-    @keyframes aboutIn {
+    @keyframes infoIn {
       from { opacity: 0; transform: translateY(24px) scale(.96); }
       to { opacity: 1; transform: translateY(0) scale(1); }
     }
-    .about-close {
+    .info-close {
       position: absolute; top: 16px; right: 16px;
       width: 38px; height: 38px; border-radius: 50%;
       background: #fff3ec; color: var(--orange);
       display: grid; place-items: center;
       transition: background .2s, transform .2s;
+      z-index: 2;
     }
-    .about-close:hover { background: #ffe6d8; transform: rotate(90deg); }
-    .about-card .eyebrow {
+    .info-close:hover { background: #ffe6d8; transform: rotate(90deg); }
+    .info-card .eyebrow {
       display: inline-block; font-size: 12px; font-weight: 700;
       letter-spacing: .08em; text-transform: uppercase;
       color: var(--orange); background: #fff3ec;
       padding: 5px 12px; border-radius: 999px; margin-bottom: 18px;
     }
-    .about-card h1 {
+    .info-card h1 {
       font-size: clamp(26px, 4vw, 34px);
       font-weight: 800; color: #2d1f15;
       line-height: 1.15; letter-spacing: -0.02em;
       margin-bottom: 18px;
     }
-    .about-card h1 .name { color: var(--orange); }
-    .about-card p {
+    .info-card h1 .name { color: var(--orange); }
+    .info-card p {
       font-size: 16px; line-height: 1.8; color: #4a3a2e;
       margin-bottom: 14px;
     }
-    .about-card p:last-of-type { margin-bottom: 0; }
-    .about-card strong { color: #2d1f15; font-weight: 700; }
+    .info-card p:last-of-type { margin-bottom: 0; }
+    .info-card strong { color: #2d1f15; font-weight: 700; }
+
+    /* Reviews 条目 */
+    .review-item { margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #f0e4da; }
+    .review-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .review-item .stars { color: #f5a623; font-size: 15px; letter-spacing: 2px; margin-bottom: 8px; }
+    .review-item blockquote { font-size: 15px; line-height: 1.7; color: #4a3a2e; font-style: italic; margin-bottom: 8px; }
+    .review-item .who { font-size: 13px; color: #8a7866; }
+    .review-item .who strong { color: #2d1f15; font-weight: 600; }
+
     @media (max-width: 639px) {
-      .about-card { padding: 34px 24px; border-radius: 22px; }
-      .about-panel { padding: 16px; }
+      .info-card { padding: 34px 24px; border-radius: 22px; }
+      .info-panel { padding: 16px; }
     }
 
     @media (max-width: 1023px) { .desktop-links { display: none; } }
@@ -142,7 +154,7 @@
       <nav class="desktop-links" aria-label="Main navigation">
         <a href="#projects">Projects</a>
         <a href="#programs">Programs</a>
-        <a href="#reviews">Reviews</a>
+        <a href="#reviews" id="reviewsLink">Reviews</a>
         <a href="#about" id="aboutLink">About Me</a>
         <a href="#contacts">Contacts</a>
       </nav>
@@ -184,7 +196,7 @@
       <nav class="panel-links" aria-label="Mobile navigation">
         <a style="--i:0" href="#projects">Projects</a>
         <a style="--i:1" href="#programs">Programs</a>
-        <a style="--i:2" href="#reviews">Reviews</a>
+        <a style="--i:2" href="#reviews" id="reviewsLinkMobile">Reviews</a>
         <a style="--i:3" href="#about" id="aboutLinkMobile">About Me</a>
         <a style="--i:4" href="#contacts">Contacts</a>
       </nav>
@@ -193,15 +205,50 @@
   </div>
 
   <!-- ===== About Me 内容面板 ===== -->
-  <div class="about-panel" id="aboutPanel" role="dialog" aria-modal="true" aria-label="About Me" aria-hidden="true">
-    <div class="about-card">
-      <button class="about-close" id="aboutClose" type="button" aria-label="Close About Me">
+  <div class="info-panel" id="aboutPanel" role="dialog" aria-modal="true" aria-label="About Me" aria-hidden="true">
+    <div class="info-card">
+      <button class="info-close" id="aboutClose" type="button" aria-label="Close About Me">
         <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
       </button>
       <span class="eyebrow">About Me</span>
       <h1>Hi, I'm <span class="name">Esther</span>.</h1>
       <p>I'm a <strong>student at Basis Guangzhou</strong>, and my birthday is <strong>December 19</strong>. I like to play <strong>soccer</strong> and go <strong>horse riding</strong>.</p>
       <p>This website is my little corner of the internet — a place to share who I am, what I'm working on, and how to get in touch. Thanks for stopping by, and feel free to say hello!</p>
+    </div>
+  </div>
+
+  <!-- ===== Reviews 内容面板 ===== -->
+  <div class="info-panel" id="reviewsPanel" role="dialog" aria-modal="true" aria-label="Reviews" aria-hidden="true">
+    <div class="info-card">
+      <button class="info-close" id="reviewsClose" type="button" aria-label="Close Reviews">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+      <span class="eyebrow">Reviews</span>
+      <h1>What people say</h1>
+
+      <div class="review-item">
+        <div class="stars">★★★★★</div>
+        <blockquote>"Esther is a great teammate on the soccer field and in group projects. She's always positive and works hard for the team."</blockquote>
+        <div class="who"><strong>Ms. Chen</strong> · PE Teacher, Basis Guangzhou</div>
+      </div>
+
+      <div class="review-item">
+        <div class="stars">★★★★★</div>
+        <blockquote>"She's disciplined, kind, and really loves horse riding. You can tell she puts real effort into everything she does."</blockquote>
+        <div class="who"><strong>Coach Liu</strong> · Riding Instructor</div>
+      </div>
+
+      <div class="review-item">
+        <div class="stars">★★★★★</div>
+        <blockquote>"Esther helped me with a class project and made it so much easier to understand. She explains things clearly and never gives up."</blockquote>
+        <div class="who"><strong>Emma</strong> · Classmate</div>
+      </div>
+
+      <div class="review-item">
+        <div class="stars">★★★★★</div>
+        <blockquote>"A thoughtful student with a lot of curiosity. She asks good questions and follows through on every task."</blockquote>
+        <div class="who"><strong>Mr. Wong</strong> · Science Teacher, Basis Guangzhou</div>
+      </div>
     </div>
   </div>
 
@@ -252,34 +299,37 @@
         }
       });
 
-      /* ---------- About Me 面板 ---------- */
-      const aboutPanel = document.getElementById('aboutPanel');
-      const aboutClose = document.getElementById('aboutClose');
-      const aboutLink = document.getElementById('aboutLink');
-      const aboutLinkMobile = document.getElementById('aboutLinkMobile');
+      /* ---------- 通用内容面板（About Me / Reviews） ---------- */
+      function setupPanel(panelId, closeId, triggerIds) {
+        const panel = document.getElementById(panelId);
+        const closeEl = document.getElementById(closeId);
+        const triggers = triggerIds.map(id => document.getElementById(id)).filter(Boolean);
 
-      function openAbout(e) {
-        e.preventDefault();
-        aboutPanel.classList.add('open');
-        aboutPanel.setAttribute('aria-hidden', 'false');
-        document.body.style.overflow = 'hidden';
-        setTimeout(() => aboutClose.focus(), 80);
-      }
-      function closeAbout() {
-        aboutPanel.classList.remove('open');
-        aboutPanel.setAttribute('aria-hidden', 'true');
-        document.body.style.overflow = '';
+        function openPanel(e) {
+          if (e) e.preventDefault();
+          panel.classList.add('open');
+          panel.setAttribute('aria-hidden', 'false');
+          document.body.style.overflow = 'hidden';
+          setTimeout(() => closeEl.focus(), 80);
+        }
+        function closePanel() {
+          panel.classList.remove('open');
+          panel.setAttribute('aria-hidden', 'true');
+          document.body.style.overflow = '';
+        }
+
+        triggers.forEach(t => t.addEventListener('click', openPanel));
+        closeEl.addEventListener('click', closePanel);
+        panel.addEventListener('click', (e) => {
+          if (e.target === panel) closePanel();
+        });
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && panel.classList.contains('open')) closePanel();
+        });
       }
 
-      aboutLink.addEventListener('click', openAbout);
-      aboutLinkMobile.addEventListener('click', openAbout);
-      aboutClose.addEventListener('click', closeAbout);
-      aboutPanel.addEventListener('click', (e) => {
-        if (e.target === aboutPanel) closeAbout();
-      });
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && aboutPanel.classList.contains('open')) closeAbout();
-      });
+      setupPanel('aboutPanel', 'aboutClose', ['aboutLink', 'aboutLinkMobile']);
+      setupPanel('reviewsPanel', 'reviewsClose', ['reviewsLink', 'reviewsLinkMobile']);
     })();
   </script>
 </body>
