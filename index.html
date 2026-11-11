@@ -4,46 +4,395 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#FF8233" />
-  <title>About Me · Esther</title>
+  <meta name="description" content="Esther's personal website. About me, projects, programs, story, and contacts." />
+  <title>Esther · Personal Site</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="pages.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root { color-scheme: light; --orange: #F16524; --orange-light: #FF8233; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; }
+    body { font-family: Inter, sans-serif; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+    a { text-decoration: none; }
+    button { font: inherit; cursor: pointer; border: none; background: none; }
+    button:focus-visible, a:focus-visible { outline: 3px solid #fff; outline-offset: 4px; }
+
+    /* ===== 原有 404 主界面 ===== */
+    .page { height: 100vh; height: 100dvh; width: 100%; overflow: hidden; position: relative; display: flex; flex-direction: column; isolation: isolate; background: linear-gradient(to bottom, #FF8233, #FDAC55); }
+    .background-art { position: absolute; inset: 0; pointer-events: none; opacity: .8; overflow: hidden; -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 95%); mask-image: linear-gradient(to bottom, black 40%, transparent 95%); }
+    .background-center { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+    .giant-404 { color: #fff; font-size: clamp(200px,48vw,800px); line-height: 1; letter-spacing: -.075em; font-weight: 900; white-space: nowrap; user-select: none; transform-origin: center center; }
+    .white-oval { position: absolute; background: #fff; border-radius: 9999px; width: clamp(120px,20vw,400px); height: 50vh; transform-origin: center; }
+    .navbar { position: relative; z-index: 20; display: flex; align-items: center; justify-content: space-between; padding: 20px 48px; gap: 16px; }
+    .logo { display: inline-flex; align-items: center; gap: 9px; color: #fff; font-size: 20px; font-weight: 700; white-space: nowrap; }
+    .logo-mark { display: grid; grid-template-columns: repeat(2,12px); gap: 2px; }
+    .logo-mark span { width: 12px; height: 12px; background: white; border-radius: 50%; }
+    .desktop-links { display: flex; gap: 4px; align-items: center; margin-left: auto; flex-wrap: wrap; }
+    .desktop-links button { background: #fff; color: var(--orange); padding: 7px 16px; border-radius: 999px; font-size: 14px; font-weight: 500; transition: opacity .2s; white-space: nowrap; }
+    .desktop-links button:hover { opacity: .9; }
+    .menu-btn { display: inline-flex; gap: 9px; align-items: center; justify-content: center; padding: 10px 20px; background: var(--orange); color: white; border-radius: 999px; font-size: 14px; font-weight: 500; transition: opacity .2s; }
+    .menu-btn:hover { opacity: .9; }
+    .icon { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+    .video-layer { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; margin-top: calc(-6vh - 40px); pointer-events: none; }
+    .video-box { width: 62vw; height: 78vh; position: relative; display: grid; place-items: center; }
+    .fox-fallback { position: absolute; inset: 0; display: grid; place-items: center; opacity: 1; transition: opacity .45s ease; }
+    .fox-illustration { width: min(68%, 440px); max-height: 74%; overflow: visible; filter: drop-shadow(0 20px 12px #a8431533); animation: fox-bob 3.5s ease-in-out infinite; }
+    .fox-tail { transform-origin: 75% 73%; animation: fox-wag 2.4s ease-in-out infinite; }
+    .fox-eye { transform-origin: center; animation: fox-blink 5s ease-in-out infinite; }
+    @keyframes fox-bob { 0%,100% { transform: translateY(6px) rotate(-1deg); } 50% { transform: translateY(-13px) rotate(1deg); } }
+    @keyframes fox-wag { 0%,100% { transform: rotate(-5deg); } 50% { transform: rotate(9deg); } }
+    @keyframes fox-blink { 0%,43%,47%,100% { transform: scaleY(1); } 45% { transform: scaleY(.10); } }
+    .video-box.video-playing .fox-fallback { opacity: 0; }
+    .video-box video { opacity: 0; transition: opacity .45s ease; position: relative; z-index: 1; }
+    .video-box.video-playing video { opacity: 1; }
+    @media (prefers-reduced-motion: reduce) { .fox-illustration,.fox-tail,.fox-eye { animation: none; } }
+    .video-box video { width: 100%; height: 100%; object-fit: contain; mix-blend-mode: darken; pointer-events: none; }
+    .bottom { position: relative; z-index: 30; margin-top: auto; padding: 0 16px 64px; display: flex; flex-direction: column; align-items: center; text-align: center; }
+    .bottom h1 { color: #fff; font-weight: 500; font-size: 24px; line-height: 1.4; margin-bottom: 16px; }
+    .home-link { display: inline-flex; align-items: center; justify-content: center; gap: 9px; border-radius: 999px; padding: 16px 32px; background: var(--orange); color: #fff; font-size: 16px; font-weight: 600; transition: transform .25s, box-shadow .25s; }
+    .home-link:hover { transform: scale(1.05); box-shadow: 0 12px 30px #9d411e40; }
+
+    /* ===== 移动端菜单 ===== */
+    .overlay { position: fixed; inset: 0; z-index: 50; visibility: hidden; pointer-events: none; transition: visibility 0s linear .5s; }
+    .overlay.open { visibility: visible; pointer-events: auto; transition-delay: 0s; }
+    .backdrop { position: absolute; inset: 0; background: #0006; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); opacity: 0; transition: opacity .5s; }
+    .overlay.open .backdrop { opacity: 1; }
+    .panel { position: absolute; top: 0; right: 0; height: 100%; width: 380px; max-width: 100%; padding: 24px; background: linear-gradient(135deg, #FF6B1A, #FF9642); transform: translateX(100%); transition: transform .5s cubic-bezier(.16,1,.3,1); display: flex; flex-direction: column; }
+    .overlay.open .panel { transform: translateX(0); }
+    .panel-header { display: flex; justify-content: space-between; align-items: center; }
+    .close-btn { width: 40px; height: 40px; border-radius: 50%; background: #ffffff33; color: #fff; display: grid; place-items: center; transition: background .2s; }
+    .close-btn:hover { background: #ffffff55; }
+    .panel-links { display: flex; flex-direction: column; gap: 12px; margin-top: 64px; }
+    .panel-links button { color: white; background: #ffffff1a; border-radius: 16px; padding: 16px 24px; font-size: 18px; font-weight: 600; opacity: 0; transform: translateY(16px); transition: opacity .3s, transform .3s, background .3s; transition-delay: 0ms; text-align: left; }
+    .panel-links button:hover { background: #ffffff33; }
+    .overlay.open .panel-links button { opacity: 1; transform: translateY(0); transition-delay: calc(150ms + var(--i) * 60ms); }
+    .panel-cta { margin-top: auto; width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 16px; background: #fff; color: var(--orange); border-radius: 999px; font-size: 16px; font-weight: 600; opacity: 0; transform: translateY(12px); transition: opacity .35s, transform .35s; }
+    .overlay.open .panel-cta { opacity: 1; transform: translateY(0); transition-delay: .45s; }
+    .panel-cta:hover { transform: scale(1.02) !important; }
+
+    /* ===== 内容模态框 ===== */
+    .modal {
+      position: fixed; inset: 0; z-index: 80;
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px;
+      background: rgba(0,0,0,0.35);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      opacity: 0; visibility: hidden; pointer-events: none;
+      transition: opacity .3s ease, visibility 0s linear .3s;
+    }
+    .modal.open {
+      opacity: 1; visibility: visible; pointer-events: auto;
+      transition: opacity .3s ease, visibility 0s linear 0s;
+    }
+    .modal-card {
+      background: #fff;
+      border-radius: 28px;
+      max-width: 640px; width: 100%;
+      max-height: calc(100vh - 48px);
+      overflow-y: auto;
+      padding: 44px 40px;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.2);
+      position: relative;
+      animation: modalIn .35s cubic-bezier(.16,1,.3,1);
+    }
+    @keyframes modalIn {
+      from { opacity: 0; transform: translateY(20px) scale(.97); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .modal-close {
+      position: absolute; top: 16px; right: 16px;
+      width: 38px; height: 38px; border-radius: 50%;
+      background: #fff3ec; color: var(--orange);
+      display: grid; place-items: center;
+      transition: background .2s, transform .2s;
+      z-index: 2;
+    }
+    .modal-close:hover { background: #ffe6d8; transform: rotate(90deg); }
+    .modal-card .eyebrow {
+      display: inline-block; font-size: 12px; font-weight: 700;
+      letter-spacing: .08em; text-transform: uppercase;
+      color: var(--orange); background: #fff3ec;
+      padding: 5px 12px; border-radius: 999px; margin-bottom: 16px;
+    }
+    .modal-card h1 {
+      font-size: clamp(26px, 4vw, 34px);
+      font-weight: 800; color: #2d1f15;
+      line-height: 1.15; letter-spacing: -0.02em;
+      margin-bottom: 18px;
+    }
+    .modal-card h1 .name { color: var(--orange); }
+    .modal-card p {
+      font-size: 16px; line-height: 1.8; color: #4a3a2e;
+      margin-bottom: 14px;
+    }
+    .modal-card p:last-of-type { margin-bottom: 0; }
+    .modal-card strong { color: #2d1f15; font-weight: 700; }
+    .modal-card .divider { height: 1px; background: #f0e4da; margin: 24px 0; }
+    .modal-card .mini-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin: 16px 0 4px; }
+    .modal-card .mini { background: #fff7f1; border-radius: 16px; padding: 18px 16px; }
+    .modal-card .mini .tag { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--orange); background: #ffe6d8; padding: 3px 9px; border-radius: 999px; margin-bottom: 8px; }
+    .modal-card .mini h3 { font-size: 15px; color: #2d1f15; margin-bottom: 4px; font-weight: 700; }
+    .modal-card .mini p { font-size: 13px; line-height: 1.5; color: #5b4b3e; margin: 0; }
+    .modal-card .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin: 16px 0 4px; }
+    .modal-card .contact-item { background: #fff7f1; border-radius: 16px; padding: 20px 16px; text-align: center; }
+    .modal-card .contact-item .ci { width: 40px; height: 40px; border-radius: 50%; background: var(--orange-light); color: #fff; display: grid; place-items: center; margin: 0 auto 10px; }
+    .modal-card .contact-item .ci .icon { width: 18px; height: 18px; }
+    .modal-card .contact-item h3 { font-size: 14px; color: #2d1f15; margin-bottom: 4px; font-weight: 700; }
+    .modal-card .contact-item p { font-size: 13px; color: #5b4b3e; line-height: 1.4; margin: 0; word-break: break-word; }
+    .modal-card .contact-item p a { color: var(--orange); font-weight: 600; }
+
+    @media (max-width: 1023px) { .desktop-links { display: none; } }
+    @media (max-width: 767px) {
+      .navbar { padding: 16px 24px; }
+      .video-box { width: 70vw; height: 70vh; }
+      .bottom h1 { font-size: 20px; }
+      .bottom { padding-bottom: 48px; }
+      .white-oval { height: 26vh; }
+      .modal-card { padding: 36px 26px; border-radius: 22px; }
+    }
+    @media (max-width: 639px) {
+      .navbar { padding: 16px; }
+      .logo { font-size: 18px; }
+      .logo-mark { grid-template-columns: repeat(2,10px); }
+      .logo-mark span { width: 10px; height: 10px; }
+      .menu-btn { padding: 9px 16px; }
+      .menu-btn .menu-label { display: none; }
+      .video-box { width: 120vw; height: 85vh; }
+      .bottom { padding-bottom: 32px; }
+      .bottom h1 { font-size: 18px; margin-bottom: 12px; }
+      .home-link { padding: 12px 24px; font-size: 14px; }
+      .white-oval { height: 22vh; }
+      .panel { width: 100%; }
+      .modal { padding: 16px; }
+      .modal-card { padding: 30px 20px; border-radius: 20px; }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; } }
+  </style>
 </head>
 <body>
-  <div class="bg-deco" aria-hidden="true"><div class="blob b1"></div><div class="blob b2"></div><div class="ring r1"></div></div>
-  <header class="navbar">
-    <a class="logo" href="index.html" aria-label="Esther home"><span class="logo-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span><span>Esther</span></a>
-    <a class="back-home" href="index.html"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 19-7-7 7-7M5 12h14"/></svg>Back to Home</a>
-  </header>
-  <main class="wrap">
-    <article class="card">
-      <span class="eyebrow">About Me</span>
-      <h1>Hi, I'm <span class="name">Esther</span>.</h1>
-
-      <p>I'm a <strong>student at Basis Guangzhou</strong>, and my birthday is <strong>December 19</strong>. I'm someone who likes to stay curious — whether that means learning something new in class, trying a different sport, or finding a better way to explain an idea to a friend.</p>
-
-      <p>Two things I really enjoy are <strong>soccer</strong> and <strong>horse riding</strong>. <strong>My favourite player is Cristiano Ronaldo.</strong> Soccer keeps me active and teaches me how important teamwork is — you can't win a match alone. Horse riding is quieter but just as rewarding: it takes patience, focus, and a real connection with the animal. Both have taught me a lot about discipline and staying calm under pressure.</p>
-
-      <div class="divider"></div>
-
-      <p>At school, I like subjects that mix creativity with problem-solving. I enjoy <strong>science</strong> because it explains how things work, and I also like <strong>art and design</strong> because they let me turn ideas into something visible. Outside of class, I've taken part in clubs and activities that push me to work with others, speak up, and manage my time better.</p>
-
-      <p>People who know me would probably say I'm <strong>thoughtful, reliable, and a little bit curious about everything</strong>. I like helping classmates understand something they're stuck on, and I'm always happy to listen. I'm not the loudest person in the room, but I care about doing things properly and following through on what I start.</p>
-
-      <div class="divider"></div>
-
-      <p>This website is my little corner of the internet. I use it to share <strong>projects I'm working on</strong>, <strong>programs and activities I've joined</strong>, and a few <strong>stories</strong> from my life. It's also a simple way for people to get in touch with me — whether it's about a school project, a collaboration, or just to say hello.</p>
-
-      <p>Right now, I'm still figuring out what I want to do in the future. I'm interested in <strong>design, technology, and sports</strong>, and I'd love to keep exploring how those things connect. For now, I'm taking it one step at a time: learning, practicing, and enjoying the process.</p>
-
-      <p>Thanks for stopping by my page. If you'd like to reach out, the contacts page has my email and a few other ways to find me. I'm always happy to meet new people and hear new ideas.</p>
-
-      <div class="actions">
-        <a class="primary" href="mailto:hello@esther.design"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m22 7-10 7L2 7"/></svg>Say hello</a>
-        <a class="secondary" href="index.html"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Back to Home</a>
+  <!-- ===== 404 主界面（完全保留） ===== -->
+  <main class="page">
+    <div class="background-art" aria-hidden="true"><div class="background-center"><div class="giant-404" id="giant404">404</div><div class="white-oval" id="whiteOval"></div></div></div>
+    <header class="navbar">
+      <a class="logo" href="index.html" aria-label="Esther home"><span class="logo-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span><span>Esther</span></a>
+      <nav class="desktop-links" aria-label="Main navigation">
+        <button type="button" data-section="projects">Projects</button>
+        <button type="button" data-section="programs">Programs</button>
+        <button type="button" data-section="story">Story</button>
+        <button type="button" data-section="about">About Me</button>
+        <button type="button" data-section="contacts">Contacts</button>
+      </nav>
+      <button class="menu-btn" id="menuOpen" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="menuOverlay"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span class="menu-label">Menu</span></button>
+    </header>
+    <div class="video-layer" aria-hidden="true"><div class="video-box" id="foxVideoBox">
+      <div class="fox-fallback">
+        <svg class="fox-illustration" viewBox="0 0 480 500" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <ellipse cx="234" cy="447" rx="160" ry="19" fill="#C75020" opacity=".15" />
+          <g class="fox-tail">
+            <path d="M302 336 C395 275 462 339 447 398 C434 447 374 453 329 421 C362 420 390 407 399 388 C354 407 310 399 284 388Z" fill="#F76B28" stroke="#B94A19" stroke-width="5" stroke-linejoin="round" />
+            <path d="M405 355 C440 364 452 390 439 411 C428 430 396 438 369 425 C402 408 412 384 405 355Z" fill="#FFFCF1" />
+          </g>
+          <path d="M158 302 C116 326 111 406 145 428 C178 447 288 447 315 415 C345 380 313 319 290 300Z" fill="#F4782F" stroke="#B94A19" stroke-width="5" />
+          <path d="M185 332 C191 374 196 417 211 435 L266 433 C290 403 294 372 290 340 C261 356 225 362 185 332Z" fill="#FFF9ED" />
+          <path d="M164 409 Q155 436 182 443 L207 443 Q226 429 209 415Z" fill="#7C402D" />
+          <path d="M265 416 Q254 436 275 444 L301 444 Q321 433 303 411Z" fill="#7C402D" />
+          <path d="M112 163 L97 54 Q96 35 116 48 L191 104Z" fill="#C75A28" stroke="#9E431F" stroke-width="7" stroke-linejoin="round" />
+          <path d="M120 142 L113 76 L168 119Z" fill="#F9B5A0" />
+          <path d="M287 111 L365 47 Q384 36 383 60 L367 183Z" fill="#C75A28" stroke="#9E431F" stroke-width="7" stroke-linejoin="round" />
+          <path d="M309 121 L366 76 L354 147Z" fill="#F9B5A0" />
+          <path d="M101 168 C110 104 174 78 240 83 C318 80 380 130 385 211 C391 278 352 345 285 368 C232 387 166 369 130 335 C93 300 79 227 101 168Z" fill="#F47730" stroke="#AD481F" stroke-width="6" />
+          <path d="M99 229 C112 276 140 305 199 314 C217 327 233 345 242 359 C253 341 275 326 291 317 C344 311 376 278 386 229 C362 245 336 257 313 258 C278 259 262 243 243 228 C218 246 206 259 173 260 C141 259 119 246 99 229Z" fill="#FFF9EE" />
+          <ellipse cx="172" cy="228" rx="14" ry="19" fill="#432A26" class="fox-eye" />
+          <ellipse cx="313" cy="228" rx="14" ry="19" fill="#432A26" class="fox-eye" />
+          <circle cx="177" cy="221" r="4" fill="white" /><circle cx="318" cy="221" r="4" fill="white" />
+          <ellipse cx="242" cy="293" rx="23" ry="17" fill="#5B3027" />
+          <path d="M242 307 L242 324 M242 324 Q225 339 213 324 M242 324 Q259 339 271 324" stroke="#6A4032" stroke-width="5" fill="none" stroke-linecap="round" />
+          <ellipse cx="140" cy="280" rx="19" ry="10" fill="#FBAB89" opacity=".68" /><ellipse cx="344" cy="280" rx="19" ry="10" fill="#FBAB89" opacity=".68" />
+        </svg>
       </div>
-    </article>
+      <video id="foxVideo" autoplay loop muted playsinline preload="auto"><source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260713_234424_b1332b69-2e69-4302-8dbc-40f86846afbd.mp4" type="video/mp4" /></video>
+    </div></div>
+    <section class="bottom"><h1>Oops, something went wrong!</h1><a class="home-link" href="index.html"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 19-7-7 7-7M5 12h14"/></svg>Back to Home</a></section>
   </main>
+
+  <!-- ===== 移动端菜单 ===== -->
+  <div class="overlay" id="menuOverlay" role="dialog" aria-modal="true" aria-label="Navigation menu" aria-hidden="true">
+    <div class="backdrop" id="menuBackdrop"></div>
+    <aside class="panel"><div class="panel-header"><a class="logo" href="index.html"><span class="logo-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span><span>Esther</span></a><button class="close-btn" id="menuClose" type="button" aria-label="Close menu"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+      <nav class="panel-links" aria-label="Mobile navigation">
+        <button type="button" style="--i:0" data-section="projects">Projects</button>
+        <button type="button" style="--i:1" data-section="programs">Programs</button>
+        <button type="button" style="--i:2" data-section="story">Story</button>
+        <button type="button" style="--i:3" data-section="about">About Me</button>
+        <button type="button" style="--i:4" data-section="contacts">Contacts</button>
+      </nav>
+      <a class="panel-cta" href="index.html"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 19-7-7 7-7M5 12h14"/></svg>Back to Home</a>
+    </aside>
+  </div>
+
+  <!-- ===== 内容模态框 ===== -->
+  <div class="modal" id="contentModal" role="dialog" aria-modal="true" aria-label="Content" aria-hidden="true">
+    <div class="modal-card">
+      <button class="modal-close" id="modalClose" type="button" aria-label="Close content">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      /* ---------- 视频与背景缩放 ---------- */
+      const foxVideo = document.getElementById('foxVideo');
+      const foxVideoBox = document.getElementById('foxVideoBox');
+      foxVideo.addEventListener('playing', () => { if (foxVideo.videoWidth > 0) foxVideoBox.classList.add('video-playing'); });
+      foxVideo.addEventListener('error', () => foxVideoBox.classList.remove('video-playing'));
+      foxVideo.addEventListener('stalled', () => foxVideoBox.classList.remove('video-playing'));
+      foxVideo.play().catch(() => foxVideoBox.classList.remove('video-playing'));
+
+      const giant = document.getElementById('giant404');
+      const oval = document.getElementById('whiteOval');
+      function resizeBackground() {
+        const scaleY = window.innerHeight / (giant.offsetHeight || 1);
+        giant.style.transform = `scale(1.15, ${scaleY * 1.4})`;
+        oval.style.transform = `scaleY(${scaleY})`;
+      }
+      window.addEventListener('resize', resizeBackground, { passive: true });
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(resizeBackground);
+      resizeBackground();
+
+      /* ---------- 移动端菜单 ---------- */
+      const overlay = document.getElementById('menuOverlay');
+      const openBtn = document.getElementById('menuOpen');
+      const closeBtn = document.getElementById('menuClose');
+      const backdrop = document.getElementById('menuBackdrop');
+
+      function setMenu(open) {
+        overlay.classList.toggle('open', open);
+        overlay.setAttribute('aria-hidden', String(!open));
+        openBtn.setAttribute('aria-expanded', String(open));
+        document.body.style.overflow = open ? 'hidden' : '';
+        if (open) closeBtn.focus(); else openBtn.focus();
+      }
+      openBtn.addEventListener('click', () => setMenu(true));
+      closeBtn.addEventListener('click', () => setMenu(false));
+      backdrop.addEventListener('click', () => setMenu(false));
+
+      /* ---------- 内容数据 ---------- */
+      const sections = {
+        about: `
+          <span class="eyebrow">About Me</span>
+          <h1>Hi, I'm <span class="name">Esther</span>.</h1>
+          <p>I'm a <strong>student at Basis Guangzhou</strong>, and my birthday is <strong>December 19</strong>. I like to play <strong>soccer</strong> and go <strong>horse riding</strong>.</p>
+          <p><strong>My favourite player is Cristiano Ronaldo.</strong> I admire his discipline and the way he keeps pushing himself to improve.</p>
+          <div class="divider"></div>
+          <p>This website is my little corner of the internet — a place to share who I am, what I'm working on, and how to get in touch. Thanks for stopping by, and feel free to say hello!</p>
+        `,
+        projects: `
+          <span class="eyebrow">Projects</span>
+          <h1>Things I've built</h1>
+          <p>A few projects I've worked on at school and in my free time.</p>
+          <div class="mini-grid">
+            <div class="mini"><span class="tag">Science</span><h3>Science Fair Project</h3><p>A research project on water filtration using everyday materials, presented at the Basis science fair.</p></div>
+            <div class="mini"><span class="tag">Web</span><h3>Personal Website</h3><p>This site — designed and built from scratch to share my work, interests, and ways to get in touch.</p></div>
+            <div class="mini"><span class="tag">Code</span><h3>Coding Club App</h3><p>A small habit-tracking app built with my coding club using HTML, CSS, and JavaScript.</p></div>
+            <div class="mini"><span class="tag">Art</span><h3>Sketchbook Portfolio</h3><p>A digital collection of my sketches and illustrations, organized by theme and year.</p></div>
+          </div>
+        `,
+        programs: `
+          <span class="eyebrow">Programs</span>
+          <h1>Programs & activities</h1>
+          <p>Clubs, camps, and programs I've taken part in.</p>
+          <div class="mini-grid">
+            <div class="mini"><span class="tag">Club</span><h3>Basis Robotics</h3><p>Building and programming small robots with a team, from design sketches to competition day.</p></div>
+            <div class="mini"><span class="tag">Camp</span><h3>Summer Coding Camp</h3><p>A two-week intensive where I built my first full web app and learned to debug with confidence.</p></div>
+            <div class="mini"><span class="tag">Volunteer</span><h3>Peer Tutoring</h3><p>Helping younger students with math and science, and learning how to explain ideas clearly.</p></div>
+            <div class="mini"><span class="tag">Sports</span><h3>Soccer Team</h3><p>Playing on the school soccer team and learning the value of teamwork and practice.</p></div>
+          </div>
+        `,
+        story: `
+          <span class="eyebrow">Story</span>
+          <h1>A little story about me</h1>
+          <p>I still remember the first time I watched a full soccer match. I didn't understand all the rules, but I couldn't look away. The energy, the teamwork, the way one player could change the whole game — it stuck with me. That player was <strong>Cristiano Ronaldo</strong>, and he's been my favourite ever since.</p>
+          <p>What I admire about him isn't just the goals. It's the discipline. He trains harder than almost anyone, takes care of his body, and keeps pushing even when people doubt him. That idea — that you can always improve if you put in the work — is something I try to carry into my own life, whether it's studying for a test or learning a new skill.</p>
+          <div class="divider"></div>
+          <p>I started playing soccer myself a few years ago. I wasn't the best at first — honestly, I was pretty bad. But I kept showing up to practice, and slowly I got better. Being part of a team taught me something I couldn't learn from a textbook: how to rely on other people and how to be someone others can rely on.</p>
+          <p>Horse riding came later, and it's completely different. There's no crowd, no scoreboard. Just me and the horse, trying to understand each other. It's taught me patience and how to stay calm when things don't go the way I planned.</p>
+          <div class="divider"></div>
+          <p>At school, I'm the kind of student who likes to figure things out. I ask a lot of questions, sometimes too many. I enjoy science because it explains the world, and I enjoy design because it lets me make something out of nothing. I'm still learning how to balance everything — sports, school, friends, and this website — but I'm getting better at it.</p>
+          <p>This page is just a small window into who I am. If you've read this far, thanks for taking the time. Maybe one day we'll meet on a soccer field, or you'll see me riding somewhere quiet. Until then, feel free to say hello.</p>
+        `,
+        contacts: `
+          <span class="eyebrow">Contacts</span>
+          <h1>Get in touch</h1>
+          <p>Whether it's about a project, a collaboration, or just to say hello — I'd love to hear from you.</p>
+          <div class="contact-grid">
+            <div class="contact-item">
+              <div class="ci"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m22 7-10 7L2 7"/></svg></div>
+              <h3>Email</h3>
+              <p><a href="mailto:hello@esther.design">hello@esther.design</a></p>
+            </div>
+            <div class="contact-item">
+              <div class="ci"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg></div>
+              <h3>School</h3>
+              <p>Basis Guangzhou</p>
+            </div>
+            <div class="contact-item">
+              <div class="ci"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></div>
+              <h3>Instagram</h3>
+              <p><a href="#" aria-label="Instagram placeholder">@esther.creates</a></p>
+            </div>
+            <div class="contact-item">
+              <div class="ci"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+              <h3>Location</h3>
+              <p>Guangzhou, China</p>
+            </div>
+          </div>
+        `
+      };
+
+      /* ---------- 模态框逻辑 ---------- */
+      const modal = document.getElementById('contentModal');
+      const modalBody = document.getElementById('modalBody');
+      const modalClose = document.getElementById('modalClose');
+
+      function openModal(section) {
+        if (!sections[section]) return;
+        modalBody.innerHTML = sections[section];
+        modal.classList.add('open');
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+        setTimeout(() => modalClose.focus(), 60);
+      }
+
+      function closeModal() {
+        modal.classList.remove('open');
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      }
+
+      // 所有带 data-section 的按钮
+      document.querySelectorAll('[data-section]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const section = btn.getAttribute('data-section');
+          if (overlay.classList.contains('open')) setMenu(false);
+          openModal(section);
+        });
+      });
+
+      modalClose.addEventListener('click', closeModal);
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          if (modal.classList.contains('open')) closeModal();
+          else if (overlay.classList.contains('open')) setMenu(false);
+        }
+      });
+    })();
+  </script>
 </body>
 </html>
