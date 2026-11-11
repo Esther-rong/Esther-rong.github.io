@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -27,7 +28,7 @@
     .logo-mark { display: grid; grid-template-columns: repeat(2,12px); gap: 2px; }
     .logo-mark span { width: 12px; height: 12px; background: white; border-radius: 50%; }
     .desktop-links { display: flex; gap: 4px; align-items: center; margin-left: auto; flex-wrap: wrap; }
-    .desktop-links a { background: #fff; color: var(--orange); padding: 7px 16px; border-radius: 999px; font-size: 14px; font-weight: 500; transition: opacity .2s; white-space: nowrap; cursor: pointer; }
+    .desktop-links a { background: #fff; color: var(--orange); padding: 7px 16px; border-radius: 999px; font-size: 14px; font-weight: 500; transition: opacity .2s; white-space: nowrap; }
     .desktop-links a:hover { opacity: .9; }
     .menu-btn { display: inline-flex; gap: 9px; align-items: center; justify-content: center; padding: 10px 20px; background: var(--orange); color: white; border-radius: 999px; font-size: 14px; font-weight: 500; transition: opacity .2s; }
     .menu-btn:hover { opacity: .9; }
@@ -61,85 +62,12 @@
     .close-btn { width: 40px; height: 40px; border-radius: 50%; background: #ffffff33; color: #fff; display: grid; place-items: center; transition: background .2s; }
     .close-btn:hover { background: #ffffff55; }
     .panel-links { display: flex; flex-direction: column; gap: 12px; margin-top: 64px; }
-    .panel-links a { color: white; background: #ffffff1a; border-radius: 16px; padding: 16px 24px; font-size: 18px; font-weight: 600; opacity: 0; transform: translateY(16px); transition: opacity .3s, transform .3s, background .3s; transition-delay: 0ms; cursor: pointer; }
+    .panel-links a { color: white; background: #ffffff1a; border-radius: 16px; padding: 16px 24px; font-size: 18px; font-weight: 600; opacity: 0; transform: translateY(16px); transition: opacity .3s, transform .3s, background .3s; transition-delay: 0ms; }
     .panel-links a:hover { background: #ffffff33; }
     .overlay.open .panel-links a { opacity: 1; transform: translateY(0); transition-delay: calc(150ms + var(--i) * 60ms); }
     .panel-cta { margin-top: auto; width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 16px; background: #fff; color: var(--orange); border-radius: 999px; font-size: 16px; font-weight: 600; opacity: 0; transform: translateY(12px); transition: opacity .35s, transform .35s; }
     .overlay.open .panel-cta { opacity: 1; transform: translateY(0); transition-delay: .45s; }
     .panel-cta:hover { transform: scale(1.02) !important; }
-
-    /* ===== 通用内容面板（About Me / Reviews） ===== */
-    .info-panel {
-      position: fixed; inset: 0; z-index: 70;
-      display: flex; align-items: center; justify-content: center;
-      padding: 24px;
-      background: rgba(0,0,0,0.35);
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
-      opacity: 0; visibility: hidden; pointer-events: none;
-      transition: opacity .35s ease, visibility 0s linear .35s;
-    }
-    .info-panel.open {
-      opacity: 1; visibility: visible; pointer-events: auto;
-      transition: opacity .35s ease, visibility 0s linear 0s;
-    }
-    .info-card {
-      background: #fff;
-      border-radius: 28px;
-      max-width: 560px; width: 100%;
-      padding: 44px 40px;
-      box-shadow: 0 24px 60px rgba(0,0,0,0.18);
-      position: relative;
-      max-height: calc(100vh - 48px);
-      overflow-y: auto;
-      animation: infoIn .45s cubic-bezier(.16,1,.3,1);
-    }
-    @keyframes infoIn {
-      from { opacity: 0; transform: translateY(24px) scale(.96); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
-    }
-    .info-close {
-      position: absolute; top: 16px; right: 16px;
-      width: 38px; height: 38px; border-radius: 50%;
-      background: #fff3ec; color: var(--orange);
-      display: grid; place-items: center;
-      transition: background .2s, transform .2s;
-      z-index: 2;
-    }
-    .info-close:hover { background: #ffe6d8; transform: rotate(90deg); }
-    .info-card .eyebrow {
-      display: inline-block; font-size: 12px; font-weight: 700;
-      letter-spacing: .08em; text-transform: uppercase;
-      color: var(--orange); background: #fff3ec;
-      padding: 5px 12px; border-radius: 999px; margin-bottom: 18px;
-    }
-    .info-card h1 {
-      font-size: clamp(26px, 4vw, 34px);
-      font-weight: 800; color: #2d1f15;
-      line-height: 1.15; letter-spacing: -0.02em;
-      margin-bottom: 18px;
-    }
-    .info-card h1 .name { color: var(--orange); }
-    .info-card p {
-      font-size: 16px; line-height: 1.8; color: #4a3a2e;
-      margin-bottom: 14px;
-    }
-    .info-card p:last-of-type { margin-bottom: 0; }
-    .info-card strong { color: #2d1f15; font-weight: 700; }
-
-    /* Reviews 条目 */
-    .review-item { margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #f0e4da; }
-    .review-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-    .review-item .stars { color: #f5a623; font-size: 15px; letter-spacing: 2px; margin-bottom: 8px; }
-    .review-item blockquote { font-size: 15px; line-height: 1.7; color: #4a3a2e; font-style: italic; margin-bottom: 8px; }
-    .review-item .who { font-size: 13px; color: #8a7866; }
-    .review-item .who strong { color: #2d1f15; font-weight: 600; }
-
-    @media (max-width: 639px) {
-      .info-card { padding: 34px 24px; border-radius: 22px; }
-      .info-panel { padding: 16px; }
-    }
-
     @media (max-width: 1023px) { .desktop-links { display: none; } }
     @media (max-width: 767px) { .navbar { padding: 16px 24px; } .video-box { width: 70vw; height: 70vh; } .bottom h1 { font-size: 20px; } .bottom { padding-bottom: 48px; } .white-oval { height: 26vh; } }
     @media (max-width: 639px) { .navbar { padding: 16px; } .logo { font-size: 18px; } .logo-mark { grid-template-columns: repeat(2,10px); } .logo-mark span { width: 10px; height: 10px; } .menu-btn { padding: 9px 16px; } .menu-btn .menu-label { display: none; } .video-box { width: 120vw; height: 85vh; } .bottom { padding-bottom: 32px; } .bottom h1 { font-size: 18px; margin-bottom: 12px; } .home-link { padding: 12px 24px; font-size: 14px; } .white-oval { height: 22vh; } .panel { width: 100%; } }
@@ -150,13 +78,13 @@
   <main class="page">
     <div class="background-art" aria-hidden="true"><div class="background-center"><div class="giant-404" id="giant404">404</div><div class="white-oval" id="whiteOval"></div></div></div>
     <header class="navbar">
-      <a class="logo" href="/" aria-label="Esther home"><span class="logo-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span><span>Esther</span></a>
+      <a class="logo" href="index.html" aria-label="Esther home"><span class="logo-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span><span>Esther</span></a>
       <nav class="desktop-links" aria-label="Main navigation">
-        <a href="#projects">Projects</a>
-        <a href="#programs">Programs</a>
-        <a href="#reviews" id="reviewsLink">Reviews</a>
-        <a href="#about" id="aboutLink">About Me</a>
-        <a href="#contacts">Contacts</a>
+        <a href="projects.html">Projects</a>
+        <a href="programs.html">Programs</a>
+        <a href="reviews.html">Reviews</a>
+        <a href="about.html">About Me</a>
+        <a href="contacts.html">Contacts</a>
       </nav>
       <button class="menu-btn" id="menuOpen" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="menuOverlay"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span class="menu-label">Menu</span></button>
     </header>
@@ -188,80 +116,29 @@
       </div>
       <video id="foxVideo" autoplay loop muted playsinline preload="auto"><source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260713_234424_b1332b69-2e69-4302-8dbc-40f86846afbd.mp4" type="video/mp4" /></video>
     </div></div>
-    <section class="bottom"><h1>Oops, something went wrong!</h1><a class="home-link" href="/"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 19-7-7 7-7M5 12h14"/></svg>Back to Home</a></section>
+    <section class="bottom"><h1>Oops, something went wrong!</h1><a class="home-link" href="index.html"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 19-7-7 7-7M5 12h14"/></svg>Back to Home</a></section>
   </main>
   <div class="overlay" id="menuOverlay" role="dialog" aria-modal="true" aria-label="Navigation menu" aria-hidden="true">
     <div class="backdrop" id="menuBackdrop"></div>
-    <aside class="panel"><div class="panel-header"><a class="logo" href="/"><span class="logo-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span><span>Esther</span></a><button class="close-btn" id="menuClose" type="button" aria-label="Close menu"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+    <aside class="panel"><div class="panel-header"><a class="logo" href="index.html"><span class="logo-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span><span>Esther</span></a><button class="close-btn" id="menuClose" type="button" aria-label="Close menu"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
       <nav class="panel-links" aria-label="Mobile navigation">
-        <a style="--i:0" href="#projects">Projects</a>
-        <a style="--i:1" href="#programs">Programs</a>
-        <a style="--i:2" href="#reviews" id="reviewsLinkMobile">Reviews</a>
-        <a style="--i:3" href="#about" id="aboutLinkMobile">About Me</a>
-        <a style="--i:4" href="#contacts">Contacts</a>
+        <a style="--i:0" href="projects.html">Projects</a>
+        <a style="--i:1" href="programs.html">Programs</a>
+        <a style="--i:2" href="reviews.html">Reviews</a>
+        <a style="--i:3" href="about.html">About Me</a>
+        <a style="--i:4" href="contacts.html">Contacts</a>
       </nav>
-      <a class="panel-cta" href="/"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 19-7-7 7-7M5 12h14"/></svg>Back to Home</a>
+      <a class="panel-cta" href="index.html"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 19-7-7 7-7M5 12h14"/></svg>Back to Home</a>
     </aside>
   </div>
-
-  <!-- ===== About Me 内容面板 ===== -->
-  <div class="info-panel" id="aboutPanel" role="dialog" aria-modal="true" aria-label="About Me" aria-hidden="true">
-    <div class="info-card">
-      <button class="info-close" id="aboutClose" type="button" aria-label="Close About Me">
-        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
-      </button>
-      <span class="eyebrow">About Me</span>
-      <h1>Hi, I'm <span class="name">Esther</span>.</h1>
-      <p>I'm a <strong>student at Basis Guangzhou</strong>, and my birthday is <strong>December 19</strong>. I like to play <strong>soccer</strong> and go <strong>horse riding</strong>.</p>
-      <p>This website is my little corner of the internet — a place to share who I am, what I'm working on, and how to get in touch. Thanks for stopping by, and feel free to say hello!</p>
-    </div>
-  </div>
-
-  <!-- ===== Reviews 内容面板 ===== -->
-  <div class="info-panel" id="reviewsPanel" role="dialog" aria-modal="true" aria-label="Reviews" aria-hidden="true">
-    <div class="info-card">
-      <button class="info-close" id="reviewsClose" type="button" aria-label="Close Reviews">
-        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
-      </button>
-      <span class="eyebrow">Reviews</span>
-      <h1>What people say</h1>
-
-      <div class="review-item">
-        <div class="stars">★★★★★</div>
-        <blockquote>"Esther is a great teammate on the soccer field and in group projects. She's always positive and works hard for the team."</blockquote>
-        <div class="who"><strong>Ms. Chen</strong> · PE Teacher, Basis Guangzhou</div>
-      </div>
-
-      <div class="review-item">
-        <div class="stars">★★★★★</div>
-        <blockquote>"She's disciplined, kind, and really loves horse riding. You can tell she puts real effort into everything she does."</blockquote>
-        <div class="who"><strong>Coach Liu</strong> · Riding Instructor</div>
-      </div>
-
-      <div class="review-item">
-        <div class="stars">★★★★★</div>
-        <blockquote>"Esther helped me with a class project and made it so much easier to understand. She explains things clearly and never gives up."</blockquote>
-        <div class="who"><strong>Emma</strong> · Classmate</div>
-      </div>
-
-      <div class="review-item">
-        <div class="stars">★★★★★</div>
-        <blockquote>"A thoughtful student with a lot of curiosity. She asks good questions and follows through on every task."</blockquote>
-        <div class="who"><strong>Mr. Wong</strong> · Science Teacher, Basis Guangzhou</div>
-      </div>
-    </div>
-  </div>
-
   <script>
     (() => {
-      /* ---------- 视频与背景缩放（原有逻辑） ---------- */
       const foxVideo = document.getElementById('foxVideo');
       const foxVideoBox = document.getElementById('foxVideoBox');
       foxVideo.addEventListener('playing', () => { if (foxVideo.videoWidth > 0) foxVideoBox.classList.add('video-playing'); });
       foxVideo.addEventListener('error', () => foxVideoBox.classList.remove('video-playing'));
       foxVideo.addEventListener('stalled', () => foxVideoBox.classList.remove('video-playing'));
       foxVideo.play().catch(() => foxVideoBox.classList.remove('video-playing'));
-
       const giant = document.getElementById('giant404');
       const oval = document.getElementById('whiteOval');
       function resizeBackground() {
@@ -272,8 +149,6 @@
       window.addEventListener('resize', resizeBackground, { passive: true });
       if (document.fonts && document.fonts.ready) document.fonts.ready.then(resizeBackground);
       resizeBackground();
-
-      /* ---------- 移动端菜单（原有逻辑） ---------- */
       const overlay = document.getElementById('menuOverlay');
       const openBtn = document.getElementById('menuOpen');
       const closeBtn = document.getElementById('menuClose');
@@ -298,38 +173,6 @@
           else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
         }
       });
-
-      /* ---------- 通用内容面板（About Me / Reviews） ---------- */
-      function setupPanel(panelId, closeId, triggerIds) {
-        const panel = document.getElementById(panelId);
-        const closeEl = document.getElementById(closeId);
-        const triggers = triggerIds.map(id => document.getElementById(id)).filter(Boolean);
-
-        function openPanel(e) {
-          if (e) e.preventDefault();
-          panel.classList.add('open');
-          panel.setAttribute('aria-hidden', 'false');
-          document.body.style.overflow = 'hidden';
-          setTimeout(() => closeEl.focus(), 80);
-        }
-        function closePanel() {
-          panel.classList.remove('open');
-          panel.setAttribute('aria-hidden', 'true');
-          document.body.style.overflow = '';
-        }
-
-        triggers.forEach(t => t.addEventListener('click', openPanel));
-        closeEl.addEventListener('click', closePanel);
-        panel.addEventListener('click', (e) => {
-          if (e.target === panel) closePanel();
-        });
-        document.addEventListener('keydown', (e) => {
-          if (e.key === 'Escape' && panel.classList.contains('open')) closePanel();
-        });
-      }
-
-      setupPanel('aboutPanel', 'aboutClose', ['aboutLink', 'aboutLinkMobile']);
-      setupPanel('reviewsPanel', 'reviewsClose', ['reviewsLink', 'reviewsLinkMobile']);
     })();
   </script>
 </body>
