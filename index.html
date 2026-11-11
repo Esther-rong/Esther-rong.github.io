@@ -172,11 +172,12 @@
   </style>
 </head>
 <body>
-  <!-- ===== 404 主界面（完全保留） ===== -->
+  <!-- ===== 404 主界面 ===== -->
   <main class="page">
     <div class="background-art" aria-hidden="true"><div class="background-center"><div class="giant-404" id="giant404">404</div><div class="white-oval" id="whiteOval"></div></div></div>
     <header class="navbar">
-      <a class="logo" href="index.html" aria-label="Esther home"><span class="logo-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span><span>Esther</span></a>
+      <!-- 注意：这里把 href 改成了 ./ 以避免在 GitHub Pages 子目录下报错 -->
+      <a class="logo" href="./" aria-label="Esther home"><span class="logo-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span><span>Esther</span></a>
       <nav class="desktop-links" aria-label="Main navigation">
         <button type="button" data-section="projects">Projects</button>
         <button type="button" data-section="programs">Programs</button>
@@ -214,13 +215,13 @@
       </div>
       <video id="foxVideo" autoplay loop muted playsinline preload="auto"><source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260713_234424_b1332b69-2e69-4302-8dbc-40f86846afbd.mp4" type="video/mp4" /></video>
     </div></div>
-    <section class="bottom"><h1>Oops, something went wrong!</h1><a class="home-link" href="index.html"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 19-7-7 7-7M5 12h14"/></svg>Back to Home</a></section>
+    <section class="bottom"><h1>Oops, something went wrong!</h1><a class="home-link" href="./"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 19-7-7 7-7M5 12h14"/></svg>Back to Home</a></section>
   </main>
 
   <!-- ===== 移动端菜单 ===== -->
   <div class="overlay" id="menuOverlay" role="dialog" aria-modal="true" aria-label="Navigation menu" aria-hidden="true">
     <div class="backdrop" id="menuBackdrop"></div>
-    <aside class="panel"><div class="panel-header"><a class="logo" href="index.html"><span class="logo-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span><span>Esther</span></a><button class="close-btn" id="menuClose" type="button" aria-label="Close menu"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+    <aside class="panel"><div class="panel-header"><a class="logo" href="./"><span class="logo-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span><span>Esther</span></a><button class="close-btn" id="menuClose" type="button" aria-label="Close menu"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
       <nav class="panel-links" aria-label="Mobile navigation">
         <button type="button" style="--i:0" data-section="projects">Projects</button>
         <button type="button" style="--i:1" data-section="programs">Programs</button>
@@ -228,7 +229,7 @@
         <button type="button" style="--i:3" data-section="about">About Me</button>
         <button type="button" style="--i:4" data-section="contacts">Contacts</button>
       </nav>
-      <a class="panel-cta" href="index.html"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 19-7-7 7-7M5 12h14"/></svg>Back to Home</a>
+      <a class="panel-cta" href="./"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 19-7-7 7-7M5 12h14"/></svg>Back to Home</a>
     </aside>
   </div>
 
@@ -373,7 +374,6 @@
         document.body.style.overflow = '';
       }
 
-      // 所有带 data-section 的按钮
       document.querySelectorAll('[data-section]').forEach(btn => {
         btn.addEventListener('click', () => {
           const section = btn.getAttribute('data-section');
