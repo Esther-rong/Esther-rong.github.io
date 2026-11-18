@@ -152,20 +152,31 @@
     .game-view.active { display: block; animation: fadeIn .3s ease; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* ===== CS 2D 游戏容器 ===== */
-    .cs-container { position: relative; width: 100%; aspect-ratio: 16/10; background: #1a1a1a; border-radius: 12px; overflow: hidden; border: 3px solid #333; cursor: crosshair; }
-    .cs-canvas { display: block; width: 100%; height: 100%; background: #2c3e50; }
-    .cs-ui { position: absolute; inset: 0; pointer-events: none; padding: 16px; display: flex; flex-direction: column; justify-content: space-between; font-family: monospace; }
-    .cs-ui-top { display: flex; justify-content: space-between; font-size: 18px; font-weight: bold; color: #fff; text-shadow: 1px 1px 2px #000; }
-    .cs-ui-bottom { display: flex; justify-content: space-between; align-items: flex-end; }
-    .cs-hp { color: #4cd137; font-size: 24px; }
-    .cs-ammo { color: #fbc531; font-size: 24px; }
-    .cs-kills { color: #e84118; font-size: 20px; }
-    .cs-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.8); display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; z-index: 10; text-align: center; }
-    .cs-overlay h2 { font-size: 32px; color: #e84118; margin-bottom: 10px; }
-    .cs-overlay p { font-size: 16px; margin-bottom: 20px; color: #ccc; }
-    .cs-start-btn { background: #e84118; color: #fff; padding: 12px 30px; border-radius: 8px; font-size: 18px; font-weight: bold; pointer-events: auto; cursor: pointer; }
-    .cs-start-btn:hover { background: #c0392b; }
+    /* ===== Raycasting 3D 引擎容器 ===== */
+    .cs3d-container { position: relative; width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 12px; overflow: hidden; border: 3px solid #333; display: flex; justify-content: center; align-items: center; }
+    .cs3d-canvas { display: block; width: 100%; height: 100%; image-rendering: pixelated; cursor: crosshair; }
+    .cs3d-ui { position: absolute; inset: 0; pointer-events: none; padding: 16px; display: flex; flex-direction: column; justify-content: space-between; font-family: monospace; }
+    .cs3d-top { display: flex; justify-content: space-between; font-size: 16px; font-weight: bold; color: #fff; text-shadow: 1px 1px 2px #000; }
+    .cs3d-bottom { display: flex; justify-content: space-between; align-items: flex-end; }
+    .cs3d-hp { color: #4cd137; font-size: 24px; }
+    .cs3d-ammo { color: #fbc531; font-size: 24px; }
+    .cs3d-kills { color: #e84118; font-size: 20px; }
+    /* 准星 */
+    .cs3d-crosshair { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 20px; height: 20px; pointer-events: none; }
+    .cs3d-crosshair::before, .cs3d-crosshair::after { content: ''; position: absolute; background: rgba(255,255,255,0.7); }
+    .cs3d-crosshair::before { top: 9px; left: 0; width: 20px; height: 2px; }
+    .cs3d-crosshair::after { top: 0; left: 9px; width: 2px; height: 20px; }
+    /* 枪械贴图 (CSS绘制) */
+    .cs3d-gun { position: absolute; bottom: -10px; right: 15%; width: 80px; height: 120px; background: #333; border-radius: 10px 10px 0 0; transform-origin: bottom center; pointer-events: none; transition: transform 0.05s; border: 2px solid #111; }
+    .cs3d-gun::before { content: ''; position: absolute; top: -20px; left: 30px; width: 20px; height: 40px; background: #222; border-radius: 5px 5px 0 0; }
+    .cs3d-gun.shoot { transform: translateY(10px) rotate(-5deg); }
+    
+    .cs3d-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.85); display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; z-index: 10; text-align: center; }
+    .cs3d-overlay h2 { font-size: 32px; color: #e84118; margin-bottom: 10px; font-family: Impact, sans-serif; letter-spacing: 2px; }
+    .cs3d-overlay p { font-size: 14px; margin-bottom: 20px; color: #ccc; font-family: sans-serif; line-height: 1.6; }
+    .cs3d-start-btn { background: #e84118; color: #fff; padding: 12px 30px; border-radius: 8px; font-size: 18px; font-weight: bold; pointer-events: auto; cursor: pointer; border: 2px solid #fff; }
+    .cs3d-start-btn:hover { background: #c0392b; }
+    .cs3d-damage-flash { position: absolute; inset: 0; background: rgba(255,0,0,0.4); opacity: 0; pointer-events: none; transition: opacity 0.1s; z-index: 5; }
 
     @media (max-width: 1023px) { .desktop-links { display: none; } }
     @media (max-width: 767px) {
@@ -240,7 +251,7 @@
     <section class="bottom">
       <h1>Oops, something went wrong!</h1>
       <a class="home-link" href="./"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 19-7-7 7-7M5 12h14"/></svg>Back to Home</a>
-      <div class="version-tag">🎮 v4.0: CS 2D Shooter Added!</div>
+      <div class="version-tag">🎮 v5.0: 3D Raycasting Engine!</div>
     </section>
   </main>
 
@@ -323,48 +334,30 @@
         `,
         projects: `
           <span class="eyebrow">Projects</span>
-          <h1>Interactive Games</h1>
-          <p>Classic games built with HTML5 Canvas and vanilla JavaScript.</p>
+          <h1>3D Shooter Engine</h1>
+          <p>A fully playable 3D FPS game built from scratch using HTML5 Canvas and Raycasting math.</p>
           
-          <div class="game-tabs">
-            <button class="game-tab-btn active" data-tab="game-cs">🔫 CS 2D</button>
-            <button class="game-tab-btn" data-tab="game-2048">🔢 2048</button>
-            <button class="game-tab-btn" data-tab="game-memory">🧠 Memory</button>
-          </div>
-
-          <!-- CS 2D Game -->
-          <div id="game-cs" class="game-view active">
-            <div class="cs-container" id="csContainer">
-              <canvas class="cs-canvas" id="csCanvas"></canvas>
-              <div class="cs-ui">
-                <div class="cs-ui-top">
-                  <div class="cs-kills">Kills: <span id="csKills">0</span></div>
-                  <div class="cs-hp">HP: <span id="csHp">100</span></div>
-                </div>
-                <div class="cs-ui-bottom">
-                  <div>WASD to Move | R to Reload</div>
-                  <div class="cs-ammo">Ammo: <span id="csAmmo">30</span>/<span id="csMaxAmmo">30</span></div>
-                </div>
+          <div class="cs3d-container" id="cs3dContainer">
+            <canvas class="cs3d-canvas" id="cs3dCanvas"></canvas>
+            <div class="cs3d-damage-flash" id="cs3dDamage"></div>
+            <div class="cs3d-crosshair"></div>
+            <div class="cs3d-gun" id="cs3dGun"></div>
+            
+            <div class="cs3d-ui">
+              <div class="cs3d-top">
+                <div class="cs3d-kills">Kills: <span id="cs3dKills">0</span></div>
+                <div class="cs3d-hp">HP: <span id="cs3dHp">100</span></div>
               </div>
-              <div class="cs-overlay" id="csOverlay">
-                <h2>CS 2D</h2>
-                <p>WASD to move, Mouse to aim & shoot, R to reload.<br>Survive as long as you can.</p>
-                <button class="cs-start-btn" id="csStartBtn">Start Game</button>
+              <div class="cs3d-bottom">
+                <div>WASD: Move | Mouse: Aim/Shoot | R: Reload</div>
+                <div class="cs3d-ammo">Ammo: <span id="cs3dAmmo">30</span>/30</div>
               </div>
             </div>
-          </div>
 
-          <!-- 2048 Game -->
-          <div id="game-2048" class="game-view">
-            <div style="text-align:center; padding: 20px;">
-               <p>2048 game logic goes here (kept for layout demo).</p>
-            </div>
-          </div>
-
-          <!-- Memory Game -->
-          <div id="game-memory" class="game-view">
-             <div style="text-align:center; padding: 20px;">
-               <p>Memory game logic goes here (kept for layout demo).</p>
+            <div class="cs3d-overlay" id="cs3dOverlay">
+              <h2>RAYCAST 3D</h2>
+              <p>Click Start to lock your mouse.<br>WASD to move, Left Click to shoot.<br>Press ESC to unlock mouse.</p>
+              <button class="cs3d-start-btn" id="cs3dStartBtn">Start Game</button>
             </div>
           </div>
         `,
@@ -409,7 +402,7 @@
       const modalBody = document.getElementById('modalBody');
       const modalClose = document.getElementById('modalClose');
       
-      let cleanupFunctions = []; // 存放清理函数
+      let cleanupFunctions = []; 
 
       function openModal(section) {
         if (!sections[section]) return;
@@ -420,7 +413,7 @@
         setTimeout(() => modalClose.focus(), 60);
         
         if (section === 'projects') {
-          setTimeout(initProjects, 50);
+          setTimeout(init3DGame, 50);
         }
       }
 
@@ -429,7 +422,7 @@
         modal.setAttribute('aria-hidden', 'true');
         document.body.style.overflow = '';
         
-        // 清理事件监听器和游戏循环
+        // 清理游戏
         cleanupFunctions.forEach(fn => fn());
         cleanupFunctions = [];
       }
@@ -447,488 +440,426 @@
         if (e.target === modal) closeModal();
       });
       document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
+        if (e.key === 'Escape' && !document.pointerLockElement) {
           if (modal.classList.contains('open')) closeModal();
           else if (overlay.classList.contains('open')) setMenu(false);
         }
       });
 
       /* ==========================================
-         游戏初始化逻辑
+         3D 射击游戏核心逻辑 (Raycasting)
          ========================================== */
-      function initProjects() {
-        // Tab 切换
-        const tabs = document.querySelectorAll('.game-tab-btn');
-        const views = document.querySelectorAll('.game-view');
-        
-        tabs.forEach(tab => {
-          tab.onclick = () => {
-            tabs.forEach(t => t.classList.remove('active'));
-            views.forEach(v => v.classList.remove('active'));
-            tab.classList.add('active');
-            document.getElementById(tab.dataset.tab).classList.add('active');
-          };
-        });
-
-        // 初始化 CS 2D
-        initCS2D();
-      }
-
-      /* ---------- CS 2D 核心逻辑 ---------- */
-      function initCS2D() {
-        const canvas = document.getElementById('csCanvas');
-        const container = document.getElementById('csContainer');
-        const overlay = document.getElementById('csOverlay');
-        const startBtn = document.getElementById('csStartBtn');
-        const hpEl = document.getElementById('csHp');
-        const ammoEl = document.getElementById('csAmmo');
-        const killsEl = document.getElementById('csKills');
+      function init3DGame() {
+        const canvas = document.getElementById('cs3dCanvas');
+        const container = document.getElementById('cs3dContainer');
+        const overlay = document.getElementById('cs3dOverlay');
+        const startBtn = document.getElementById('cs3dStartBtn');
+        const hpEl = document.getElementById('cs3dHp');
+        const ammoEl = document.getElementById('cs3dAmmo');
+        const killsEl = document.getElementById('cs3dKills');
+        const gunEl = document.getElementById('cs3dGun');
+        const damageFlash = document.getElementById('cs3dDamage');
         
         if (!canvas) return;
 
         const ctx = canvas.getContext('2d');
-        let width, height;
-        let animationId;
-        let isRunning = false;
         
-        // 游戏状态
-        let player;
-        let bullets = [];
-        let enemies = [];
-        let walls = [];
-        let particles = []; // 射击/爆炸特效
-        let keys = {};
-        let mouse = { x: 0, y: 0, isDown: false };
-        let kills = 0;
-        let spawnTimer = 0;
+        // 降低内部分辨率以提升性能 (Raycasting 比较吃性能)
+        canvas.width = 640; 
+        canvas.height = 360;
+        const W = canvas.width;
+        const H = canvas.height;
 
-        // 调色板
-        const colors = {
-          bg: '#2c3e50',
-          player: '#3498db',
-          enemy: '#e74c3c',
-          wall: '#7f8c8d',
-          bullet: '#f1c40f',
-          enemyBullet: '#e67e22'
+        // 游戏常量
+        const FOV = Math.PI / 3; // 60度视野
+        const HALF_FOV = FOV / 2;
+        const MAX_DEPTH = 20;
+        const NUM_RAYS = W / 2; // 每两列画一根射线 (优化)
+        
+        // 地图 (1=墙, 2=另一种墙, 0=空地)
+        const MAP = [
+          [1,1,1,1,1,1,1,1,1,1,1,1],
+          [1,0,0,0,0,0,0,0,0,0,0,1],
+          [1,0,1,1,0,0,1,1,0,1,0,1],
+          [1,0,1,0,0,0,0,1,0,1,0,1],
+          [1,0,0,0,1,1,0,0,0,0,0,1],
+          [1,0,1,0,1,0,0,1,0,1,0,1],
+          [1,0,1,0,0,0,0,1,0,1,0,1],
+          [1,0,0,0,1,1,0,0,0,0,0,1],
+          [1,0,1,0,0,0,1,1,0,1,0,1],
+          [1,0,0,0,1,0,0,0,0,1,0,1],
+          [1,0,0,0,0,0,0,0,0,0,0,1],
+          [1,1,1,1,1,1,1,1,1,1,1,1]
+        ];
+
+        // 玩家状态
+        let player = {
+          x: 1.5, y: 1.5,
+          angle: 0,
+          speed: 0.05,
+          hp: 100,
+          ammo: 30,
+          maxAmmo: 30,
+          isReloading: false,
+          kills: 0
         };
 
-        // 初始化尺寸
-        function resize() {
-          const rect = container.getBoundingClientRect();
-          canvas.width = rect.width;
-          canvas.height = rect.height;
-          width = canvas.width;
-          height = canvas.height;
-        }
-        resize();
-        window.addEventListener('resize', resize);
-        cleanupFunctions.push(() => window.removeEventListener('resize', resize));
+        let keys = {};
+        let enemies = [];
+        let isRunning = false;
+        let animationId;
+        let zBuffer = new Float32Array(W); // 用于遮挡判断
+        let lastShootTime = 0;
 
-        // 实体类
-        class Player {
-          constructor() {
-            this.x = width / 2;
-            this.y = height / 2;
-            this.radius = 15;
-            this.speed = 3;
-            this.hp = 100;
-            this.maxAmmo = 30;
-            this.ammo = 30;
-            this.isReloading = false;
-            this.reloadTime = 1500;
-            this.lastShot = 0;
-            this.fireRate = 150; // ms per shot
-            this.angle = 0;
-          }
+        // 颜色配置
+        const COLORS = {
+          sky: '#87CEEB',
+          floor: '#556B2F',
+          wall1: '#8B4513', // 棕色
+          wall2: '#A9A9A9', // 灰色
+          enemy: '#FF0000',
+          gun: '#333'
+        };
 
-          update() {
-            // 移动
-            let dx = 0, dy = 0;
-            if (keys['w'] || keys['W']) dy -= 1;
-            if (keys['s'] || keys['S']) dy += 1;
-            if (keys['a'] || keys['A']) dx -= 1;
-            if (keys['d'] || keys['D']) dx += 1;
-
-            if (dx !== 0 || dy !== 0) {
-              const len = Math.hypot(dx, dy);
-              dx = (dx / len) * this.speed;
-              dy = (dy / len) * this.speed;
-              
-              // 简易碰撞（只限制在屏幕内）
-              this.x = Math.max(this.radius, Math.min(width - this.radius, this.x + dx));
-              this.y = Math.max(this.radius, Math.min(height - this.radius, this.y + dy));
-            }
-
-            // 瞄准
-            this.angle = Math.atan2(mouse.y - this.y, mouse.x - this.x);
-
-            // 换弹
-            if ((keys['r'] || keys['R']) && this.ammo < this.maxAmmo && !this.isReloading) {
-              this.isReloading = true;
-              setTimeout(() => {
-                this.ammo = this.maxAmmo;
-                this.isReloading = false;
-                updateUI();
-              }, this.reloadTime);
-            }
-
-            // 射击
-            if (mouse.isDown && this.ammo > 0 && !this.isReloading) {
-              const now = Date.now();
-              if (now - this.lastShot > this.fireRate) {
-                this.shoot();
-                this.lastShot = now;
-              }
-            }
-          }
-
-          shoot() {
-            this.ammo--;
-            updateUI();
-            
-            // 准星偏移（散弹）
-            const spread = (Math.random() - 0.5) * 0.1;
-            const shootAngle = this.angle + spread;
-            
-            bullets.push(new Bullet(
-              this.x + Math.cos(shootAngle) * 20,
-              this.y + Math.sin(shootAngle) * 20,
-              shootAngle,
-              10, // speed
-              true // is player bullet
-            ));
-
-            // 枪口火焰特效
-            particles.push(new Particle(
-              this.x + Math.cos(shootAngle) * 25,
-              this.y + Math.sin(shootAngle) * 25,
-              '#f1c40f',
-              2
-            ));
-          }
-
-          draw() {
-            ctx.save();
-            ctx.translate(this.x, this.y);
-            ctx.rotate(this.angle);
-            
-            // 身体
-            ctx.beginPath();
-            ctx.arc(0, 0, this.radius, 0, Math.PI * 2);
-            ctx.fillStyle = colors.player;
-            ctx.fill();
-            ctx.strokeStyle = '#2980b9';
-            ctx.lineWidth = 2;
-            ctx.stroke();
-
-            // 枪管
-            ctx.fillStyle = '#2c3e50';
-            ctx.fillRect(this.radius - 5, -4, 20, 8);
-            
-            ctx.restore();
-          }
-        }
-
-        class Enemy {
-          constructor() {
-            // 从边缘生成
-            if (Math.random() > 0.5) {
-              this.x = Math.random() > 0.5 ? 0 : width;
-              this.y = Math.random() * height;
-            } else {
-              this.x = Math.random() * width;
-              this.y = Math.random() > 0.5 ? 0 : height;
-            }
-            this.radius = 14;
-            this.speed = 1.2 + Math.random() * 0.5;
-            this.hp = 20;
-            this.shootCooldown = 1000 + Math.random() * 1000;
-            this.lastShot = 0;
-            this.color = colors.enemy;
-          }
-
-          update() {
-            // 朝玩家移动
-            const dx = player.x - this.x;
-            const dy = player.y - this.y;
-            const dist = Math.hypot(dx, dy);
-            
-            if (dist > 150) { // 保持距离
-              this.x += (dx / dist) * this.speed;
-              this.y += (dy / dist) * this.speed;
-            }
-
-            // 射击
-            const now = Date.now();
-            if (dist < 400 && now - this.lastShot > this.shootCooldown) {
-              this.shoot();
-              this.lastShot = now;
-            }
-          }
-
-          shoot() {
-            const angle = Math.atan2(player.y - this.y, player.x - this.x);
-            bullets.push(new Bullet(
-              this.x, this.y,
-              angle,
-              5, // enemy bullet speed
-              false
-            ));
-          }
-
-          draw() {
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-            ctx.fillStyle = this.color;
-            ctx.fill();
-            ctx.strokeStyle = '#c0392b';
-            ctx.lineWidth = 2;
-            ctx.stroke();
-
-            // 敌人眼睛/瞄准方向
-            const angle = Math.atan2(player.y - this.y, player.x - this.x);
-            ctx.beginPath();
-            ctx.moveTo(this.x, this.y);
-            ctx.lineTo(this.x + Math.cos(angle) * 20, this.y + Math.sin(angle) * 20);
-            ctx.strokeStyle = '#fff';
-            ctx.lineWidth = 2;
-            ctx.stroke();
-          }
-        }
-
-        class Bullet {
-          constructor(x, y, angle, speed, isPlayer) {
-            this.x = x;
-            this.y = y;
-            this.vx = Math.cos(angle) * speed;
-            this.vy = Math.sin(angle) * speed;
-            this.radius = isPlayer ? 3 : 4;
-            this.isPlayer = isPlayer;
-            this.dead = false;
-            this.color = isPlayer ? colors.bullet : colors.enemyBullet;
-          }
-
-          update() {
-            this.x += this.vx;
-            this.y += this.vy;
-
-            // 出界
-            if (this.x < 0 || this.x > width || this.y < 0 || this.y > height) {
-              this.dead = true;
-            }
-          }
-
-          draw() {
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-            ctx.fillStyle = this.color;
-            ctx.fill();
-            // 拖尾
-            ctx.beginPath();
-            ctx.moveTo(this.x, this.y);
-            ctx.lineTo(this.x - this.vx * 2, this.y - this.vy * 2);
-            ctx.strokeStyle = this.color;
-            ctx.lineWidth = 1;
-            ctx.stroke();
-          }
-        }
-
-        class Particle {
-          constructor(x, y, color, size) {
-            this.x = x;
-            this.y = y;
-            this.vx = (Math.random() - 0.5) * 4;
-            this.vy = (Math.random() - 0.5) * 4;
-            this.life = 1;
-            this.color = color;
-            this.size = size;
-          }
-          update() {
-            this.x += this.vx;
-            this.y += this.vy;
-            this.life -= 0.05;
-          }
-          draw() {
-            ctx.globalAlpha = this.life;
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-            ctx.fillStyle = this.color;
-            ctx.fill();
-            ctx.globalAlpha = 1;
-          }
-        }
-
-        // UI 更新
-        function updateUI() {
-          hpEl.textContent = Math.max(0, player.hp);
-          ammoEl.textContent = player.ammo;
-          killsEl.textContent = kills;
-        }
-
-        // 碰撞检测
-        function checkCollisions() {
-          // 子弹与敌人/玩家
-          for (let i = bullets.length - 1; i >= 0; i--) {
-            const b = bullets[i];
-            if (b.dead) continue;
-
-            if (b.isPlayer) {
-              // 玩家子弹打敌人
-              for (let j = enemies.length - 1; j >= 0; j--) {
-                const e = enemies[j];
-                if (Math.hypot(b.x - e.x, b.y - e.y) < b.radius + e.radius) {
-                  b.dead = true;
-                  e.hp -= 10;
-                  // 受击特效
-                  for(let k=0; k<3; k++) particles.push(new Particle(b.x, b.y, colors.enemy, 2));
-                  if (e.hp <= 0) {
-                    enemies.splice(j, 1);
-                    kills++;
-                    updateUI();
-                    // 死亡特效
-                    for(let k=0; k<10; k++) particles.push(new Particle(e.x, e.y, colors.enemy, 3));
-                  }
-                  break;
-                }
-              }
-            } else {
-              // 敌人子弹打玩家
-              if (Math.hypot(b.x - player.x, b.y - player.y) < b.radius + player.radius) {
-                b.dead = true;
-                player.hp -= 10;
-                updateUI();
-                // 玩家受击闪烁（暂时简化为屏幕泛红）
-                container.style.boxShadow = 'inset 0 0 50px rgba(231, 76, 60, 0.8)';
-                setTimeout(() => container.style.boxShadow = 'none', 100);
-
-                if (player.hp <= 0) {
-                  gameOver();
-                }
-              }
-            }
-          }
-        }
-
-        // 游戏结束
-        function gameOver() {
-          isRunning = false;
-          cancelAnimationFrame(animationId);
-          overlay.style.display = 'flex';
-          overlay.innerHTML = `
-            <h2>Game Over</h2>
-            <p>You survived ${Math.floor(Date.now() / 1000 - startTime)} seconds.<br>Kills: ${kills}</p>
-            <button class="cs-start-btn" id="csRestartBtn">Try Again</button>
-          `;
-          document.getElementById('csRestartBtn').onclick = startGame;
-        }
-
-        // 重置并开始
-        let startTime;
+        // 重置游戏
         function startGame() {
-          overlay.style.display = 'none';
-          resize();
-          player = new Player();
-          bullets = [];
+          player = { x: 1.5, y: 1.5, angle: 0, speed: 0.05, hp: 100, ammo: 30, maxAmmo: 30, isReloading: false, kills: 0 };
           enemies = [];
-          particles = [];
-          kills = 0;
-          spawnTimer = 0;
+          keys = {};
           isRunning = true;
+          overlay.style.display = 'none';
           updateUI();
-          startTime = Date.now();
+          
+          // 生成几个敌人
+          spawnEnemy(8, 8);
+          spawnEnemy(10, 2);
+          spawnEnemy(5, 10);
+          spawnEnemy(2, 9);
+
+          // 锁定鼠标
+          canvas.requestPointerLock();
+          
+          if(animationId) cancelAnimationFrame(animationId);
           gameLoop();
         }
 
-        // 主循环
+        function spawnEnemy(x, y) {
+          enemies.push({ x, y, hp: 30, alive: true, lastShot: 0 });
+        }
+
+        function updateUI() {
+          hpEl.textContent = player.hp;
+          ammoEl.textContent = player.ammo;
+          killsEl.textContent = player.kills;
+        }
+
+        // 鼠标移动控制视角 (Pointer Lock)
+        const onMouseMove = (e) => {
+          if (document.pointerLockElement === canvas) {
+            player.angle += e.movementX * 0.002;
+            // 保证角度在 0 到 2PI 之间
+            if (player.angle < 0) player.angle += Math.PI * 2;
+            if (player.angle > Math.PI * 2) player.angle -= Math.PI * 2;
+          }
+        };
+
+        // 键盘控制
+        const onKeyDown = (e) => {
+          keys[e.key.toLowerCase()] = true;
+          if (e.key.toLowerCase() === 'r' && isRunning) {
+            reload();
+          }
+        };
+        const onKeyUp = (e) => {
+          keys[e.key.toLowerCase()] = false;
+        };
+
+        // 换弹
+        function reload() {
+          if (player.isReloading || player.ammo === player.maxAmmo) return;
+          player.isReloading = true;
+          setTimeout(() => {
+            player.ammo = player.maxAmmo;
+            player.isReloading = false;
+            updateUI();
+          }, 1500);
+        }
+
+        // 射击 (中心射线检测)
+        const onMouseDown = (e) => {
+          if (document.pointerLockElement !== canvas || !isRunning) return;
+          if (e.button !== 0) return; // 只响应左键
+
+          const now = Date.now();
+          if (now - lastShootTime < 150) return; // 射速限制
+          lastShootTime = now;
+
+          if (player.ammo <= 0) {
+            reload();
+            return;
+          }
+
+          player.ammo--;
+          updateUI();
+
+          // 枪械后坐力动画
+          gunEl.classList.add('shoot');
+          setTimeout(() => gunEl.classList.remove('shoot'), 50);
+
+          // 命中检测：在视野正中心 (角度偏差极小)
+          let hitEnemy = null;
+          let minDist = MAX_DEPTH;
+
+          // 计算玩家朝向的射线
+          const rayDirX = Math.cos(player.angle);
+          const rayDirY = Math.sin(player.angle);
+
+          for (let enemy of enemies) {
+            if (!enemy.alive) continue;
+
+            const dx = enemy.x - player.x;
+            const dy = enemy.y - player.y;
+            const dist = Math.hypot(dx, dy);
+
+            // 敌人是否在准星附近 (角度差)
+            const angleToEnemy = Math.atan2(dy, dx);
+            let angleDiff = player.angle - angleToEnemy;
+            // 规范化角度差到 -PI 到 PI
+            while (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
+            while (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
+
+            // 如果敌人在准星正负 5 度内，且距离较近
+            if (Math.abs(angleDiff) < 0.1 && dist < minDist) {
+              // 检查是否有墙壁遮挡
+              if (!isWallBetween(player.x, player.y, enemy.x, enemy.y)) {
+                minDist = dist;
+                hitEnemy = enemy;
+              }
+            }
+          }
+
+          if (hitEnemy) {
+            hitEnemy.hp -= 15;
+            if (hitEnemy.hp <= 0) {
+              hitEnemy.alive = false;
+              player.kills++;
+              updateUI();
+            }
+          }
+        };
+
+        // DDA 算法检测两点之间是否有墙 (用于射击遮挡判断)
+        function isWallBetween(x1, y1, x2, y2) {
+          const dx = x2 - x1;
+          const dy = y2 - y1;
+          const dist = Math.hypot(dx, dy);
+          const steps = Math.ceil(dist * 10); // 精度
+          for (let i = 0; i < steps; i++) {
+            const t = i / steps;
+            const cx = Math.floor(x1 + dx * t);
+            const cy = Math.floor(y1 + dy * t);
+            if (MAP[cy] && MAP[cy][cx] > 0) return true;
+          }
+          return false;
+        }
+
+        // 主循环渲染
         function gameLoop() {
           if (!isRunning) return;
 
           // 清屏
-          ctx.fillStyle = colors.bg;
-          ctx.fillRect(0, 0, width, height);
+          ctx.fillStyle = COLORS.sky;
+          ctx.fillRect(0, 0, W, H/2);
+          ctx.fillStyle = COLORS.floor;
+          ctx.fillRect(0, H/2, W, H/2);
 
-          // 画网格背景
-          ctx.strokeStyle = 'rgba(255,255,255,0.05)';
-          ctx.lineWidth = 1;
-          for(let i=0; i<width; i+=40) { ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,height); ctx.stroke(); }
-          for(let i=0; i<height; i+=40) { ctx.beginPath(); ctx.moveTo(0,i); ctx.lineTo(width,i); ctx.stroke(); }
+          // 移动玩家
+          let moveX = 0;
+          let moveY = 0;
+          if (keys['w']) { moveX += Math.cos(player.angle); moveY += Math.sin(player.angle); }
+          if (keys['s']) { moveX -= Math.cos(player.angle); moveY -= Math.sin(player.angle); }
+          if (keys['a']) { moveX += Math.cos(player.angle - Math.PI/2); moveY += Math.sin(player.angle - Math.PI/2); }
+          if (keys['d']) { moveX += Math.cos(player.angle + Math.PI/2); moveY += Math.sin(player.angle + Math.PI/2); }
 
-          // 更新玩家
-          player.update();
-          player.draw();
+          // 简单的碰撞检测
+          const nextX = player.x + moveX * player.speed;
+          const nextY = player.y + moveY * player.speed;
+          if (!MAP[Math.floor(player.y)]?.[Math.floor(nextX)]) player.x = nextX;
+          if (!MAP[Math.floor(nextY)]?.[Math.floor(player.x)]) player.y = nextY;
 
-          // 生成敌人
-          spawnTimer++;
-          if (spawnTimer > 60) { // 每秒生成
-            enemies.push(new Enemy());
-            spawnTimer = 0;
+          // Raycasting 渲染墙壁
+          const angleStep = FOV / NUM_RAYS;
+          let rayAngle = player.angle - HALF_FOV;
+
+          for (let i = 0; i < NUM_RAYS; i++) {
+            const cosA = Math.cos(rayAngle);
+            const sinA = Math.sin(rayAngle);
+            
+            // DDA 投射射线
+            let dist = 0;
+            let hit = false;
+            let wallType = 1;
+
+            // 步进寻找墙壁
+            while (!hit && dist < MAX_DEPTH) {
+              dist += 0.05;
+              const testX = player.x + cosA * dist;
+              const testY = player.y + sinA * dist;
+              
+              const mapX = Math.floor(testX);
+              const mapY = Math.floor(testY);
+
+              if (mapY >= 0 && mapY < MAP.length && mapX >= 0 && mapX < MAP[0].length) {
+                if (MAP[mapY][mapX] > 0) {
+                  hit = true;
+                  wallType = MAP[mapY][mapX];
+                }
+              }
+            }
+
+            // 消除鱼眼效应
+            const correctedDist = dist * Math.cos(rayAngle - player.angle);
+            
+            // 记录 Z-Buffer 用于渲染敌人
+            const screenX = Math.floor(i * (W / NUM_RAYS));
+            zBuffer[screenX] = correctedDist;
+
+            // 计算墙壁高度
+            const wallHeight = H / correctedDist;
+            const drawStart = Math.max(0, (H - wallHeight) / 2);
+            
+            // 绘制墙壁列
+            ctx.fillStyle = wallType === 1 ? COLORS.wall1 : COLORS.wall2;
+            
+            // 简单的阴影效果（根据距离变暗）
+            const brightness = Math.max(0, 1 - correctedDist / MAX_DEPTH);
+            ctx.globalAlpha = 0.4 + brightness * 0.6;
+            
+            // 为了性能，每次画 2 像素宽
+            ctx.fillRect(screenX, drawStart, W / NUM_RAYS + 1, wallHeight);
+            ctx.globalAlpha = 1;
+
+            rayAngle += angleStep;
           }
 
-          // 更新敌人
-          for (let i = enemies.length - 1; i >= 0; i--) {
-            enemies[i].update();
-            enemies[i].draw();
-          }
+          // 渲染敌人 (Sprite 投影)
+          // 从远到近排序，实现正确的遮挡
+          const visibleEnemies = enemies.filter(e => e.alive).map(e => {
+            const dx = e.x - player.x;
+            const dy = e.y - player.y;
+            const dist = Math.hypot(dx, dy);
+            let angle = Math.atan2(dy, dx);
+            
+            // 计算相对角度
+            let angleDiff = angle - player.angle;
+            while (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
+            while (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
+            
+            return { e, dist, angleDiff };
+          }).sort((a, b) => b.dist - a.dist);
 
-          // 更新子弹
-          for (let i = bullets.length - 1; i >= 0; i--) {
-            const b = bullets[i];
-            b.update();
-            if (!b.dead) b.draw();
-            else bullets.splice(i, 1);
-          }
+          for (let obj of visibleEnemies) {
+            // 如果敌人不在视野内，跳过
+            if (Math.abs(obj.angleDiff) > HALF_FOV + 0.2) continue;
 
-          // 更新粒子
-          for (let i = particles.length - 1; i >= 0; i--) {
-            const p = particles[i];
-            p.update();
-            if (p.life > 0) p.draw();
-            else particles.splice(i, 1);
-          }
+            // 消除鱼眼效应
+            const correctedDist = obj.dist * Math.cos(obj.angleDiff);
+            
+            // 计算屏幕投影位置
+            const spriteScreenX = (obj.angleDiff / FOV + 0.5) * W;
+            const spriteHeight = H / correctedDist;
+            const spriteWidth = H / correctedDist; // 假设敌人是正方形
+            
+            const drawStartY = (H - spriteHeight) / 2;
+            const drawStartX = spriteScreenX - spriteWidth / 2;
 
-          // 碰撞检测
-          checkCollisions();
+            // 遮挡检测 (Z-Buffer)
+            const centerRayIndex = Math.floor(spriteScreenX / (W / NUM_RAYS));
+            if (centerRayIndex >= 0 && centerRayIndex < W) {
+              if (correctedDist < zBuffer[centerRayIndex] + 0.5) { // 避免边缘闪烁
+                // 绘制敌人 (红色方块，加个眼睛)
+                ctx.fillStyle = COLORS.enemy;
+                ctx.fillRect(drawStartX, drawStartY, spriteWidth, spriteHeight);
+                
+                // 绘制简单的面部细节
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(drawStartX + spriteWidth * 0.2, drawStartY + spriteHeight * 0.2, spriteWidth * 0.2, spriteHeight * 0.2);
+                ctx.fillRect(drawStartX + spriteWidth * 0.6, drawStartY + spriteHeight * 0.2, spriteWidth * 0.2, spriteHeight * 0.2);
+                
+                // 阴影
+                ctx.fillStyle = 'rgba(0,0,0,0.3)';
+                ctx.fillRect(drawStartX, drawStartY, spriteWidth, spriteHeight);
+              }
+            }
+
+            // 敌人攻击玩家判定 (距离极近)
+            if (obj.dist < 0.6) {
+              player.hp -= 0.5;
+              updateUI();
+              damageFlash.style.opacity = '1';
+              setTimeout(() => damageFlash.style.opacity = '0', 100);
+              
+              if (player.hp <= 0) {
+                gameOver();
+              }
+            }
+          }
 
           animationId = requestAnimationFrame(gameLoop);
         }
 
-        // 事件监听
-        const handleKeyDown = (e) => {
-          keys[e.key] = true;
-          if (e.key === 'r' || e.key === 'R') {
-            // 阻止默认刷新行为
-            if (isRunning) e.preventDefault();
+        function gameOver() {
+          isRunning = false;
+          cancelAnimationFrame(animationId);
+          document.exitPointerLock();
+          overlay.style.display = 'flex';
+          overlay.innerHTML = `
+            <h2>YOU DIED</h2>
+            <p>Kills: ${player.kills}</p>
+            <button class="cs3d-start-btn" id="cs3dRestartBtn">Try Again</button>
+          `;
+          document.getElementById('cs3dRestartBtn').onclick = startGame;
+        }
+
+        // 监听指针锁定状态
+        document.addEventListener('pointerlockchange', () => {
+          if (document.pointerLockElement !== canvas && isRunning) {
+            // 如果用户按了 ESC 解锁鼠标，暂停游戏
+            isRunning = false;
+            cancelAnimationFrame(animationId);
+            overlay.style.display = 'flex';
+            overlay.innerHTML = `
+              <h2>PAUSED</h2>
+              <p>Click Resume to lock mouse again.</p>
+              <button class="cs3d-start-btn" id="cs3dResumeBtn">Resume</button>
+            `;
+            document.getElementById('cs3dResumeBtn').onclick = () => {
+              overlay.style.display = 'none';
+              isRunning = true;
+              canvas.requestPointerLock();
+              gameLoop();
+            };
           }
-        };
-        const handleKeyUp = (e) => { keys[e.key] = false; };
-        
-        const handleMouseMove = (e) => {
-          const rect = canvas.getBoundingClientRect();
-          mouse.x = e.clientX - rect.left;
-          mouse.y = e.clientY - rect.top;
-        };
-        const handleMouseDown = (e) => { if(e.button === 0) mouse.isDown = true; };
-        const handleMouseUp = (e) => { if(e.button === 0) mouse.isDown = false; };
+        });
 
-        window.addEventListener('keydown', handleKeyDown);
-        window.addEventListener('keyup', handleKeyUp);
-        canvas.addEventListener('mousemove', handleMouseMove);
-        canvas.addEventListener('mousedown', handleMouseDown);
-        window.addEventListener('mouseup', handleMouseUp);
-        // 防止右键菜单弹出
-        canvas.addEventListener('contextmenu', e => e.preventDefault());
+        // 绑定事件和清理
+        window.addEventListener('keydown', onKeyDown);
+        window.addEventListener('keyup', onKeyUp);
+        document.addEventListener('mousemove', onMouseMove);
+        canvas.addEventListener('mousedown', onMouseDown);
+        startBtn.onclick = startGame;
 
-        // 绑定清理函数
         cleanupFunctions.push(() => {
           isRunning = false;
           cancelAnimationFrame(animationId);
-          window.removeEventListener('keydown', handleKeyDown);
-          window.removeEventListener('keyup', handleKeyUp);
-          window.removeEventListener('mouseup', handleMouseUp);
+          window.removeEventListener('keydown', onKeyDown);
+          window.removeEventListener('keyup', onKeyUp);
+          document.removeEventListener('mousemove', onMouseMove);
+          canvas.removeEventListener('mousedown', onMouseDown);
+          if (document.pointerLockElement === canvas) {
+            document.exitPointerLock();
+          }
         });
-
-        // 绑定开始按钮
-        startBtn.onclick = startGame;
       }
     })();
   </script>
