@@ -243,7 +243,7 @@
     <section class="bottom">
       <h1>Oops, something went wrong!</h1>
       <a class="home-link" href="./"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 19-7-7 7-7M5 12h14"/></svg>Back to Home</a>
-      <div class="version-tag">🎮 v8.0: CS:GO Style FPS (Fixed)</div>
+      <div class="version-tag">🎮 v8.2: Endless Survival Mode!</div>
     </section>
   </main>
 
@@ -339,7 +339,7 @@
       projects: `
         <span class="eyebrow">Projects</span>
         <h1>CS:GO Style 3D Shooter</h1>
-        <p>A fully playable 3D First-Person Shooter built with Three.js. Move, aim, and eliminate the targets!</p>
+        <p>A fully playable 3D First-Person Shooter built with Three.js. Move, aim, and survive the endless waves!</p>
         
         <div class="game-container-3d" id="g3dContainer">
           <div class="g3d-ui">
@@ -357,7 +357,7 @@
 
           <div class="g3d-overlay" id="g3dOverlay">
             <h2>THREE.JS FPS</h2>
-            <p>Click Start to lock your mouse.<br>WASD to move, Left Click to shoot.<br>Eliminate all enemies!</p>
+            <p>Click Start to lock your mouse.<br>WASD to move, Left Click to shoot.<br>Endless enemies incoming! Survive as long as you can.</p>
             <button class="g3d-start-btn" id="g3dStartBtn">Start Game</button>
           </div>
         </div>
@@ -447,7 +447,7 @@
     });
 
     /* ==========================================
-       CS:GO 风格 Three.js FPS 游戏核心
+       CS:GO 风格 Three.js FPS 游戏核心 (无限模式)
        ========================================== */
     function init3DGame() {
       const container = document.getElementById('g3dContainer');
@@ -463,9 +463,8 @@
 
       // ================= 1. 场景与渲染器 =================
       const scene = new THREE.Scene();
-      // 沙漠风格天空与雾气
       scene.background = new THREE.Color(0xd4c4a8); 
-      scene.fog = new THREE.Fog(0xd4c4a8, 10, 60);
+      scene.fog = new THREE.Fog(0xd4c4a8, 10, 70);
 
       const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 200);
       
@@ -480,7 +479,6 @@
       const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
       scene.add(ambientLight);
 
-      // 强烈的沙漠阳光
       const dirLight = new THREE.DirectionalLight(0xffeedd, 1.2);
       dirLight.position.set(20, 40, 10);
       dirLight.castShadow = true;
@@ -495,10 +493,8 @@
       // ================= 3. 控制器与地图 =================
       const controls = new PointerLockControls(camera, document.body);
       scene.add(controls.getObject());
-      // 出生点设置在一个开阔地带
       controls.getObject().position.set(0, 1.7, 15); 
 
-      // 地面 (沙地)
       const floorGeo = new THREE.PlaneGeometry(100, 100);
       const floorMat = new THREE.MeshStandardMaterial({ color: 0xc2b280, roughness: 1.0 });
       const floor = new THREE.Mesh(floorGeo, floorMat);
@@ -506,10 +502,9 @@
       floor.receiveShadow = true;
       scene.add(floor);
 
-      // 墙壁和木箱
       const obstacles = [];
-      const wallMat = new THREE.MeshStandardMaterial({ color: 0x8b7355, roughness: 0.9 }); // 土墙
-      const crateMat = new THREE.MeshStandardMaterial({ color: 0xa0522d, roughness: 0.8 }); // 木箱
+      const wallMat = new THREE.MeshStandardMaterial({ color: 0x8b7355, roughness: 0.9 });
+      const crateMat = new THREE.MeshStandardMaterial({ color: 0xa0522d, roughness: 0.8 });
 
       function createBox(x, z, w, h, d, isCrate) {
         const geo = new THREE.BoxGeometry(w, h, d);
@@ -521,23 +516,21 @@
         obstacles.push(new THREE.Box3().setFromObject(box));
       }
 
-      // 构建类似 Dust2 的掩体布局
-      createBox(0, -15, 30, 4, 2, false); // 北墙
-      createBox(-15, 0, 2, 4, 30, false); // 西墙
-      createBox(15, 0, 2, 4, 30, false);  // 东墙
-      createBox(0, 20, 30, 4, 2, false);  // 南墙
+      createBox(0, -15, 30, 4, 2, false);
+      createBox(-15, 0, 2, 4, 30, false);
+      createBox(15, 0, 2, 4, 30, false);
+      createBox(0, 20, 30, 4, 2, false);
 
-      // 木箱掩体
       createBox(-6, 5, 4, 2, 4, true);
       createBox(6, -5, 4, 2, 4, true);
       createBox(0, 0, 6, 2, 6, true);
       createBox(-8, -8, 2, 2, 6, true);
       createBox(8, 8, 6, 2, 2, true);
 
-      // ================= 4. 武器模型 (AK风格) =================
+      // ================= 4. 武器模型 =================
       const gunGroup = new THREE.Group();
       const gunMat = new THREE.MeshStandardMaterial({ color: 0x222222, roughness: 0.5, metalness: 0.8 });
-      const woodMat = new THREE.MeshStandardMaterial({ color: 0x5c3a21, roughness: 0.8 }); // 木质护木
+      const woodMat = new THREE.MeshStandardMaterial({ color: 0x5c3a21, roughness: 0.8 });
       
       const barrel = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.5), gunMat); barrel.rotation.x = Math.PI/2; barrel.position.set(0, 0.05, -0.5);
       const body = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.12, 0.4), gunMat); body.position.set(0, 0, -0.2);
@@ -549,40 +542,52 @@
       gunGroup.position.set(0.2, -0.2, -0.5);
       camera.add(gunGroup);
 
-      // 枪口火光
       const muzzleFlash = new THREE.PointLight(0xffaa00, 0, 5);
       muzzleFlash.position.set(0, 0.05, -0.8);
       gunGroup.add(muzzleFlash);
 
-      // ================= 5. 敌人系统 (纯代码生成，保证显示) =================
+      // ================= 5. 敌人系统与生成 =================
       let enemies = [];
-      
-      function spawnEnemy(x, z) {
+      let enemyBullets = [];
+      let spawnTimer = 0;
+      const MAX_ENEMIES = 8; // 同屏最大敌人数
+      const SPAWN_INTERVAL = 2.5; // 生成间隔（秒）
+
+      function spawnEnemy() {
+        // 寻找一个安全的生成点（距离玩家远且不在墙内）
+        let valid = false;
+        let x, z;
+        const playerPos = controls.getObject().position;
+
+        while (!valid) {
+          // 随机在地图范围内生成
+          x = (Math.random() - 0.5) * 26; 
+          z = (Math.random() - 0.5) * 26 - 2; 
+          
+          // 距离玩家必须大于 12 米
+          const distToPlayer = Math.sqrt((x - playerPos.x)**2 + (z - playerPos.z)**2);
+          if (distToPlayer > 12) {
+            // 检查是否与障碍物重叠
+            const testBox = new THREE.Box3(new THREE.Vector3(x-1, 0, z-1), new THREE.Vector3(x+1, 2, z+1));
+            let collides = false;
+            for (let obs of obstacles) {
+              if (testBox.intersectsBox(obs)) { collides = true; break; }
+            }
+            if (!collides) valid = true;
+          }
+        }
+
         const enemyGroup = new THREE.Group();
-        
-        // 黑色衣服的恐怖分子
         const bodyMat = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.8 });
         const skinMat = new THREE.MeshStandardMaterial({ color: 0xffcc99, roughness: 0.6 });
         
-        // 躯干
-        const torso = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.8, 0.3), bodyMat);
-        torso.position.y = 1.0;
-        torso.castShadow = true;
-        // 头
-        const head = new THREE.Mesh(new THREE.SphereGeometry(0.2, 16, 16), skinMat);
-        head.position.y = 1.6;
-        head.castShadow = true;
-        // 腿
-        const legL = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.6, 0.2), bodyMat);
-        legL.position.set(-0.15, 0.3, 0);
-        const legR = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.6, 0.2), bodyMat);
-        legR.position.set(0.15, 0.3, 0);
-        // 手持武器 (简化)
-        const gun = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.1, 0.5), gunMat);
-        gun.position.set(0.25, 1.0, -0.3);
+        const torso = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.8, 0.3), bodyMat); torso.position.y = 1.0; torso.castShadow = true;
+        const head = new THREE.Mesh(new THREE.SphereGeometry(0.2, 16, 16), skinMat); head.position.y = 1.6; head.castShadow = true;
+        const legL = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.6, 0.2), bodyMat); legL.position.set(-0.15, 0.3, 0);
+        const legR = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.6, 0.2), bodyMat); legR.position.set(0.15, 0.3, 0);
+        const gun = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.1, 0.5), gunMat); gun.position.set(0.25, 1.0, -0.3);
 
         enemyGroup.add(torso, head, legL, legR, gun);
-        
         enemyGroup.position.set(x, 0, z);
         scene.add(enemyGroup);
         
@@ -596,7 +601,6 @@
       }
 
       // ================= 6. 特效与音效 =================
-      // 子弹曳光
       const tracers = [];
       function createTracer(start, end) {
         const material = new THREE.LineBasicMaterial({ color: 0xffff00, transparent: true, opacity: 0.8 });
@@ -607,7 +611,6 @@
         tracers.push({ line, life: 1.0 });
       }
 
-      // 粒子爆炸效果
       const particles = [];
       const pGeo = new THREE.BufferGeometry();
       const pCount = 100;
@@ -628,7 +631,6 @@
         }
       }
 
-      // 音效合成
       let audioCtx;
       function playShootSound() {
         if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -661,22 +663,23 @@
       const centerScreen = new THREE.Vector2(0, 0); 
 
       function resetGame() {
+        // 清理场上所有东西
         enemies.forEach(e => scene.remove(e.mesh));
         enemies = [];
+        enemyBullets.forEach(b => scene.remove(b.mesh));
+        enemyBullets = [];
         
         controls.getObject().position.set(0, 1.7, 15);
-        // 重置相机旋转
         camera.rotation.set(0, 0, 0); 
         
         player = { hp: 100, ammo: 30, maxAmmo: 30, kills: 0, isReloading: false };
         updateUI();
 
-        // 在掩体后面生成敌人
-        spawnEnemy(-6, -10);
-        spawnEnemy(6, -10);
-        spawnEnemy(0, -8);
-        spawnEnemy(10, 5);
-        spawnEnemy(-10, 5);
+        // 初始生成几个敌人，然后靠定时器刷
+        spawnTimer = 0;
+        spawnEnemy();
+        spawnEnemy();
+        spawnEnemy();
       }
 
       function updateUI() {
@@ -703,11 +706,9 @@
         updateUI();
         playShootSound();
 
-        // 准星扩散
         crosshair.classList.add('shoot');
         setTimeout(() => crosshair.classList.remove('shoot'), 100);
 
-        // 后坐力
         const originalPos = gunGroup.position.clone();
         const originalRot = gunGroup.rotation.clone();
         gunGroup.position.z += 0.1;
@@ -719,11 +720,9 @@
           gunGroup.rotation.copy(originalRot);
         }, 50);
 
-        // 枪口火光
         muzzleFlash.intensity = 2;
         setTimeout(() => muzzleFlash.intensity = 0, 50);
 
-        // 射线检测
         raycaster.setFromCamera(centerScreen, camera);
         const enemyMeshes = enemies.filter(e => e.alive).map(e => e.mesh);
         const intersects = raycaster.intersectObjects(enemyMeshes, true);
@@ -749,7 +748,6 @@
             hitEnemy.hp -= 20;
             spawnParticles(hitPoint);
 
-            // 受击闪白
             hitEnemy.mesh.traverse(child => {
               if (child.isMesh) {
                 child.material.color.setHex(0xffffff);
@@ -766,12 +764,10 @@
           }
         }
 
-        // 曳光弹特效
         const muzzlePos = new THREE.Vector3(0.2, -0.15, -0.8).applyMatrix4(camera.matrixWorld);
         createTracer(muzzlePos, hitPoint);
       }
 
-      // 碰撞检测
       function checkCollision(newPos) {
         const playerBox = new THREE.Box3(
           new THREE.Vector3(newPos.x - 0.4, 0, newPos.z - 0.4),
@@ -790,21 +786,29 @@
 
         const delta = Math.min(clock.getDelta(), 0.1);
 
-        // 移动逻辑
+        // 玩家移动
         if (document.pointerLockElement === document.body) {
           const speed = 6 * delta;
           const prevPos = controls.getObject().position.clone();
 
-          // 使用原生的移动方法，防止方向计算错误
           if (keys.KeyW) controls.moveForward(speed);
           if (keys.KeyS) controls.moveForward(-speed);
           if (keys.KeyA) controls.moveRight(-speed);
           if (keys.KeyD) controls.moveRight(speed);
 
-          // 如果发生碰撞，回退位置
           if (checkCollision(controls.getObject().position)) {
             controls.getObject().position.copy(prevPos);
           }
+        }
+
+        // --- 无限敌人生成逻辑 ---
+        spawnTimer += delta;
+        const aliveEnemies = enemies.filter(e => e.alive).length;
+        
+        // 如果场上活着的敌人少于上限，并且时间到了，就刷新
+        if (spawnTimer >= SPAWN_INTERVAL && aliveEnemies < MAX_ENEMIES) {
+          spawnEnemy();
+          spawnTimer = 0;
         }
 
         // 敌人 AI
@@ -814,30 +818,76 @@
         enemies.forEach(enemy => {
           if (!enemy.alive) return;
           
-          // 计算距离（忽略 Y 轴高度差）
           const dx = playerPos.x - enemy.mesh.position.x;
           const dz = playerPos.z - enemy.mesh.position.z;
           const dist = Math.sqrt(dx*dx + dz*dz);
           
-          if (dist > 2) {
-            // 追踪玩家
-            const dir = new THREE.Vector3(dx, 0, dz).normalize();
-            enemy.mesh.position.addScaledVector(dir, enemy.speed * delta);
-            // 面向玩家
+          if (dist < 15) {
             enemy.mesh.lookAt(playerPos.x, enemy.mesh.position.y, playerPos.z);
-          } else {
-            // 近战攻击
-            if (now - enemy.lastAttack > 1000) {
-              player.hp -= 15;
-              updateUI();
-              damageFlash.style.opacity = '1';
-              setTimeout(() => damageFlash.style.opacity = '0', 150);
-              enemy.lastAttack = now;
+            const dir = new THREE.Vector3(dx, 0, dz).normalize();
+            
+            if (dist > 10) {
+              enemy.mesh.position.addScaledVector(dir, enemy.speed * delta);
+            } else if (dist < 5) {
+              enemy.mesh.position.addScaledVector(dir, -enemy.speed * delta);
+            } else {
+              const strafeDir = new THREE.Vector3(-dir.z, 0, dir.x);
+              const strafeAmount = Math.sin(now * 0.002 + enemy.mesh.position.x) * 0.5;
+              enemy.mesh.position.addScaledVector(strafeDir, strafeAmount * enemy.speed * delta);
+            }
 
-              if (player.hp <= 0) gameOver();
+            // 远程开火
+            if (now - enemy.lastAttack > 1500 + Math.random() * 500) {
+              const bulletGeo = new THREE.SphereGeometry(0.1, 8, 8);
+              const bulletMat = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+              const bullet = new THREE.Mesh(bulletGeo, bulletMat);
+              
+              bullet.position.copy(enemy.mesh.position);
+              bullet.position.y += 1.2;
+              scene.add(bullet);
+              
+              const bulletDir = new THREE.Vector3(
+                playerPos.x - bullet.position.x,
+                playerPos.y - bullet.position.y,
+                playerPos.z - bullet.position.z
+              ).normalize();
+              
+              enemyBullets.push({
+                mesh: bullet,
+                dir: bulletDir,
+                speed: 12,
+                life: 3.0
+              });
+
+              enemy.lastAttack = now;
             }
           }
         });
+
+        // 更新敌方子弹
+        for (let i = enemyBullets.length - 1; i >= 0; i--) {
+          const b = enemyBullets[i];
+          b.mesh.position.addScaledVector(b.dir, b.speed * delta);
+          b.life -= delta;
+
+          if (b.mesh.position.distanceTo(playerPos) < 0.6) {
+            player.hp -= 10;
+            updateUI();
+            damageFlash.style.opacity = '1';
+            setTimeout(() => damageFlash.style.opacity = '0', 150);
+            
+            scene.remove(b.mesh);
+            enemyBullets.splice(i, 1);
+            
+            if (player.hp <= 0) gameOver();
+            continue;
+          }
+
+          if (b.life <= 0) {
+            scene.remove(b.mesh);
+            enemyBullets.splice(i, 1);
+          }
+        }
 
         // 更新特效
         for (let i = tracers.length - 1; i >= 0; i--) {
@@ -882,7 +932,7 @@
         overlay.style.display = 'flex';
         overlay.innerHTML = `
           <h2>YOU DIED</h2>
-          <p>Kills: ${player.kills}</p>
+          <p>Survived Kills: ${player.kills}</p>
           <button class="g3d-start-btn" id="g3dRestartBtn">Try Again</button>
         `;
         document.getElementById('g3dRestartBtn').onclick = startGame;
@@ -899,7 +949,6 @@
 
       // ================= 9. 事件监听 =================
       const onKeyDown = (e) => {
-        // 使用 e.code 兼容所有输入法
         if (e.code in keys) keys[e.code] = true;
         if (e.code === 'KeyR') reload();
       };
