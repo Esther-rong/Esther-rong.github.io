@@ -18,7 +18,7 @@
     button { font: inherit; cursor: pointer; border: none; background: none; }
     button:focus-visible, a:focus-visible { outline: 3px solid #fff; outline-offset: 4px; }
 
-    /* ===== 原有 404 主界面 ===== */
+    /* ===== 404 主界面 ===== */
     .page { height: 100vh; height: 100dvh; width: 100%; overflow: hidden; position: relative; display: flex; flex-direction: column; isolation: isolate; background: linear-gradient(to bottom, #FF8233, #FDAC55); }
     .background-art { position: absolute; inset: 0; pointer-events: none; opacity: .8; overflow: hidden; -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 95%); mask-image: linear-gradient(to bottom, black 40%, transparent 95%); }
     .background-center { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
@@ -52,6 +52,9 @@
     .bottom h1 { color: #fff; font-weight: 500; font-size: 24px; line-height: 1.4; margin-bottom: 16px; }
     .home-link { display: inline-flex; align-items: center; justify-content: center; gap: 9px; border-radius: 999px; padding: 16px 32px; background: var(--orange); color: #fff; font-size: 16px; font-weight: 600; transition: transform .25s, box-shadow .25s; }
     .home-link:hover { transform: scale(1.05); box-shadow: 0 12px 30px #9d411e40; }
+    
+    /* 显眼的新版本提示，确认你看到的是新代码 */
+    .version-tag { margin-top: 12px; color: #fff; font-size: 12px; opacity: 0.8; font-weight: 600; letter-spacing: 1px; }
 
     /* ===== 移动端菜单 ===== */
     .overlay { position: fixed; inset: 0; z-index: 50; visibility: hidden; pointer-events: none; transition: visibility 0s linear .5s; }
@@ -147,16 +150,16 @@
     .modal-card .contact-item p { font-size: 13px; color: #5b4b3e; line-height: 1.4; margin: 0; word-break: break-word; }
     .modal-card .contact-item p a { color: var(--orange); font-weight: 600; }
 
-    /* ===== 小游戏 CSS ===== */
-    .game-section { margin-top: 24px; text-align: center; background: #fff7f1; padding: 24px; border-radius: 20px; }
-    .game-section h3 { font-size: 18px; color: #2d1f15; margin-bottom: 8px; font-weight: 700; }
-    .game-section p { font-size: 14px; margin-bottom: 16px; color: #5b4b3e; }
+    /* ===== 井字棋游戏 CSS ===== */
+    .game-box { margin-top: 30px; padding: 24px; background: #fff7f1; border-radius: 20px; text-align: center; border: 1px solid #ffe6d8; }
+    .game-box h3 { font-size: 18px; color: #2d1f15; margin-bottom: 8px; font-weight: 800; }
+    .game-box p { font-size: 14px; margin-bottom: 16px; color: #5b4b3e; }
     .game-status { font-weight: 700; color: var(--orange); margin-bottom: 16px; font-size: 16px; height: 24px; }
-    .game-board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 220px; margin: 0 auto 20px; }
-    .game-cell { width: 100%; aspect-ratio: 1; background: #fff; border-radius: 12px; display: grid; place-items: center; font-size: 36px; cursor: pointer; transition: background .2s, transform .1s; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 1px solid #f0e4da; }
+    .game-board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 200px; margin: 0 auto 20px; }
+    .game-cell { width: 100%; aspect-ratio: 1; background: #fff; border-radius: 12px; display: grid; place-items: center; font-size: 32px; cursor: pointer; transition: background .2s, transform .1s; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border: 1px solid #f0e4da; user-select: none; }
     .game-cell:hover { background: #fffaf5; transform: scale(1.05); }
-    .game-cell.win { background: #ffe6d8; border-color: var(--orange); }
-    .game-reset { padding: 10px 24px; background: var(--orange); color: #fff; border-radius: 999px; font-weight: 600; font-size: 14px; transition: background .2s, transform .2s; }
+    .game-cell.win { background: #ffd4b8; border-color: var(--orange); }
+    .game-reset { padding: 8px 24px; background: var(--orange); color: #fff; border-radius: 999px; font-weight: 600; font-size: 14px; transition: background .2s, transform .2s; }
     .game-reset:hover { background: #d6551a; transform: scale(1.05); }
 
     @media (max-width: 1023px) { .desktop-links { display: none; } }
@@ -229,7 +232,12 @@
       </div>
       <video id="foxVideo" autoplay loop muted playsinline preload="auto"><source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260713_234424_b1332b69-2e69-4302-8dbc-40f86846afbd.mp4" type="video/mp4" /></video>
     </div></div>
-    <section class="bottom"><h1>Oops, something went wrong!</h1><a class="home-link" href="./"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 19-7-7 7-7M5 12h14"/></svg>Back to Home</a></section>
+    <section class="bottom">
+      <h1>Oops, something went wrong!</h1>
+      <a class="home-link" href="./"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 19-7-7 7-7M5 12h14"/></svg>Back to Home</a>
+      <!-- 这个提示用来帮你确认代码是否更新成功 -->
+      <div class="version-tag">🎮 v2.0: Game added to Projects!</div>
+    </section>
   </main>
 
   <!-- ===== 移动端菜单 ===== -->
@@ -320,9 +328,7 @@
             <div class="mini"><span class="tag">Art</span><h3>Sketchbook Portfolio</h3><p>A digital collection of my sketches and illustrations, organized by theme and year.</p></div>
           </div>
           
-          <div class="divider"></div>
-          
-          <div class="game-section">
+          <div class="game-box">
             <h3>⚽️ Soccer vs Horse 🐎</h3>
             <p>Play a quick mini-game of Tic-Tac-Toe!</p>
             <div class="game-status" id="gameStatus">Your turn: ⚽️</div>
@@ -391,7 +397,7 @@
         
         // 如果是 projects 页面，初始化游戏
         if (section === 'projects') {
-          setTimeout(initTicTacToe, 50);
+          setTimeout(initGame, 50);
         }
       }
 
@@ -421,92 +427,77 @@
       });
 
       /* ---------- 井字棋游戏逻辑 ---------- */
-      function initTicTacToe() {
-        const boardElement = document.getElementById('gameBoard');
-        const statusElement = document.getElementById('gameStatus');
+      function initGame() {
+        const board = document.getElementById('gameBoard');
+        const status = document.getElementById('gameStatus');
         const resetBtn = document.getElementById('gameReset');
-        if (!boardElement) return;
+        
+        if (!board) return;
 
         let state = ["", "", "", "", "", "", "", "", ""];
         let currentPlayer = "⚽️";
-        let isGameActive = true;
+        let isActive = true;
 
         const winPatterns = [
-          [0,1,2], [3,4,5], [6,7,8], // 行
-          [0,3,6], [1,4,7], [2,5,8], // 列
-          [0,4,8], [2,4,6]           // 对角线
+          [0,1,2], [3,4,5], [6,7,8], // rows
+          [0,3,6], [1,4,7], [2,5,8], // cols
+          [0,4,8], [2,4,6]           // diags
         ];
 
-        // 重置UI
-        const resetBoardUI = () => {
-          Array.from(boardElement.children).forEach(cell => {
-            cell.textContent = "";
-            cell.classList.remove('win');
-          });
-          statusElement.textContent = `Your turn: ⚽️`;
-        };
+        const handleCellClick = (e) => {
+          const cell = e.target;
+          if (!cell.classList.contains('game-cell')) return;
+          
+          const idx = parseInt(cell.getAttribute('data-index'));
+          if (state[idx] !== "" || !isActive) return;
 
-        const checkResult = () => {
-          let roundWon = false;
+          // 更新状态
+          state[idx] = currentPlayer;
+          cell.textContent = currentPlayer;
+
+          // 检查胜负
+          let won = false;
           let winPattern = null;
-
           for (let i = 0; i < winPatterns.length; i++) {
             const [a, b, c] = winPatterns[i];
             if (state[a] && state[a] === state[b] && state[a] === state[c]) {
-              roundWon = true;
+              won = true;
               winPattern = winPatterns[i];
               break;
             }
           }
 
-          if (roundWon) {
-            statusElement.textContent = `Player ${currentPlayer} wins! 🎉`;
-            isGameActive = false;
-            // 高亮获胜格子
-            winPattern.forEach(idx => {
-              boardElement.children[idx].classList.add('win');
-            });
+          if (won) {
+            status.textContent = `Player ${currentPlayer} wins! 🎉`;
+            isActive = false;
+            winPattern.forEach(i => board.children[i].classList.add('win'));
             return;
           }
 
           if (!state.includes("")) {
-            statusElement.textContent = `It's a draw! 🤝`;
-            isGameActive = false;
+            status.textContent = `It's a draw! 🤝`;
+            isActive = false;
             return;
           }
 
           // 切换玩家
           currentPlayer = currentPlayer === "⚽️" ? "🐎" : "⚽️";
-          statusElement.textContent = `Your turn: ${currentPlayer}`;
+          status.textContent = `Your turn: ${currentPlayer}`;
         };
 
-        const handleCellClick = (e) => {
-          const cell = e.target;
-          const index = parseInt(cell.getAttribute('data-index'));
-          if (state[index] !== "" || !isGameActive) return;
+        // 绑定事件（用 onclick 避免重复绑定）
+        board.onclick = handleCellClick;
 
-          state[index] = currentPlayer;
-          cell.textContent = currentPlayer;
-          checkResult();
-        };
-
-        const resetGame = () => {
+        resetBtn.onclick = () => {
           state = ["", "", "", "", "", "", "", "", ""];
           currentPlayer = "⚽️";
-          isGameActive = true;
-          resetBoardUI();
+          isActive = true;
+          status.textContent = `Your turn: ⚽️`;
+          Array.from(board.children).forEach(cell => {
+            cell.textContent = "";
+            cell.classList.remove('win');
+          });
         };
-
-        // 绑定事件（克隆节点以避免重复绑定）
-        const newBoard = boardElement.cloneNode(true);
-        boardElement.replaceWith(newBoard);
-        newBoard.addEventListener('click', (e) => {
-          if (e.target.classList.contains('game-cell')) handleCellClick(e);
-        });
-
-        const newResetBtn = resetBtn.cloneNode(true);
-        resetBtn.replaceWith(newResetBtn);
-        newResetBtn.addEventListener('click', resetGame);
       }
     })();
   </script>
