@@ -18,7 +18,7 @@
     button { font: inherit; cursor: pointer; border: none; background: none; }
     button:focus-visible, a:focus-visible { outline: 3px solid #fff; outline-offset: 4px; }
 
-    /* ===== 404 主界面 ===== */
+    /* ===== 原有 404 主界面 ===== */
     .page { height: 100vh; height: 100dvh; width: 100%; overflow: hidden; position: relative; display: flex; flex-direction: column; isolation: isolate; background: linear-gradient(to bottom, #FF8233, #FDAC55); }
     .background-art { position: absolute; inset: 0; pointer-events: none; opacity: .8; overflow: hidden; -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 95%); mask-image: linear-gradient(to bottom, black 40%, transparent 95%); }
     .background-center { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
@@ -53,7 +53,7 @@
     .home-link { display: inline-flex; align-items: center; justify-content: center; gap: 9px; border-radius: 999px; padding: 16px 32px; background: var(--orange); color: #fff; font-size: 16px; font-weight: 600; transition: transform .25s, box-shadow .25s; }
     .home-link:hover { transform: scale(1.05); box-shadow: 0 12px 30px #9d411e40; }
     
-    /* 显眼的新版本提示，确认你看到的是新代码 */
+    /* 显眼的新版本提示 */
     .version-tag { margin-top: 12px; color: #fff; font-size: 12px; opacity: 0.8; font-weight: 600; letter-spacing: 1px; }
 
     /* ===== 移动端菜单 ===== */
@@ -134,13 +134,6 @@
     .modal-card strong { color: #2d1f15; font-weight: 700; }
     .modal-card .divider { height: 1px; background: #f0e4da; margin: 24px 0; }
     
-    /* Mini Grid */
-    .modal-card .mini-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin: 16px 0 4px; }
-    .modal-card .mini { background: #fff7f1; border-radius: 16px; padding: 18px 16px; }
-    .modal-card .mini .tag { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--orange); background: #ffe6d8; padding: 3px 9px; border-radius: 999px; margin-bottom: 8px; }
-    .modal-card .mini h3 { font-size: 15px; color: #2d1f15; margin-bottom: 4px; font-weight: 700; }
-    .modal-card .mini p { font-size: 13px; line-height: 1.5; color: #5b4b3e; margin: 0; }
-    
     /* Contacts */
     .modal-card .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin: 16px 0 4px; }
     .modal-card .contact-item { background: #fff7f1; border-radius: 16px; padding: 20px 16px; text-align: center; }
@@ -151,15 +144,15 @@
     .modal-card .contact-item p a { color: var(--orange); font-weight: 600; }
 
     /* ===== 井字棋游戏 CSS ===== */
-    .game-box { margin-top: 30px; padding: 24px; background: #fff7f1; border-radius: 20px; text-align: center; border: 1px solid #ffe6d8; }
-    .game-box h3 { font-size: 18px; color: #2d1f15; margin-bottom: 8px; font-weight: 800; }
+    .game-box { margin-top: 10px; padding: 24px; background: #fff7f1; border-radius: 20px; text-align: center; border: 1px solid #ffe6d8; }
+    .game-box h3 { font-size: 20px; color: #2d1f15; margin-bottom: 8px; font-weight: 800; }
     .game-box p { font-size: 14px; margin-bottom: 16px; color: #5b4b3e; }
     .game-status { font-weight: 700; color: var(--orange); margin-bottom: 16px; font-size: 16px; height: 24px; }
-    .game-board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 200px; margin: 0 auto 20px; }
-    .game-cell { width: 100%; aspect-ratio: 1; background: #fff; border-radius: 12px; display: grid; place-items: center; font-size: 32px; cursor: pointer; transition: background .2s, transform .1s; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border: 1px solid #f0e4da; user-select: none; }
+    .game-board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 220px; margin: 0 auto 20px; }
+    .game-cell { width: 100%; aspect-ratio: 1; background: #fff; border-radius: 12px; display: grid; place-items: center; font-size: 36px; cursor: pointer; transition: background .2s, transform .1s; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border: 1px solid #f0e4da; user-select: none; }
     .game-cell:hover { background: #fffaf5; transform: scale(1.05); }
     .game-cell.win { background: #ffd4b8; border-color: var(--orange); }
-    .game-reset { padding: 8px 24px; background: var(--orange); color: #fff; border-radius: 999px; font-weight: 600; font-size: 14px; transition: background .2s, transform .2s; }
+    .game-reset { padding: 10px 24px; background: var(--orange); color: #fff; border-radius: 999px; font-weight: 600; font-size: 14px; transition: background .2s, transform .2s; }
     .game-reset:hover { background: #d6551a; transform: scale(1.05); }
 
     @media (max-width: 1023px) { .desktop-links { display: none; } }
@@ -235,8 +228,7 @@
     <section class="bottom">
       <h1>Oops, something went wrong!</h1>
       <a class="home-link" href="./"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 19-7-7 7-7M5 12h14"/></svg>Back to Home</a>
-      <!-- 这个提示用来帮你确认代码是否更新成功 -->
-      <div class="version-tag">🎮 v2.0: Game added to Projects!</div>
+      <div class="version-tag">🎮 v2.1: Only Game left in Projects!</div>
     </section>
   </main>
 
@@ -320,17 +312,10 @@
         projects: `
           <span class="eyebrow">Projects</span>
           <h1>Things I've built</h1>
-          <p>A few projects I've worked on at school and in my free time.</p>
-          <div class="mini-grid">
-            <div class="mini"><span class="tag">Science</span><h3>Science Fair Project</h3><p>A research project on water filtration using everyday materials, presented at the Basis science fair.</p></div>
-            <div class="mini"><span class="tag">Web</span><h3>Personal Website</h3><p>This site — designed and built from scratch to share my work, interests, and ways to get in touch.</p></div>
-            <div class="mini"><span class="tag">Code</span><h3>Coding Club App</h3><p>A small habit-tracking app built with my coding club using HTML, CSS, and JavaScript.</p></div>
-            <div class="mini"><span class="tag">Art</span><h3>Sketchbook Portfolio</h3><p>A digital collection of my sketches and illustrations, organized by theme and year.</p></div>
-          </div>
+          <p>A quick mini-game I built from scratch. Give it a try!</p>
           
           <div class="game-box">
             <h3>⚽️ Soccer vs Horse 🐎</h3>
-            <p>Play a quick mini-game of Tic-Tac-Toe!</p>
             <div class="game-status" id="gameStatus">Your turn: ⚽️</div>
             <div class="game-board" id="gameBoard">
               <div class="game-cell" data-index="0"></div>
