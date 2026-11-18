@@ -243,7 +243,7 @@
     <section class="bottom">
       <h1>Oops, something went wrong!</h1>
       <a class="home-link" href="./"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 19-7-7 7-7M5 12h14"/></svg>Back to Home</a>
-      <div class="version-tag">🎮 v8.2: Endless Survival Mode!</div>
+      <div class="version-tag">🎮 v8.3: Realistic Bullets & Wall Collision!</div>
     </section>
   </main>
 
@@ -447,7 +447,7 @@
     });
 
     /* ==========================================
-       CS:GO 风格 Three.js FPS 游戏核心 (无限模式)
+       CS:GO 风格 Three.js FPS 游戏核心 (真实子弹碰撞)
        ========================================== */
     function init3DGame() {
       const container = document.getElementById('g3dContainer');
@@ -546,28 +546,24 @@
       muzzleFlash.position.set(0, 0.05, -0.8);
       gunGroup.add(muzzleFlash);
 
-      // ================= 5. 敌人系统与生成 =================
+      // ================= 5. 敌人系统 =================
       let enemies = [];
       let enemyBullets = [];
       let spawnTimer = 0;
-      const MAX_ENEMIES = 8; // 同屏最大敌人数
-      const SPAWN_INTERVAL = 2.5; // 生成间隔（秒）
+      const MAX_ENEMIES = 8;
+      const SPAWN_INTERVAL = 2.5;
 
       function spawnEnemy() {
-        // 寻找一个安全的生成点（距离玩家远且不在墙内）
         let valid = false;
         let x, z;
         const playerPos = controls.getObject().position;
 
         while (!valid) {
-          // 随机在地图范围内生成
           x = (Math.random() - 0.5) * 26; 
           z = (Math.random() - 0.5) * 26 - 2; 
           
-          // 距离玩家必须大于 12 米
           const distToPlayer = Math.sqrt((x - playerPos.x)**2 + (z - playerPos.z)**2);
           if (distToPlayer > 12) {
-            // 检查是否与障碍物重叠
             const testBox = new THREE.Box3(new THREE.Vector3(x-1, 0, z-1), new THREE.Vector3(x+1, 2, z+1));
             let collides = false;
             for (let obs of obstacles) {
@@ -601,6 +597,7 @@
       }
 
       // ================= 6. 特效与音效 =================
+      // 玩家射击曳光弹 (Line)
       const tracers = [];
       function createTracer(start, end) {
         const material = new THREE.LineBasicMaterial({ color: 0xffff00, transparent: true, opacity: 0.8 });
@@ -611,22 +608,31 @@
         tracers.push({ line, life: 1.0 });
       }
 
+      // 粒子特效 (血雾/火花)
       const particles = [];
       const pGeo = new THREE.BufferGeometry();
-      const pCount = 100;
+      const pCount = 200;
       const pPositions = new Float32Array(pCount * 3);
       pGeo.setAttribute('position', new THREE.BufferAttribute(pPositions, 3));
-      const pMat = new THREE.PointsMaterial({ color: 0xff0000, size: 0.15 });
+      
+      // 使用顶点颜色实现不同颜色的粒子
+      const pColors = new Float32Array(pCount * 3);
+      pGeo.setAttribute('color', new THREE.BufferAttribute(pColors, 3));
+      
+      const pMat = new THREE.PointsMaterial({ size: 0.15, vertexColors: true });
       const particleSystem = new THREE.Points(pGeo, pMat);
       scene.add(particleSystem);
       let pData = [];
 
-      function spawnParticles(pos) {
-        for (let i = 0; i < 20; i++) {
+      function spawnParticles(pos, colorHex) {
+        const color = new THREE.Color(colorHex);
+        for (let i = 0; i < 15; i++) {
+          if (pData.length >= pCount) pData.shift(); // 防止溢出
           pData.push({
             pos: pos.clone(),
             vel: new THREE.Vector3((Math.random()-0.5)*4, (Math.random()-0.5)*4, (Math.random()-0.5)*4),
-            life: 1.0
+            life: 1.0,
+            color: color
           });
         }
       }
@@ -663,7 +669,6 @@
       const centerScreen = new THREE.Vector2(0, 0); 
 
       function resetGame() {
-        // 清理场上所有东西
         enemies.forEach(e => scene.remove(e.mesh));
         enemies = [];
         enemyBullets.forEach(b => scene.remove(b.mesh));
@@ -675,7 +680,6 @@
         player = { hp: 100, ammo: 30, maxAmmo: 30, kills: 0, isReloading: false };
         updateUI();
 
-        // 初始生成几个敌人，然后靠定时器刷
         spawnTimer = 0;
         spawnEnemy();
         spawnEnemy();
@@ -723,18 +727,31 @@
         muzzleFlash.intensity = 2;
         setTimeout(() => muzzleFlash.intensity = 0, 50);
 
+        // 玩家射击检测：同时检测敌人和墙壁
         raycaster.setFromCamera(centerScreen, camera);
         const enemyMeshes = enemies.filter(e => e.alive).map(e => e.mesh);
-        const intersects = raycaster.intersectObjects(enemyMeshes, true);
+        
+        // 获取所有墙壁和掩体的 mesh (用于阻挡子弹)
+        const obstacleMeshes = [];
+        scene.traverse(child => {
+          if (child.isMesh && (child.material === wallMat || child.material === crateMat)) {
+             obstacleMeshes.push(child);
+          }
+        });
+
+        // 合并检测对象
+        const allTargets = [...enemyMeshes, ...obstacleMeshes];
+        const intersects = raycaster.intersectObjects(allTargets, true);
 
         const rayStart = camera.position.clone();
         let hitPoint = rayStart.clone().add(raycaster.ray.direction.clone().multiplyScalar(50));
+        let hitEnemy = null;
 
         if (intersects.length > 0) {
           const hit = intersects[0];
           hitPoint = hit.point;
           
-          let hitEnemy = null;
+          // 检查打中的是不是敌人
           for (let e of enemies) {
             let parent = hit.object;
             while (parent) {
@@ -744,23 +761,29 @@
             if (hitEnemy) break;
           }
 
-          if (hitEnemy) {
-            hitEnemy.hp -= 20;
-            spawnParticles(hitPoint);
+          // 如果没打中敌人，说明打中了墙壁，产生火花
+          if (!hitEnemy) {
+            spawnParticles(hitPoint, 0xffaa00); // 橙色火花
+          }
+        }
 
-            hitEnemy.mesh.traverse(child => {
-              if (child.isMesh) {
-                child.material.color.setHex(0xffffff);
-                setTimeout(() => child.material.color.setHex(0x111111), 50);
-              }
-            });
+        // 处理敌人受击
+        if (hitEnemy) {
+          hitEnemy.hp -= 20;
+          spawnParticles(hitPoint, 0xff0000); // 红色血雾
 
-            if (hitEnemy.hp <= 0) {
-              hitEnemy.alive = false;
-              scene.remove(hitEnemy.mesh);
-              player.kills++;
-              updateUI();
+          hitEnemy.mesh.traverse(child => {
+            if (child.isMesh) {
+              child.material.color.setHex(0xffffff);
+              setTimeout(() => child.material.color.setHex(0x111111), 50);
             }
+          });
+
+          if (hitEnemy.hp <= 0) {
+            hitEnemy.alive = false;
+            scene.remove(hitEnemy.mesh);
+            player.kills++;
+            updateUI();
           }
         }
 
@@ -801,17 +824,15 @@
           }
         }
 
-        // --- 无限敌人生成逻辑 ---
+        // --- 无限敌人生成 ---
         spawnTimer += delta;
         const aliveEnemies = enemies.filter(e => e.alive).length;
-        
-        // 如果场上活着的敌人少于上限，并且时间到了，就刷新
         if (spawnTimer >= SPAWN_INTERVAL && aliveEnemies < MAX_ENEMIES) {
           spawnEnemy();
           spawnTimer = 0;
         }
 
-        // 敌人 AI
+        // --- 敌人 AI ---
         const playerPos = controls.getObject().position;
         const now = Date.now();
 
@@ -822,11 +843,11 @@
           const dz = playerPos.z - enemy.mesh.position.z;
           const dist = Math.sqrt(dx*dx + dz*dz);
           
-          if (dist < 15) {
+          if (dist < 20) { // 视野范围
             enemy.mesh.lookAt(playerPos.x, enemy.mesh.position.y, playerPos.z);
             const dir = new THREE.Vector3(dx, 0, dz).normalize();
             
-            if (dist > 10) {
+            if (dist > 12) {
               enemy.mesh.position.addScaledVector(dir, enemy.speed * delta);
             } else if (dist < 5) {
               enemy.mesh.position.addScaledVector(dir, -enemy.speed * delta);
@@ -838,13 +859,15 @@
 
             // 远程开火
             if (now - enemy.lastAttack > 1500 + Math.random() * 500) {
-              const bulletGeo = new THREE.SphereGeometry(0.1, 8, 8);
-              const bulletMat = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+              // 真实子弹外观 (圆柱体)
+              const bulletGeo = new THREE.CylinderGeometry(0.02, 0.02, 0.4, 8);
+              // 旋转圆柱体使其平躺，指向 Z 轴正向
+              bulletGeo.rotateX(Math.PI / 2); 
+              const bulletMat = new THREE.MeshBasicMaterial({ color: 0xffff00 }); // 黄色曳光弹
               const bullet = new THREE.Mesh(bulletGeo, bulletMat);
               
               bullet.position.copy(enemy.mesh.position);
               bullet.position.y += 1.2;
-              scene.add(bullet);
               
               const bulletDir = new THREE.Vector3(
                 playerPos.x - bullet.position.x,
@@ -852,11 +875,17 @@
                 playerPos.z - bullet.position.z
               ).normalize();
               
+              // 让子弹模型朝向飞行方向
+              bullet.lookAt(bullet.position.clone().add(bulletDir));
+              
+              scene.add(bullet);
+              
               enemyBullets.push({
                 mesh: bullet,
                 dir: bulletDir,
-                speed: 12,
-                life: 3.0
+                speed: 18, // 稍微加快子弹速度
+                life: 3.0,
+                prevPos: bullet.position.clone() // 记录上一帧位置，用于射线检测防穿模
               });
 
               enemy.lastAttack = now;
@@ -864,12 +893,37 @@
           }
         });
 
-        // 更新敌方子弹
+        // --- 敌方子弹物理检测 (防穿墙、防反弹) ---
         for (let i = enemyBullets.length - 1; i >= 0; i--) {
           const b = enemyBullets[i];
+          
+          // 1. 更新位置
+          const oldPos = b.mesh.position.clone();
           b.mesh.position.addScaledVector(b.dir, b.speed * delta);
           b.life -= delta;
 
+          // 2. 墙壁碰撞检测 (用射线从上一帧位置射向当前位置，防止高速穿模)
+          const moveDist = oldPos.distanceTo(b.mesh.position);
+          const ray = new THREE.Raycaster(oldPos, b.dir.clone().normalize(), 0, moveDist);
+          
+          const obstacleMeshes = [];
+          scene.traverse(child => {
+            if (child.isMesh && (child.material === wallMat || child.material === crateMat)) {
+               obstacleMeshes.push(child);
+            }
+          });
+          
+          const wallHits = ray.intersectObjects(obstacleMeshes, false);
+          if (wallHits.length > 0) {
+            // 打中墙壁，产生火花，销毁子弹
+            spawnParticles(wallHits[0].point, 0xffaa00);
+            scene.remove(b.mesh);
+            b.mesh.geometry.dispose();
+            enemyBullets.splice(i, 1);
+            continue;
+          }
+
+          // 3. 玩家碰撞检测
           if (b.mesh.position.distanceTo(playerPos) < 0.6) {
             player.hp -= 10;
             updateUI();
@@ -877,22 +931,26 @@
             setTimeout(() => damageFlash.style.opacity = '0', 150);
             
             scene.remove(b.mesh);
+            b.mesh.geometry.dispose();
             enemyBullets.splice(i, 1);
             
             if (player.hp <= 0) gameOver();
             continue;
           }
 
+          // 4. 超时销毁
           if (b.life <= 0) {
             scene.remove(b.mesh);
+            b.mesh.geometry.dispose();
             enemyBullets.splice(i, 1);
           }
         }
 
-        // 更新特效
+        // --- 更新特效 ---
+        // 曳光弹
         for (let i = tracers.length - 1; i >= 0; i--) {
           const t = tracers[i];
-          t.life -= delta * 10;
+          t.life -= delta * 15; // 消失得更快
           t.line.material.opacity = t.life;
           if (t.life <= 0) {
             scene.remove(t.line);
@@ -902,25 +960,33 @@
           }
         }
 
+        // 粒子
         for (let i = pData.length - 1; i >= 0; i--) {
           const p = pData[i];
           p.pos.add(p.vel.clone().multiplyScalar(delta));
-          p.vel.y -= 9.8 * delta;
-          p.life -= delta * 2;
+          p.vel.y -= 9.8 * delta; // 重力
+          p.life -= delta * 2.5;
           if (p.life <= 0) pData.splice(i, 1);
         }
         
         const positions = particleSystem.geometry.attributes.position.array;
+        const colors = particleSystem.geometry.attributes.color.array;
+        
         for (let i = 0; i < pCount; i++) {
           if (i < pData.length) {
             positions[i*3] = pData[i].pos.x;
             positions[i*3+1] = pData[i].pos.y;
             positions[i*3+2] = pData[i].pos.z;
+            
+            colors[i*3] = pData[i].color.r;
+            colors[i*3+1] = pData[i].color.g;
+            colors[i*3+2] = pData[i].color.b;
           } else {
-            positions[i*3+1] = -100;
+            positions[i*3+1] = -100; // 隐藏
           }
         }
         particleSystem.geometry.attributes.position.needsUpdate = true;
+        particleSystem.geometry.attributes.color.needsUpdate = true;
 
         renderer.render(scene, camera);
       }
