@@ -155,11 +155,11 @@
     .g3d-kills { color: #e84118; font-size: 20px; }
     
     /* 动态准星 */
-    .g3d-crosshair { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 30px; height: 30px; pointer-events: none; z-index: 5; transition: transform 0.05s; }
-    .g3d-crosshair::before, .g3d-crosshair::after { content: ''; position: absolute; background: rgba(255,255,255,0.8); box-shadow: 0 0 2px #000; }
-    .g3d-crosshair::before { top: 14px; left: 0; width: 30px; height: 2px; }
-    .g3d-crosshair::after { top: 0; left: 14px; width: 2px; height: 30px; }
-    .g3d-crosshair.shoot { transform: translate(-50%, -50%) scale(1.5); } /* 开火扩散 */
+    .g3d-crosshair { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 20px; height: 20px; pointer-events: none; z-index: 5; transition: transform 0.05s; }
+    .g3d-crosshair::before, .g3d-crosshair::after { content: ''; position: absolute; background: rgba(0,255,0,0.8); box-shadow: 0 0 2px #000; }
+    .g3d-crosshair::before { top: 9px; left: 0; width: 20px; height: 2px; }
+    .g3d-crosshair::after { top: 0; left: 9px; width: 2px; height: 20px; }
+    .g3d-crosshair.shoot { transform: translate(-50%, -50%) scale(1.5); }
     
     /* 屏幕受击闪红 */
     .g3d-damage { position: absolute; inset: 0; background: radial-gradient(circle, transparent 40%, rgba(255,0,0,0.6) 100%); opacity: 0; pointer-events: none; transition: opacity 0.1s; z-index: 4; }
@@ -169,7 +169,6 @@
     .g3d-overlay p { font-size: 15px; margin-bottom: 20px; color: #ccc; font-family: sans-serif; line-height: 1.6; }
     .g3d-start-btn { background: #e84118; color: #fff; padding: 12px 30px; border-radius: 8px; font-size: 18px; font-weight: bold; pointer-events: auto; cursor: pointer; border: 2px solid #fff; transition: all 0.2s; }
     .g3d-start-btn:hover { background: #c0392b; transform: scale(1.05); }
-    .g3d-loading { font-size: 20px; color: #fbc531; margin-bottom: 20px; font-family: sans-serif; }
 
     @media (max-width: 1023px) { .desktop-links { display: none; } }
     @media (max-width: 767px) {
@@ -244,7 +243,7 @@
     <section class="bottom">
       <h1>Oops, something went wrong!</h1>
       <a class="home-link" href="./"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 19-7-7 7-7M5 12h14"/></svg>Back to Home</a>
-      <div class="version-tag">🎮 v7.0: Realistic Three.js FPS!</div>
+      <div class="version-tag">🎮 v8.0: CS:GO Style FPS (Fixed)</div>
     </section>
   </main>
 
@@ -285,7 +284,6 @@
   <script type="module">
     import * as THREE from 'three';
     import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
-    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
     /* ---------- 视频与背景缩放 ---------- */
     const foxVideo = document.getElementById('foxVideo');
@@ -340,8 +338,8 @@
       `,
       projects: `
         <span class="eyebrow">Projects</span>
-        <h1>Realistic 3D Shooter</h1>
-        <p>A fully playable 3D First-Person Shooter powered by Three.js with advanced lighting, textures, and AI.</p>
+        <h1>CS:GO Style 3D Shooter</h1>
+        <p>A fully playable 3D First-Person Shooter built with Three.js. Move, aim, and eliminate the targets!</p>
         
         <div class="game-container-3d" id="g3dContainer">
           <div class="g3d-ui">
@@ -350,7 +348,7 @@
               <div class="g3d-hp">HP: <span id="g3dHp">100</span></div>
             </div>
             <div class="g3d-bottom" style="display:flex; justify-content:space-between;">
-              <div style="color:#fff; font-size:14px; text-shadow:1px 1px 1px #000;">WASD: Move | Left Click: Shoot | ESC: Pause</div>
+              <div style="color:#fff; font-size:14px; text-shadow:1px 1px 1px #000;">WASD: Move | Left Click: Shoot | R: Reload | ESC: Pause</div>
               <div class="g3d-ammo">Ammo: <span id="g3dAmmo">30</span>/30</div>
             </div>
           </div>
@@ -359,7 +357,7 @@
 
           <div class="g3d-overlay" id="g3dOverlay">
             <h2>THREE.JS FPS</h2>
-            <p>Click Start to lock your mouse.<br>WASD to move, Left Click to shoot.</p>
+            <p>Click Start to lock your mouse.<br>WASD to move, Left Click to shoot.<br>Eliminate all enemies!</p>
             <button class="g3d-start-btn" id="g3dStartBtn">Start Game</button>
           </div>
         </div>
@@ -449,7 +447,7 @@
     });
 
     /* ==========================================
-       高真实感 Three.js FPS 游戏核心
+       CS:GO 风格 Three.js FPS 游戏核心
        ========================================== */
     function init3DGame() {
       const container = document.getElementById('g3dContainer');
@@ -465,216 +463,143 @@
 
       // ================= 1. 场景与渲染器 =================
       const scene = new THREE.Scene();
-      // 深色雾效，增加真实感
-      scene.fog = new THREE.FogExp2(0x111111, 0.05);
-      
-      // 动态天空渐变背景
-      const canvas = document.createElement('canvas');
-      canvas.width = 2; canvas.height = 256;
-      const ctx = canvas.getContext('2d');
-      const gradient = ctx.createLinearGradient(0, 0, 0, 256);
-      gradient.addColorStop(0, '#1a1a2e'); // 夜空
-      gradient.addColorStop(1, '#4a4a4a'); // 地平线
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, 2, 256);
-      const skyTexture = new THREE.CanvasTexture(canvas);
-      skyTexture.colorSpace = THREE.SRGBColorSpace;
-      scene.background = skyTexture;
+      // 沙漠风格天空与雾气
+      scene.background = new THREE.Color(0xd4c4a8); 
+      scene.fog = new THREE.Fog(0xd4c4a8, 10, 60);
 
       const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 200);
       
-      const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
+      const renderer = new THREE.WebGLRenderer({ antialias: true });
       renderer.setSize(container.clientWidth, container.clientHeight);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-      // 开启真实阴影与色调映射
       renderer.shadowMap.enabled = true;
       renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-      renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 1.0;
       container.appendChild(renderer.domElement);
 
-      // ================= 2. 程序化纹理生成 =================
-      // 砖墙纹理
-      const brickCanvas = document.createElement('canvas');
-      brickCanvas.width = 512; brickCanvas.height = 512;
-      const bCtx = brickCanvas.getContext('2d');
-      bCtx.fillStyle = '#2c2c2c'; bCtx.fillRect(0, 0, 512, 512);
-      bCtx.fillStyle = '#4a4a4a';
-      for(let y=0; y<512; y+=64) {
-        const offset = (y/64)%2 === 0 ? 0 : 64;
-        for(let x=-64; x<512; x+=128) {
-          bCtx.fillRect(x+offset+2, y+2, 124, 60);
-        }
-      }
-      const brickTexture = new THREE.CanvasTexture(brickCanvas);
-      brickTexture.wrapS = THREE.RepeatWrapping;
-      brickTexture.wrapT = THREE.RepeatWrapping;
-      brickTexture.repeat.set(2, 1);
-
-      // 水泥地纹理
-      const floorCanvas = document.createElement('canvas');
-      floorCanvas.width = 512; floorCanvas.height = 512;
-      const fCtx = floorCanvas.getContext('2d');
-      fCtx.fillStyle = '#1e1e1e'; fCtx.fillRect(0,0,512,512);
-      for(let i=0; i<5000; i++) {
-        fCtx.fillStyle = `rgba(255,255,255,${Math.random()*0.05})`;
-        fCtx.fillRect(Math.random()*512, Math.random()*512, 2, 2);
-      }
-      const floorTexture = new THREE.CanvasTexture(floorCanvas);
-      floorTexture.wrapS = THREE.RepeatWrapping;
-      floorTexture.wrapT = THREE.RepeatWrapping;
-      floorTexture.repeat.set(10, 10);
-
-      // ================= 3. 光照系统 =================
-      const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
+      // ================= 2. 光照系统 =================
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
       scene.add(ambientLight);
 
-      const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 0.4);
-      scene.add(hemiLight);
-
-      // 主聚光灯（模拟月光/探照灯）
-      const dirLight = new THREE.DirectionalLight(0xffeedd, 1.5);
-      dirLight.position.set(20, 30, 10);
+      // 强烈的沙漠阳光
+      const dirLight = new THREE.DirectionalLight(0xffeedd, 1.2);
+      dirLight.position.set(20, 40, 10);
       dirLight.castShadow = true;
       dirLight.shadow.mapSize.width = 2048;
       dirLight.shadow.mapSize.height = 2048;
-      dirLight.shadow.camera.top = 30;
-      dirLight.shadow.camera.bottom = -30;
-      dirLight.shadow.camera.left = -30;
-      dirLight.shadow.camera.right = 30;
+      dirLight.shadow.camera.top = 40;
+      dirLight.shadow.camera.bottom = -40;
+      dirLight.shadow.camera.left = -40;
+      dirLight.shadow.camera.right = 40;
       scene.add(dirLight);
 
-      // ================= 4. 环境与碰撞 =================
+      // ================= 3. 控制器与地图 =================
       const controls = new PointerLockControls(camera, document.body);
       scene.add(controls.getObject());
-      controls.getObject().position.set(0, 1.7, 0); // 人眼高度
+      // 出生点设置在一个开阔地带
+      controls.getObject().position.set(0, 1.7, 15); 
 
-      // 地面
+      // 地面 (沙地)
       const floorGeo = new THREE.PlaneGeometry(100, 100);
-      const floorMat = new THREE.MeshStandardMaterial({ 
-        map: floorTexture, 
-        roughness: 0.9,
-        metalness: 0.1
-      });
+      const floorMat = new THREE.MeshStandardMaterial({ color: 0xc2b280, roughness: 1.0 });
       const floor = new THREE.Mesh(floorGeo, floorMat);
       floor.rotation.x = -Math.PI / 2;
       floor.receiveShadow = true;
       scene.add(floor);
 
-      // 墙壁
+      // 墙壁和木箱
       const obstacles = [];
-      const wallMat = new THREE.MeshStandardMaterial({ 
-        map: brickTexture, 
-        roughness: 0.8,
-        color: 0xaaaaaa
-      });
+      const wallMat = new THREE.MeshStandardMaterial({ color: 0x8b7355, roughness: 0.9 }); // 土墙
+      const crateMat = new THREE.MeshStandardMaterial({ color: 0xa0522d, roughness: 0.8 }); // 木箱
 
-      function createWall(x, z, width, depth, height = 6) {
-        const wallGeo = new THREE.BoxGeometry(width, height, depth);
-        const wall = new THREE.Mesh(wallGeo, wallMat);
-        wall.position.set(x, height/2, z);
-        wall.castShadow = true;
-        wall.receiveShadow = true;
-        scene.add(wall);
-        obstacles.push(new THREE.Box3().setFromObject(wall));
+      function createBox(x, z, w, h, d, isCrate) {
+        const geo = new THREE.BoxGeometry(w, h, d);
+        const box = new THREE.Mesh(geo, isCrate ? crateMat : wallMat);
+        box.position.set(x, h/2, z);
+        box.castShadow = true;
+        box.receiveShadow = true;
+        scene.add(box);
+        obstacles.push(new THREE.Box3().setFromObject(box));
       }
 
-      // 生成一个复杂的掩体迷宫
-      createWall(0, -10, 20, 1); // 北墙
-      createWall(0, 10, 20, 1);  // 南墙
-      createWall(-10, 0, 1, 20); // 西墙
-      createWall(10, 0, 1, 20);  // 东墙
-      
-      // 内部掩体
-      createWall(-4, -4, 4, 2);
-      createWall(4, 4, 2, 4);
-      createWall(0, 0, 2, 2);
-      createWall(-5, 5, 3, 1);
-      createWall(5, -5, 1, 3);
+      // 构建类似 Dust2 的掩体布局
+      createBox(0, -15, 30, 4, 2, false); // 北墙
+      createBox(-15, 0, 2, 4, 30, false); // 西墙
+      createBox(15, 0, 2, 4, 30, false);  // 东墙
+      createBox(0, 20, 30, 4, 2, false);  // 南墙
 
-      // ================= 5. 武器系统 =================
+      // 木箱掩体
+      createBox(-6, 5, 4, 2, 4, true);
+      createBox(6, -5, 4, 2, 4, true);
+      createBox(0, 0, 6, 2, 6, true);
+      createBox(-8, -8, 2, 2, 6, true);
+      createBox(8, 8, 6, 2, 2, true);
+
+      // ================= 4. 武器模型 (AK风格) =================
       const gunGroup = new THREE.Group();
-      const gunMat = new THREE.MeshStandardMaterial({ color: 0x222222, roughness: 0.3, metalness: 0.8 });
+      const gunMat = new THREE.MeshStandardMaterial({ color: 0x222222, roughness: 0.5, metalness: 0.8 });
+      const woodMat = new THREE.MeshStandardMaterial({ color: 0x5c3a21, roughness: 0.8 }); // 木质护木
       
-      // 拼装一把现代步枪
-      const body = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.15, 0.6), gunMat); body.position.set(0, 0, -0.2);
-      const barrel = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.4), gunMat); barrel.rotation.x = Math.PI/2; barrel.position.set(0, 0.03, -0.6);
-      const mag = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.2, 0.15), gunMat); mag.position.set(0, -0.15, -0.2); mag.rotation.x = 0.3;
-      const sight = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.05, 0.1), gunMat); sight.position.set(0, 0.1, -0.3);
-      
-      gunGroup.add(body, barrel, mag, sight);
-      
-      // 固定在相机右侧
-      gunGroup.position.set(0.25, -0.25, -0.5);
-      gunGroup.rotation.y = -0.1;
+      const barrel = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.5), gunMat); barrel.rotation.x = Math.PI/2; barrel.position.set(0, 0.05, -0.5);
+      const body = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.12, 0.4), gunMat); body.position.set(0, 0, -0.2);
+      const woodStock = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.1, 0.3), woodMat); woodStock.position.set(0, -0.02, 0.1);
+      const mag = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.2, 0.1), gunMat); mag.position.set(0, -0.15, -0.15); mag.rotation.x = 0.4;
+      const sight = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.05, 0.1), gunMat); sight.position.set(0, 0.08, -0.3);
+
+      gunGroup.add(barrel, body, woodStock, mag, sight);
+      gunGroup.position.set(0.2, -0.2, -0.5);
       camera.add(gunGroup);
 
-      // 枪口闪光灯
+      // 枪口火光
       const muzzleFlash = new THREE.PointLight(0xffaa00, 0, 5);
-      muzzleFlash.position.set(0, 0.03, -0.8);
+      muzzleFlash.position.set(0, 0.05, -0.8);
       gunGroup.add(muzzleFlash);
 
-      // ================= 6. 敌人 AI =================
+      // ================= 5. 敌人系统 (纯代码生成，保证显示) =================
       let enemies = [];
-      let enemyMixers = [];
-      const loader = new GLTFLoader();
       
-      // 加载官方骨骼士兵模型
-      function loadEnemyModel(onLoad) {
-        // 使用 three.js 官方示例库的士兵模型
-        loader.load('https://threejs.org/examples/models/gltf/Soldier.glb', (gltf) => {
-          const model = gltf.scene;
-          model.scale.set(0.01, 0.01, 0.01); // 调整大小
-          // 开启阴影
-          model.traverse((child) => {
-            if (child.isMesh) {
-              child.castShadow = true;
-              child.receiveShadow = true;
-            }
-          });
-          const mixer = new THREE.AnimationMixer(model);
-          // 播放走路动画 (通常是动画索引 0 或 1)
-          if (gltf.animations.length > 0) {
-            const action = mixer.clipAction(gltf.animations[0]);
-            action.play();
-          }
-          onLoad(model, mixer);
-        }, undefined, (error) => {
-          console.warn("模型加载失败，使用替代品", error);
-          // 失败则创建一个发光的红色机器人
-          const fallbackGroup = new THREE.Group();
-          const fMat = new THREE.MeshStandardMaterial({ color: 0xff0000, emissive: 0x440000 });
-          const fBody = new THREE.Mesh(new THREE.CapsuleGeometry(0.3, 1, 4, 8), fMat);
-          fBody.position.y = 0.8;
-          fBody.castShadow = true;
-          fallbackGroup.add(fBody);
-          onLoad(fallbackGroup, null);
-        });
-      }
-
       function spawnEnemy(x, z) {
-        loadEnemyModel((model, mixer) => {
-          model.position.set(x, 0, z);
-          scene.add(model);
-          
-          if (mixer) enemyMixers.push(mixer);
+        const enemyGroup = new THREE.Group();
+        
+        // 黑色衣服的恐怖分子
+        const bodyMat = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.8 });
+        const skinMat = new THREE.MeshStandardMaterial({ color: 0xffcc99, roughness: 0.6 });
+        
+        // 躯干
+        const torso = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.8, 0.3), bodyMat);
+        torso.position.y = 1.0;
+        torso.castShadow = true;
+        // 头
+        const head = new THREE.Mesh(new THREE.SphereGeometry(0.2, 16, 16), skinMat);
+        head.position.y = 1.6;
+        head.castShadow = true;
+        // 腿
+        const legL = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.6, 0.2), bodyMat);
+        legL.position.set(-0.15, 0.3, 0);
+        const legR = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.6, 0.2), bodyMat);
+        legR.position.set(0.15, 0.3, 0);
+        // 手持武器 (简化)
+        const gun = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.1, 0.5), gunMat);
+        gun.position.set(0.25, 1.0, -0.3);
 
-          enemies.push({
-            mesh: model,
-            mixer: mixer,
-            hp: 40,
-            alive: true,
-            lastAttack: 0,
-            speed: 1.2 + Math.random() * 1.5
-          });
+        enemyGroup.add(torso, head, legL, legR, gun);
+        
+        enemyGroup.position.set(x, 0, z);
+        scene.add(enemyGroup);
+        
+        enemies.push({
+          mesh: enemyGroup,
+          hp: 40,
+          alive: true,
+          lastAttack: 0,
+          speed: 2.0 + Math.random() * 1.5
         });
       }
 
-      // ================= 7. 特效系统 =================
-      // 曳光弹（子弹轨迹）
+      // ================= 6. 特效与音效 =================
+      // 子弹曳光
       const tracers = [];
       function createTracer(start, end) {
-        const material = new THREE.LineBasicMaterial({ color: 0xffdd00, transparent: true, opacity: 0.8 });
+        const material = new THREE.LineBasicMaterial({ color: 0xffff00, transparent: true, opacity: 0.8 });
         const points = [start.clone(), end.clone()];
         const geometry = new THREE.BufferGeometry().setFromPoints(points);
         const line = new THREE.Line(geometry, material);
@@ -682,80 +607,55 @@
         tracers.push({ line, life: 1.0 });
       }
 
-      // 命中血雾粒子
+      // 粒子爆炸效果
       const particles = [];
-      const particleGeo = new THREE.BufferGeometry();
-      const particleCount = 50;
-      const particlePositions = new Float32Array(particleCount * 3);
-      particleGeo.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
-      const particleMat = new THREE.PointsMaterial({ color: 0xff0000, size: 0.1 });
-      const particleSystem = new THREE.Points(particleGeo, particleMat);
+      const pGeo = new THREE.BufferGeometry();
+      const pCount = 100;
+      const pPositions = new Float32Array(pCount * 3);
+      pGeo.setAttribute('position', new THREE.BufferAttribute(pPositions, 3));
+      const pMat = new THREE.PointsMaterial({ color: 0xff0000, size: 0.15 });
+      const particleSystem = new THREE.Points(pGeo, pMat);
       scene.add(particleSystem);
-      let particleData = [];
+      let pData = [];
 
-      function spawnBlood(pos) {
-        for (let i = 0; i < particleCount; i++) {
-          particleData.push({
+      function spawnParticles(pos) {
+        for (let i = 0; i < 20; i++) {
+          pData.push({
             pos: pos.clone(),
-            vel: new THREE.Vector3((Math.random()-0.5)*5, (Math.random()-0.5)*5, (Math.random()-0.5)*5),
+            vel: new THREE.Vector3((Math.random()-0.5)*4, (Math.random()-0.5)*4, (Math.random()-0.5)*4),
             life: 1.0
           });
         }
       }
 
-      // ================= 8. 音效合成 (Web Audio API) =================
+      // 音效合成
       let audioCtx;
       function playShootSound() {
         if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         if (audioCtx.state === 'suspended') audioCtx.resume();
-        
-        // 噪声缓冲模拟枪声
-        const bufferSize = audioCtx.sampleRate * 0.2; 
+        const bufferSize = audioCtx.sampleRate * 0.1; 
         const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
         const data = buffer.getChannelData(0);
-        for (let i = 0; i < bufferSize; i++) {
-          data[i] = Math.random() * 2 - 1;
-        }
-        
+        for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
         const noise = audioCtx.createBufferSource();
         noise.buffer = buffer;
-        
         const filter = audioCtx.createBiquadFilter();
         filter.type = 'lowpass';
-        filter.frequency.setValueAtTime(1000, audioCtx.currentTime);
+        filter.frequency.setValueAtTime(800, audioCtx.currentTime);
         filter.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.1);
-        
         const gain = audioCtx.createGain();
         gain.gain.setValueAtTime(1, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
-        
-        noise.connect(filter);
-        filter.connect(gain);
-        gain.connect(audioCtx.destination);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+        noise.connect(filter); filter.connect(gain); gain.connect(audioCtx.destination);
         noise.start();
       }
 
-      function playHitSound() {
-        if (!audioCtx) return;
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = 'square';
-        osc.frequency.setValueAtTime(200, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.1);
-        gain.gain.setValueAtTime(0.5, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.1);
-      }
-
-      // ================= 9. 游戏逻辑 =================
+      // ================= 7. 游戏逻辑 =================
       let isRunning = false;
       let animationId;
       let player = { hp: 100, ammo: 30, maxAmmo: 30, kills: 0, isReloading: false };
       let clock = new THREE.Clock();
-      let keys = { w: false, a: false, s: false, d: false };
+      let keys = { KeyW: false, KeyA: false, KeyS: false, KeyD: false };
       
       const raycaster = new THREE.Raycaster();
       const centerScreen = new THREE.Vector2(0, 0); 
@@ -763,18 +663,20 @@
       function resetGame() {
         enemies.forEach(e => scene.remove(e.mesh));
         enemies = [];
-        enemyMixers = [];
         
-        controls.getObject().position.set(0, 1.7, 0);
+        controls.getObject().position.set(0, 1.7, 15);
+        // 重置相机旋转
+        camera.rotation.set(0, 0, 0); 
+        
         player = { hp: 100, ammo: 30, maxAmmo: 30, kills: 0, isReloading: false };
         updateUI();
 
-        // 生成敌人
-        spawnEnemy(-8, -8);
-        spawnEnemy(8, -8);
-        spawnEnemy(-8, 8);
-        spawnEnemy(8, 8);
-        spawnEnemy(0, -5);
+        // 在掩体后面生成敌人
+        spawnEnemy(-6, -10);
+        spawnEnemy(6, -10);
+        spawnEnemy(0, -8);
+        spawnEnemy(10, 5);
+        spawnEnemy(-10, 5);
       }
 
       function updateUI() {
@@ -790,7 +692,7 @@
           player.ammo = player.maxAmmo;
           player.isReloading = false;
           updateUI();
-        }, 1200);
+        }, 1000);
       }
 
       function shoot() {
@@ -801,45 +703,40 @@
         updateUI();
         playShootSound();
 
-        // 1. 准星扩散
+        // 准星扩散
         crosshair.classList.add('shoot');
         setTimeout(() => crosshair.classList.remove('shoot'), 100);
 
-        // 2. 后坐力动画 (枪械后移+上跳，相机微上抬)
+        // 后坐力
         const originalPos = gunGroup.position.clone();
         const originalRot = gunGroup.rotation.clone();
         gunGroup.position.z += 0.1;
         gunGroup.rotation.x += 0.1;
-        camera.rotation.x += 0.02; // 镜头后坐力
+        camera.rotation.x += 0.015;
 
         setTimeout(() => {
           gunGroup.position.copy(originalPos);
           gunGroup.rotation.copy(originalRot);
         }, 50);
 
-        // 3. 枪口火焰
+        // 枪口火光
         muzzleFlash.intensity = 2;
         setTimeout(() => muzzleFlash.intensity = 0, 50);
 
-        // 4. 射线检测
+        // 射线检测
         raycaster.setFromCamera(centerScreen, camera);
-        
-        // 获取所有活着的敌人的 mesh 对象
         const enemyMeshes = enemies.filter(e => e.alive).map(e => e.mesh);
-        // 使用递归检测 (因为模型包含多个 mesh)
         const intersects = raycaster.intersectObjects(enemyMeshes, true);
 
         const rayStart = camera.position.clone();
-        let hitPoint = rayStart.clone().add(raycaster.ray.direction.clone().multiplyScalar(50)); // 默认终点
+        let hitPoint = rayStart.clone().add(raycaster.ray.direction.clone().multiplyScalar(50));
 
         if (intersects.length > 0) {
           const hit = intersects[0];
           hitPoint = hit.point;
           
-          // 找到被击中的敌人对象
           let hitEnemy = null;
           for (let e of enemies) {
-            // 检查相交对象是否属于当前敌人的子层级
             let parent = hit.object;
             while (parent) {
               if (parent === e.mesh) { hitEnemy = e; break; }
@@ -849,16 +746,14 @@
           }
 
           if (hitEnemy) {
-            hitEnemy.hp -= 15;
-            playHitSound();
-            spawnBlood(hitPoint);
+            hitEnemy.hp -= 20;
+            spawnParticles(hitPoint);
 
             // 受击闪白
             hitEnemy.mesh.traverse(child => {
-              if (child.isMesh && child.material) {
-                const originalColor = child.material.color.clone();
+              if (child.isMesh) {
                 child.material.color.setHex(0xffffff);
-                setTimeout(() => child.material.color.copy(originalColor), 50);
+                setTimeout(() => child.material.color.setHex(0x111111), 50);
               }
             });
 
@@ -871,16 +766,16 @@
           }
         }
 
-        // 5. 生成曳光弹特效
-        // 略微偏移起点，使其从枪口发出
-        const muzzlePos = new THREE.Vector3(0.25, -0.2, -0.8).applyMatrix4(camera.matrixWorld);
+        // 曳光弹特效
+        const muzzlePos = new THREE.Vector3(0.2, -0.15, -0.8).applyMatrix4(camera.matrixWorld);
         createTracer(muzzlePos, hitPoint);
       }
 
+      // 碰撞检测
       function checkCollision(newPos) {
         const playerBox = new THREE.Box3(
-          new THREE.Vector3(newPos.x - 0.3, 0, newPos.z - 0.3),
-          new THREE.Vector3(newPos.x + 0.3, 2, newPos.z + 0.3)
+          new THREE.Vector3(newPos.x - 0.4, 0, newPos.z - 0.4),
+          new THREE.Vector3(newPos.x + 0.4, 2, newPos.z + 0.4)
         );
         for (let i = 0; i < obstacles.length; i++) {
           if (playerBox.intersectsBox(obstacles[i])) return true;
@@ -888,64 +783,50 @@
         return false;
       }
 
-      // ================= 10. 主循环 =================
+      // ================= 8. 主循环 =================
       function animate() {
         if (!isRunning) return;
         animationId = requestAnimationFrame(animate);
 
-        const delta = Math.min(clock.getDelta(), 0.1); // 限制最大增量防止穿墙
+        const delta = Math.min(clock.getDelta(), 0.1);
 
         // 移动逻辑
         if (document.pointerLockElement === document.body) {
           const speed = 6 * delta;
           const prevPos = controls.getObject().position.clone();
 
-          const forward = new THREE.Vector3();
-          camera.getWorldDirection(forward);
-          forward.y = 0; forward.normalize();
-          
-          const right = new THREE.Vector3();
-          right.crossVectors(forward, camera.up).normalize();
+          // 使用原生的移动方法，防止方向计算错误
+          if (keys.KeyW) controls.moveForward(speed);
+          if (keys.KeyS) controls.moveForward(-speed);
+          if (keys.KeyA) controls.moveRight(-speed);
+          if (keys.KeyD) controls.moveRight(speed);
 
-          let moveDir = new THREE.Vector3();
-          if (keys.w) moveDir.add(forward);
-          if (keys.s) moveDir.sub(forward);
-          if (keys.a) moveDir.sub(right);
-          if (keys.d) moveDir.add(right);
-          
-          if (moveDir.lengthSq() > 0) {
-            moveDir.normalize().multiplyScalar(speed);
-            
-            const nextPosX = prevPos.clone();
-            nextPosX.x += moveDir.x;
-            if (!checkCollision(nextPosX)) controls.getObject().position.x = nextPosX.x;
-
-            const nextPosZ = prevPos.clone();
-            nextPosZ.z += moveDir.z;
-            if (!checkCollision(nextPosZ)) controls.getObject().position.z = nextPosZ.z;
+          // 如果发生碰撞，回退位置
+          if (checkCollision(controls.getObject().position)) {
+            controls.getObject().position.copy(prevPos);
           }
         }
 
-        // 更新敌人动画与 AI
+        // 敌人 AI
         const playerPos = controls.getObject().position;
         const now = Date.now();
-
-        enemyMixers.forEach(mixer => mixer.update(delta));
 
         enemies.forEach(enemy => {
           if (!enemy.alive) return;
           
-          const dist = enemy.mesh.position.distanceTo(playerPos);
+          // 计算距离（忽略 Y 轴高度差）
+          const dx = playerPos.x - enemy.mesh.position.x;
+          const dz = playerPos.z - enemy.mesh.position.z;
+          const dist = Math.sqrt(dx*dx + dz*dz);
           
-          if (dist > 1.5) {
-            const dir = new THREE.Vector3().subVectors(playerPos, enemy.mesh.position);
-            dir.y = 0;
-            dir.normalize();
+          if (dist > 2) {
+            // 追踪玩家
+            const dir = new THREE.Vector3(dx, 0, dz).normalize();
             enemy.mesh.position.addScaledVector(dir, enemy.speed * delta);
-            // 让模型面向玩家
+            // 面向玩家
             enemy.mesh.lookAt(playerPos.x, enemy.mesh.position.y, playerPos.z);
           } else {
-            // 攻击
+            // 近战攻击
             if (now - enemy.lastAttack > 1000) {
               player.hp -= 15;
               updateUI();
@@ -959,10 +840,9 @@
         });
 
         // 更新特效
-        // 曳光弹
         for (let i = tracers.length - 1; i >= 0; i--) {
           const t = tracers[i];
-          t.life -= delta * 10; // 快速消失
+          t.life -= delta * 10;
           t.line.material.opacity = t.life;
           if (t.life <= 0) {
             scene.remove(t.line);
@@ -972,24 +852,22 @@
           }
         }
 
-        // 血液粒子
-        for (let i = particleData.length - 1; i >= 0; i--) {
-          const p = particleData[i];
+        for (let i = pData.length - 1; i >= 0; i--) {
+          const p = pData[i];
           p.pos.add(p.vel.clone().multiplyScalar(delta));
-          p.vel.y -= 9.8 * delta; // 重力
+          p.vel.y -= 9.8 * delta;
           p.life -= delta * 2;
-          if (p.life <= 0) particleData.splice(i, 1);
+          if (p.life <= 0) pData.splice(i, 1);
         }
         
-        // 更新粒子系统几何体
         const positions = particleSystem.geometry.attributes.position.array;
-        for (let i = 0; i < particleCount; i++) {
-          if (i < particleData.length) {
-            positions[i*3] = particleData[i].pos.x;
-            positions[i*3+1] = particleData[i].pos.y;
-            positions[i*3+2] = particleData[i].pos.z;
+        for (let i = 0; i < pCount; i++) {
+          if (i < pData.length) {
+            positions[i*3] = pData[i].pos.x;
+            positions[i*3+1] = pData[i].pos.y;
+            positions[i*3+2] = pData[i].pos.z;
           } else {
-            positions[i*3+1] = -100; // 隐藏在屏幕外
+            positions[i*3+1] = -100;
           }
         }
         particleSystem.geometry.attributes.position.needsUpdate = true;
@@ -1019,13 +897,14 @@
         animate();
       }
 
-      // ================= 11. 事件绑定 =================
+      // ================= 9. 事件监听 =================
       const onKeyDown = (e) => {
-        if (e.key.toLowerCase() in keys) keys[e.key.toLowerCase()] = true;
-        if (e.key.toLowerCase() === 'r') reload();
+        // 使用 e.code 兼容所有输入法
+        if (e.code in keys) keys[e.code] = true;
+        if (e.code === 'KeyR') reload();
       };
       const onKeyUp = (e) => {
-        if (e.key.toLowerCase() in keys) keys[e.key.toLowerCase()] = false;
+        if (e.code in keys) keys[e.code] = false;
       };
       const onMouseDown = (e) => { if (e.button === 0) shoot(); };
       const onResize = () => {
@@ -1063,7 +942,7 @@
 
       startBtn.onclick = startGame;
 
-      // ================= 12. 清理 =================
+      // ================= 10. 清理 =================
       cleanupFunctions.push(() => {
         isRunning = false;
         cancelAnimationFrame(animationId);
