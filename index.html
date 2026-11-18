@@ -92,7 +92,7 @@
     .modal-card {
       background: #fff;
       border-radius: 28px;
-      max-width: 640px; width: 100%;
+      max-width: 800px; width: 100%; /* 稍微变宽以容纳 3D 游戏 */
       max-height: calc(100vh - 48px);
       overflow-y: auto;
       padding: 44px 40px;
@@ -110,7 +110,7 @@
       background: #fff3ec; color: var(--orange);
       display: grid; place-items: center;
       transition: background .2s, transform .2s;
-      z-index: 2;
+      z-index: 100; /* 确保在最上层 */
     }
     .modal-close:hover { background: #ffe6d8; transform: rotate(90deg); }
     .modal-card .eyebrow {
@@ -143,40 +143,27 @@
     .modal-card .contact-item p { font-size: 13px; color: #5b4b3e; line-height: 1.4; margin: 0; word-break: break-word; }
     .modal-card .contact-item p a { color: var(--orange); font-weight: 600; }
 
-    /* ===== 游戏通用标签页 ===== */
-    .game-tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #f0e4da; padding-bottom: 10px; flex-wrap: wrap; }
-    .game-tab-btn { padding: 8px 16px; border-radius: 8px; font-weight: 600; font-size: 15px; color: #8a7866; transition: all .2s; }
-    .game-tab-btn:hover { background: #fff7f1; color: var(--orange); }
-    .game-tab-btn.active { background: var(--orange); color: #fff; box-shadow: 0 4px 12px rgba(241, 101, 36, 0.3); }
-    .game-view { display: none; }
-    .game-view.active { display: block; animation: fadeIn .3s ease; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-
-    /* ===== Raycasting 3D 引擎容器 ===== */
-    .cs3d-container { position: relative; width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 12px; overflow: hidden; border: 3px solid #333; display: flex; justify-content: center; align-items: center; }
-    .cs3d-canvas { display: block; width: 100%; height: 100%; image-rendering: pixelated; cursor: crosshair; }
-    .cs3d-ui { position: absolute; inset: 0; pointer-events: none; padding: 16px; display: flex; flex-direction: column; justify-content: space-between; font-family: monospace; }
-    .cs3d-top { display: flex; justify-content: space-between; font-size: 16px; font-weight: bold; color: #fff; text-shadow: 1px 1px 2px #000; }
-    .cs3d-bottom { display: flex; justify-content: space-between; align-items: flex-end; }
-    .cs3d-hp { color: #4cd137; font-size: 24px; }
-    .cs3d-ammo { color: #fbc531; font-size: 24px; }
-    .cs3d-kills { color: #e84118; font-size: 20px; }
-    /* 准星 */
-    .cs3d-crosshair { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 20px; height: 20px; pointer-events: none; }
-    .cs3d-crosshair::before, .cs3d-crosshair::after { content: ''; position: absolute; background: rgba(255,255,255,0.7); }
-    .cs3d-crosshair::before { top: 9px; left: 0; width: 20px; height: 2px; }
-    .cs3d-crosshair::after { top: 0; left: 9px; width: 2px; height: 20px; }
-    /* 枪械贴图 (CSS绘制) */
-    .cs3d-gun { position: absolute; bottom: -10px; right: 15%; width: 80px; height: 120px; background: #333; border-radius: 10px 10px 0 0; transform-origin: bottom center; pointer-events: none; transition: transform 0.05s; border: 2px solid #111; }
-    .cs3d-gun::before { content: ''; position: absolute; top: -20px; left: 30px; width: 20px; height: 40px; background: #222; border-radius: 5px 5px 0 0; }
-    .cs3d-gun.shoot { transform: translateY(10px) rotate(-5deg); }
+    /* ===== Three.js 3D 游戏容器 ===== */
+    .game-container-3d { position: relative; width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 12px; overflow: hidden; border: 3px solid #333; }
+    .game-container-3d canvas { display: block; width: 100%; height: 100%; }
     
-    .cs3d-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.85); display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; z-index: 10; text-align: center; }
-    .cs3d-overlay h2 { font-size: 32px; color: #e84118; margin-bottom: 10px; font-family: Impact, sans-serif; letter-spacing: 2px; }
-    .cs3d-overlay p { font-size: 14px; margin-bottom: 20px; color: #ccc; font-family: sans-serif; line-height: 1.6; }
-    .cs3d-start-btn { background: #e84118; color: #fff; padding: 12px 30px; border-radius: 8px; font-size: 18px; font-weight: bold; pointer-events: auto; cursor: pointer; border: 2px solid #fff; }
-    .cs3d-start-btn:hover { background: #c0392b; }
-    .cs3d-damage-flash { position: absolute; inset: 0; background: rgba(255,0,0,0.4); opacity: 0; pointer-events: none; transition: opacity 0.1s; z-index: 5; }
+    /* 游戏 UI */
+    .g3d-ui { position: absolute; inset: 0; pointer-events: none; padding: 16px; display: flex; flex-direction: column; justify-content: space-between; font-family: monospace; z-index: 10; }
+    .g3d-top { display: flex; justify-content: space-between; font-size: 18px; font-weight: bold; color: #fff; text-shadow: 1px 1px 2px #000; }
+    .g3d-hp { color: #4cd137; font-size: 24px; }
+    .g3d-ammo { color: #fbc531; font-size: 24px; }
+    .g3d-kills { color: #e84118; font-size: 20px; }
+    .g3d-crosshair { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 20px; height: 20px; pointer-events: none; z-index: 5; }
+    .g3d-crosshair::before, .g3d-crosshair::after { content: ''; position: absolute; background: rgba(255,255,255,0.7); }
+    .g3d-crosshair::before { top: 9px; left: 0; width: 20px; height: 2px; }
+    .g3d-crosshair::after { top: 0; left: 9px; width: 2px; height: 20px; }
+    .g3d-damage { position: absolute; inset: 0; background: rgba(255,0,0,0.4); opacity: 0; pointer-events: none; transition: opacity 0.1s; z-index: 4; }
+    
+    .g3d-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.85); display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; z-index: 20; text-align: center; }
+    .g3d-overlay h2 { font-size: 36px; color: #e84118; margin-bottom: 10px; font-family: Impact, sans-serif; letter-spacing: 2px; text-shadow: 2px 2px 4px #000; }
+    .g3d-overlay p { font-size: 15px; margin-bottom: 20px; color: #ccc; font-family: sans-serif; line-height: 1.6; }
+    .g3d-start-btn { background: #e84118; color: #fff; padding: 12px 30px; border-radius: 8px; font-size: 18px; font-weight: bold; pointer-events: auto; cursor: pointer; border: 2px solid #fff; transition: all 0.2s; }
+    .g3d-start-btn:hover { background: #c0392b; transform: scale(1.05); }
 
     @media (max-width: 1023px) { .desktop-links { display: none; } }
     @media (max-width: 767px) {
@@ -251,7 +238,7 @@
     <section class="bottom">
       <h1>Oops, something went wrong!</h1>
       <a class="home-link" href="./"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 19-7-7 7-7M5 12h14"/></svg>Back to Home</a>
-      <div class="version-tag">🎮 v5.0: 3D Raycasting Engine!</div>
+      <div class="version-tag">🎮 v6.0: Three.js True 3D FPS!</div>
     </section>
   </main>
 
@@ -279,589 +266,575 @@
     </div>
   </div>
 
-  <script>
-    (() => {
-      /* ---------- 视频与背景缩放 ---------- */
-      const foxVideo = document.getElementById('foxVideo');
-      const foxVideoBox = document.getElementById('foxVideoBox');
-      foxVideo.addEventListener('playing', () => { if (foxVideo.videoWidth > 0) foxVideoBox.classList.add('video-playing'); });
-      foxVideo.addEventListener('error', () => foxVideoBox.classList.remove('video-playing'));
-      foxVideo.addEventListener('stalled', () => foxVideoBox.classList.remove('video-playing'));
-      foxVideo.play().catch(() => foxVideoBox.classList.remove('video-playing'));
-
-      const giant = document.getElementById('giant404');
-      const oval = document.getElementById('whiteOval');
-      function resizeBackground() {
-        const scaleY = window.innerHeight / (giant.offsetHeight || 1);
-        giant.style.transform = `scale(1.15, ${scaleY * 1.4})`;
-        oval.style.transform = `scaleY(${scaleY})`;
+  <!-- 引入 Three.js (ESM) -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
       }
-      window.addEventListener('resize', resizeBackground, { passive: true });
-      if (document.fonts && document.fonts.ready) document.fonts.ready.then(resizeBackground);
-      resizeBackground();
+    }
+  </script>
 
-      /* ---------- 移动端菜单 ---------- */
-      const overlay = document.getElementById('menuOverlay');
-      const openBtn = document.getElementById('menuOpen');
-      const closeBtn = document.getElementById('menuClose');
-      const backdrop = document.getElementById('menuBackdrop');
+  <script type="module">
+    import * as THREE from 'three';
+    import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
 
-      function setMenu(open) {
-        overlay.classList.toggle('open', open);
-        overlay.setAttribute('aria-hidden', String(!open));
-        openBtn.setAttribute('aria-expanded', String(open));
-        document.body.style.overflow = open ? 'hidden' : '';
-        if (open) closeBtn.focus(); else openBtn.focus();
-      }
-      openBtn.addEventListener('click', () => setMenu(true));
-      closeBtn.addEventListener('click', () => setMenu(false));
-      backdrop.addEventListener('click', () => setMenu(false));
+    /* ---------- 视频与背景缩放 ---------- */
+    const foxVideo = document.getElementById('foxVideo');
+    const foxVideoBox = document.getElementById('foxVideoBox');
+    foxVideo.addEventListener('playing', () => { if (foxVideo.videoWidth > 0) foxVideoBox.classList.add('video-playing'); });
+    foxVideo.addEventListener('error', () => foxVideoBox.classList.remove('video-playing'));
+    foxVideo.addEventListener('stalled', () => foxVideoBox.classList.remove('video-playing'));
+    foxVideo.play().catch(() => foxVideoBox.classList.remove('video-playing'));
 
-      /* ---------- 内容数据 ---------- */
-      const sections = {
-        about: `
-          <span class="eyebrow">About Me</span>
-          <h1>Hi, I'm <span class="name">Esther</span>.</h1>
-          <p>I'm a <strong>student at Basis Guangzhou</strong>, and my birthday is <strong>December 19</strong>. I'm someone who likes to stay curious — whether that means learning something new in class, trying a different sport, or finding a better way to explain an idea to a friend.</p>
-          <p>Two things I really enjoy are <strong>soccer</strong> and <strong>horse riding</strong>. <strong>My favourite player is Cristiano Ronaldo.</strong> Soccer keeps me active and teaches me how important teamwork is — you can't win a match alone. Horse riding is quieter but just as rewarding: it takes patience, focus, and a real connection with the animal. Both have taught me a lot about discipline and staying calm under pressure.</p>
-          <div class="divider"></div>
-          <p>At school, I like subjects that mix creativity with problem-solving. I enjoy <strong>science</strong> because it explains how things work, and I also like <strong>art and design</strong> because they let me turn ideas into something visible. Outside of class, I've taken part in clubs and activities that push me to work with others, speak up, and manage my time better.</p>
-          <p>People who know me would probably say I'm <strong>thoughtful, reliable, and a little bit curious about everything</strong>. I like helping classmates understand something they're stuck on, and I'm always happy to listen. I'm not the loudest person in the room, but I care about doing things properly and following through on what I start.</p>
-          <div class="divider"></div>
-          <p>This website is my little corner of the internet. I use it to share <strong>projects I'm working on</strong> and a few <strong>stories</strong> from my life. It's also a simple way for people to get in touch with me — whether it's about a school project, a collaboration, or just to say hello.</p>
-          <p>Right now, I'm still figuring out what I want to do in the future. I'm interested in <strong>design, technology, and sports</strong>, and I'd love to keep exploring how those things connect. For now, I'm taking it one step at a time: learning, practicing, and enjoying the process.</p>
-          <p>Thanks for stopping by my page. If you'd like to reach out, the contacts page has my email and a few other ways to find me. I'm always happy to meet new people and hear new ideas.</p>
-        `,
-        projects: `
-          <span class="eyebrow">Projects</span>
-          <h1>3D Shooter Engine</h1>
-          <p>A fully playable 3D FPS game built from scratch using HTML5 Canvas and Raycasting math.</p>
-          
-          <div class="cs3d-container" id="cs3dContainer">
-            <canvas class="cs3d-canvas" id="cs3dCanvas"></canvas>
-            <div class="cs3d-damage-flash" id="cs3dDamage"></div>
-            <div class="cs3d-crosshair"></div>
-            <div class="cs3d-gun" id="cs3dGun"></div>
-            
-            <div class="cs3d-ui">
-              <div class="cs3d-top">
-                <div class="cs3d-kills">Kills: <span id="cs3dKills">0</span></div>
-                <div class="cs3d-hp">HP: <span id="cs3dHp">100</span></div>
-              </div>
-              <div class="cs3d-bottom">
-                <div>WASD: Move | Mouse: Aim/Shoot | R: Reload</div>
-                <div class="cs3d-ammo">Ammo: <span id="cs3dAmmo">30</span>/30</div>
-              </div>
+    const giant = document.getElementById('giant404');
+    const oval = document.getElementById('whiteOval');
+    function resizeBackground() {
+      const scaleY = window.innerHeight / (giant.offsetHeight || 1);
+      giant.style.transform = `scale(1.15, ${scaleY * 1.4})`;
+      oval.style.transform = `scaleY(${scaleY})`;
+    }
+    window.addEventListener('resize', resizeBackground, { passive: true });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(resizeBackground);
+    resizeBackground();
+
+    /* ---------- 移动端菜单 ---------- */
+    const overlay = document.getElementById('menuOverlay');
+    const openBtn = document.getElementById('menuOpen');
+    const closeBtn = document.getElementById('menuClose');
+    const backdrop = document.getElementById('menuBackdrop');
+
+    function setMenu(open) {
+      overlay.classList.toggle('open', open);
+      overlay.setAttribute('aria-hidden', String(!open));
+      openBtn.setAttribute('aria-expanded', String(open));
+      document.body.style.overflow = open ? 'hidden' : '';
+      if (open) closeBtn.focus(); else openBtn.focus();
+    }
+    openBtn.addEventListener('click', () => setMenu(true));
+    closeBtn.addEventListener('click', () => setMenu(false));
+    backdrop.addEventListener('click', () => setMenu(false));
+
+    /* ---------- 内容数据 ---------- */
+    const sections = {
+      about: `
+        <span class="eyebrow">About Me</span>
+        <h1>Hi, I'm <span class="name">Esther</span>.</h1>
+        <p>I'm a <strong>student at Basis Guangzhou</strong>, and my birthday is <strong>December 19</strong>. I'm someone who likes to stay curious — whether that means learning something new in class, trying a different sport, or finding a better way to explain an idea to a friend.</p>
+        <p>Two things I really enjoy are <strong>soccer</strong> and <strong>horse riding</strong>. <strong>My favourite player is Cristiano Ronaldo.</strong> Soccer keeps me active and teaches me how important teamwork is — you can't win a match alone. Horse riding is quieter but just as rewarding: it takes patience, focus, and a real connection with the animal. Both have taught me a lot about discipline and staying calm under pressure.</p>
+        <div class="divider"></div>
+        <p>At school, I like subjects that mix creativity with problem-solving. I enjoy <strong>science</strong> because it explains how things work, and I also like <strong>art and design</strong> because they let me turn ideas into something visible. Outside of class, I've taken part in clubs and activities that push me to work with others, speak up, and manage my time better.</p>
+        <p>People who know me would probably say I'm <strong>thoughtful, reliable, and a little bit curious about everything</strong>. I like helping classmates understand something they're stuck on, and I'm always happy to listen. I'm not the loudest person in the room, but I care about doing things properly and following through on what I start.</p>
+        <div class="divider"></div>
+        <p>This website is my little corner of the internet. I use it to share <strong>projects I'm working on</strong> and a few <strong>stories</strong> from my life. It's also a simple way for people to get in touch with me — whether it's about a school project, a collaboration, or just to say hello.</p>
+        <p>Right now, I'm still figuring out what I want to do in the future. I'm interested in <strong>design, technology, and sports</strong>, and I'd love to keep exploring how those things connect. For now, I'm taking it one step at a time: learning, practicing, and enjoying the process.</p>
+        <p>Thanks for stopping by my page. If you'd like to reach out, the contacts page has my email and a few other ways to find me. I'm always happy to meet new people and hear new ideas.</p>
+      `,
+      projects: `
+        <span class="eyebrow">Projects</span>
+        <h1>Three.js 3D Shooter</h1>
+        <p>A fully playable 3D First-Person Shooter built with the Three.js engine.</p>
+        
+        <div class="game-container-3d" id="g3dContainer">
+          <div class="g3d-ui">
+            <div class="g3d-top">
+              <div class="g3d-kills">Kills: <span id="g3dKills">0</span></div>
+              <div class="g3d-hp">HP: <span id="g3dHp">100</span></div>
             </div>
-
-            <div class="cs3d-overlay" id="cs3dOverlay">
-              <h2>RAYCAST 3D</h2>
-              <p>Click Start to lock your mouse.<br>WASD to move, Left Click to shoot.<br>Press ESC to unlock mouse.</p>
-              <button class="cs3d-start-btn" id="cs3dStartBtn">Start Game</button>
+            <div class="g3d-bottom" style="display:flex; justify-content:space-between;">
+              <div style="color:#fff; font-size:14px;">WASD: Move | Left Click: Shoot | ESC: Pause</div>
+              <div class="g3d-ammo">Ammo: <span id="g3dAmmo">30</span>/30</div>
             </div>
           </div>
-        `,
-        story: `
-          <span class="eyebrow">Story</span>
-          <h1>A little story about me</h1>
-          <p>I still remember the first time I watched a full soccer match. I didn't understand all the rules, but I couldn't look away. The energy, the teamwork, the way one player could change the whole game — it stuck with me. That player was <strong>Cristiano Ronaldo</strong>, and he's been my favourite ever since.</p>
-          <p>What I admire about him isn't just the goals. It's the discipline. He trains harder than almost anyone, takes care of his body, and keeps pushing even when people doubt him. That idea — that you can always improve if you put in the work — is something I try to carry into my own life, whether it's studying for a test or learning a new skill.</p>
-          <div class="divider"></div>
-          <p>I started playing soccer myself a few years ago. I wasn't the best at first — honestly, I was pretty bad. But I kept showing up to practice, and slowly I got better. Being part of a team taught me something I couldn't learn from a textbook: how to rely on other people and how to be someone others can rely on.</p>
-          <p>Horse riding came later, and it's completely different. There's no crowd, no scoreboard. Just me and the horse, trying to understand each other. It's taught me patience and how to stay calm when things don't go the way I planned.</p>
-          <div class="divider"></div>
-          <p>At school, I'm the kind of student who likes to figure things out. I ask a lot of questions, sometimes too many. I enjoy science because it explains the world, and I enjoy design because it lets me make something out of nothing. I'm still learning how to balance everything — sports, school, friends, and this website — but I'm getting better at it.</p>
-          <p>This page is just a small window into who I am. If you've read this far, thanks for taking the time. Maybe one day we'll meet on a soccer field, or you'll see me riding somewhere quiet. Until then, feel free to say hello.</p>
-        `,
-        contacts: `
-          <span class="eyebrow">Contacts</span>
-          <h1>Get in touch</h1>
-          <p>Whether it's about a project, a collaboration, or just to say hello — I'd love to hear from you.</p>
-          <div class="contact-grid">
-            <div class="contact-item">
-              <div class="ci"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m22 7-10 7L2 7"/></svg></div>
-              <h3>Email</h3>
-              <p><strong><a href="mailto:esther.rong1000128-bbgz@basischina.com" style="font-size: 14px;">esther.rong1000128-bbgz@basischina.com</a></strong></p>
-            </div>
-            <div class="contact-item">
-              <div class="ci"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg></div>
-              <h3>School</h3>
-              <p>Basis Guangzhou</p>
-            </div>
-            <div class="contact-item">
-              <div class="ci"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
-              <h3>Location</h3>
-              <p>Guangzhou, China</p>
-            </div>
-          </div>
-        `
-      };
+          <div class="g3d-crosshair"></div>
+          <div class="g3d-damage" id="g3dDamage"></div>
 
-      /* ---------- 模态框逻辑 ---------- */
-      const modal = document.getElementById('contentModal');
-      const modalBody = document.getElementById('modalBody');
-      const modalClose = document.getElementById('modalClose');
+          <div class="g3d-overlay" id="g3dOverlay">
+            <h2>THREE.JS FPS</h2>
+            <p>Click Start to lock your mouse.<br>WASD to move, Left Click to shoot.</p>
+            <button class="g3d-start-btn" id="g3dStartBtn">Start Game</button>
+          </div>
+        </div>
+      `,
+      story: `
+        <span class="eyebrow">Story</span>
+        <h1>A little story about me</h1>
+        <p>I still remember the first time I watched a full soccer match. I didn't understand all the rules, but I couldn't look away. The energy, the teamwork, the way one player could change the whole game — it stuck with me. That player was <strong>Cristiano Ronaldo</strong>, and he's been my favourite ever since.</p>
+        <p>What I admire about him isn't just the goals. It's the discipline. He trains harder than almost anyone, takes care of his body, and keeps pushing even when people doubt him. That idea — that you can always improve if you put in the work — is something I try to carry into my own life, whether it's studying for a test or learning a new skill.</p>
+        <div class="divider"></div>
+        <p>I started playing soccer myself a few years ago. I wasn't the best at first — honestly, I was pretty bad. But I kept showing up to practice, and slowly I got better. Being part of a team taught me something I couldn't learn from a textbook: how to rely on other people and how to be someone others can rely on.</p>
+        <p>Horse riding came later, and it's completely different. There's no crowd, no scoreboard. Just me and the horse, trying to understand each other. It's taught me patience and how to stay calm when things don't go the way I planned.</p>
+        <div class="divider"></div>
+        <p>At school, I'm the kind of student who likes to figure things out. I ask a lot of questions, sometimes too many. I enjoy science because it explains the world, and I enjoy design because it lets me make something out of nothing. I'm still learning how to balance everything — sports, school, friends, and this website — but I'm getting better at it.</p>
+        <p>This page is just a small window into who I am. If you've read this far, thanks for taking the time. Maybe one day we'll meet on a soccer field, or you'll see me riding somewhere quiet. Until then, feel free to say hello.</p>
+      `,
+      contacts: `
+        <span class="eyebrow">Contacts</span>
+        <h1>Get in touch</h1>
+        <p>Whether it's about a project, a collaboration, or just to say hello — I'd love to hear from you.</p>
+        <div class="contact-grid">
+          <div class="contact-item">
+            <div class="ci"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m22 7-10 7L2 7"/></svg></div>
+            <h3>Email</h3>
+            <p><strong><a href="mailto:esther.rong1000128-bbgz@basischina.com" style="font-size: 14px;">esther.rong1000128-bbgz@basischina.com</a></strong></p>
+          </div>
+          <div class="contact-item">
+            <div class="ci"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg></div>
+            <h3>School</h3>
+            <p>Basis Guangzhou</p>
+          </div>
+          <div class="contact-item">
+            <div class="ci"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+            <h3>Location</h3>
+            <p>Guangzhou, China</p>
+          </div>
+        </div>
+      `
+    };
+
+    /* ---------- 模态框逻辑 ---------- */
+    const modal = document.getElementById('contentModal');
+    const modalBody = document.getElementById('modalBody');
+    const modalClose = document.getElementById('modalClose');
+    
+    let cleanupFunctions = []; 
+
+    function openModal(section) {
+      if (!sections[section]) return;
+      modalBody.innerHTML = sections[section];
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      setTimeout(() => modalClose.focus(), 60);
       
-      let cleanupFunctions = []; 
+      if (section === 'projects') {
+        setTimeout(init3DGame, 50);
+      }
+    }
 
-      function openModal(section) {
-        if (!sections[section]) return;
-        modalBody.innerHTML = sections[section];
-        modal.classList.add('open');
-        modal.setAttribute('aria-hidden', 'false');
-        document.body.style.overflow = 'hidden';
-        setTimeout(() => modalClose.focus(), 60);
-        
-        if (section === 'projects') {
-          setTimeout(init3DGame, 50);
-        }
+    function closeModal() {
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      
+      cleanupFunctions.forEach(fn => fn());
+      cleanupFunctions = [];
+    }
+
+    document.querySelectorAll('[data-section]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const section = btn.getAttribute('data-section');
+        if (overlay.classList.contains('open')) setMenu(false);
+        openModal(section);
+      });
+    });
+
+    modalClose.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !document.pointerLockElement) {
+        if (modal.classList.contains('open')) closeModal();
+        else if (overlay.classList.contains('open')) setMenu(false);
+      }
+    });
+
+    /* ==========================================
+       Three.js 3D 射击游戏逻辑
+       ========================================== */
+    function init3DGame() {
+      const container = document.getElementById('g3dContainer');
+      const overlay = document.getElementById('g3dOverlay');
+      const startBtn = document.getElementById('g3dStartBtn');
+      const hpEl = document.getElementById('g3dHp');
+      const ammoEl = document.getElementById('g3dAmmo');
+      const killsEl = document.getElementById('g3dKills');
+      const damageFlash = document.getElementById('g3dDamage');
+      
+      if (!container) return;
+
+      // 1. 基础场景设置
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x87CEEB); // 天空蓝
+      scene.fog = new THREE.Fog(0x87CEEB, 10, 50); // 雾效
+
+      const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+      
+      const renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setSize(container.clientWidth, container.clientHeight);
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      container.appendChild(renderer.domElement);
+
+      // 2. 光照
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+      scene.add(ambientLight);
+
+      const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+      dirLight.position.set(10, 20, 10);
+      dirLight.castShadow = true;
+      dirLight.shadow.camera.top = 20;
+      dirLight.shadow.camera.bottom = -20;
+      dirLight.shadow.camera.left = -20;
+      dirLight.shadow.camera.right = 20;
+      scene.add(dirLight);
+
+      // 3. 玩家控制器 (PointerLockControls)
+      const controls = new PointerLockControls(camera, document.body);
+      scene.add(controls.getObject());
+      // 玩家出生点
+      controls.getObject().position.set(0, 1.6, 0);
+
+      // 4. 地图生成 (地面 + 墙壁)
+      // 地面
+      const floorGeo = new THREE.PlaneGeometry(100, 100);
+      const floorMat = new THREE.MeshStandardMaterial({ color: 0x556B2F, roughness: 0.8 });
+      const floor = new THREE.Mesh(floorGeo, floorMat);
+      floor.rotation.x = -Math.PI / 2;
+      floor.receiveShadow = true;
+      scene.add(floor);
+
+      // 墙壁碰撞盒集合
+      const obstacles = [];
+      
+      // 生成墙壁
+      function createWall(x, z, width, depth) {
+        const wallGeo = new THREE.BoxGeometry(width, 4, depth);
+        const wallMat = new THREE.MeshStandardMaterial({ color: 0x8B4513 });
+        const wall = new THREE.Mesh(wallGeo, wallMat);
+        wall.position.set(x, 2, z);
+        wall.castShadow = true;
+        wall.receiveShadow = true;
+        scene.add(wall);
+        obstacles.push(new THREE.Box3().setFromObject(wall));
       }
 
-      function closeModal() {
-        modal.classList.remove('open');
-        modal.setAttribute('aria-hidden', 'true');
-        document.body.style.overflow = '';
-        
-        // 清理游戏
-        cleanupFunctions.forEach(fn => fn());
-        cleanupFunctions = [];
-      }
+      // 简单的迷宫布局
+      createWall(0, -5, 10, 1);
+      createWall(-5, 0, 1, 10);
+      createWall(5, 0, 1, 10);
+      createWall(0, 5, 10, 1);
+      createWall(-2, 2, 2, 1);
+      createWall(2, -2, 1, 3);
 
-      document.querySelectorAll('[data-section]').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const section = btn.getAttribute('data-section');
-          if (overlay.classList.contains('open')) setMenu(false);
-          openModal(section);
+      // 5. 武器 (简单方块组合)
+      const gunGroup = new THREE.Group();
+      const gunMat = new THREE.MeshStandardMaterial({ color: 0x333333 });
+      const gunBody = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.2, 0.6), gunMat);
+      const gunBarrel = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.1, 0.4), gunMat);
+      gunBarrel.position.set(0, 0, -0.4);
+      gunGroup.add(gunBody, gunBarrel);
+      // 将武器固定在相机右下角
+      gunGroup.position.set(0.3, -0.3, -0.6);
+      camera.add(gunGroup);
+
+      // 6. 游戏状态
+      let enemies = [];
+      let isRunning = false;
+      let animationId;
+      let player = { hp: 100, ammo: 30, maxAmmo: 30, kills: 0, isReloading: false };
+      let clock = new THREE.Clock();
+      let keys = { w: false, a: false, s: false, d: false };
+      
+      const raycaster = new THREE.Raycaster();
+      const centerScreen = new THREE.Vector2(0, 0); // 准星在屏幕正中心
+
+      // 7. 敌人生成
+      function spawnEnemy(x, z) {
+        const enemyGroup = new THREE.Group();
+        const bodyMat = new THREE.MeshStandardMaterial({ color: 0xff0000 });
+        const body = new THREE.Mesh(new THREE.CapsuleGeometry(0.4, 1, 4, 8), bodyMat);
+        body.position.y = 0.9;
+        body.castShadow = true;
+        enemyGroup.add(body);
+        
+        // 眼睛
+        const eyeMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+        const eye = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.1, 0.1), eyeMat);
+        eye.position.set(0, 1.3, -0.35);
+        enemyGroup.add(eye);
+
+        enemyGroup.position.set(x, 0, z);
+        scene.add(enemyGroup);
+        
+        enemies.push({
+          mesh: enemyGroup,
+          hp: 30,
+          alive: true,
+          lastAttack: 0,
+          speed: 1.5 + Math.random() * 1.5
         });
-      });
+      }
 
-      modalClose.addEventListener('click', closeModal);
-      modal.addEventListener('click', (e) => {
-        if (e.target === modal) closeModal();
-      });
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && !document.pointerLockElement) {
-          if (modal.classList.contains('open')) closeModal();
-          else if (overlay.classList.contains('open')) setMenu(false);
-        }
-      });
-
-      /* ==========================================
-         3D 射击游戏核心逻辑 (Raycasting)
-         ========================================== */
-      function init3DGame() {
-        const canvas = document.getElementById('cs3dCanvas');
-        const container = document.getElementById('cs3dContainer');
-        const overlay = document.getElementById('cs3dOverlay');
-        const startBtn = document.getElementById('cs3dStartBtn');
-        const hpEl = document.getElementById('cs3dHp');
-        const ammoEl = document.getElementById('cs3dAmmo');
-        const killsEl = document.getElementById('cs3dKills');
-        const gunEl = document.getElementById('cs3dGun');
-        const damageFlash = document.getElementById('cs3dDamage');
+      // 8. 重置游戏
+      function resetGame() {
+        // 清理旧敌人
+        enemies.forEach(e => scene.remove(e.mesh));
+        enemies = [];
         
-        if (!canvas) return;
+        // 重置玩家位置和状态
+        controls.getObject().position.set(0, 1.6, 0);
+        player = { hp: 100, ammo: 30, maxAmmo: 30, kills: 0, isReloading: false };
+        updateUI();
 
-        const ctx = canvas.getContext('2d');
-        
-        // 降低内部分辨率以提升性能 (Raycasting 比较吃性能)
-        canvas.width = 640; 
-        canvas.height = 360;
-        const W = canvas.width;
-        const H = canvas.height;
+        // 生成新敌人
+        spawnEnemy(-8, -8);
+        spawnEnemy(8, -8);
+        spawnEnemy(-8, 8);
+        spawnEnemy(8, 8);
+        spawnEnemy(0, -10);
+      }
 
-        // 游戏常量
-        const FOV = Math.PI / 3; // 60度视野
-        const HALF_FOV = FOV / 2;
-        const MAX_DEPTH = 20;
-        const NUM_RAYS = W / 2; // 每两列画一根射线 (优化)
-        
-        // 地图 (1=墙, 2=另一种墙, 0=空地)
-        const MAP = [
-          [1,1,1,1,1,1,1,1,1,1,1,1],
-          [1,0,0,0,0,0,0,0,0,0,0,1],
-          [1,0,1,1,0,0,1,1,0,1,0,1],
-          [1,0,1,0,0,0,0,1,0,1,0,1],
-          [1,0,0,0,1,1,0,0,0,0,0,1],
-          [1,0,1,0,1,0,0,1,0,1,0,1],
-          [1,0,1,0,0,0,0,1,0,1,0,1],
-          [1,0,0,0,1,1,0,0,0,0,0,1],
-          [1,0,1,0,0,0,1,1,0,1,0,1],
-          [1,0,0,0,1,0,0,0,0,1,0,1],
-          [1,0,0,0,0,0,0,0,0,0,0,1],
-          [1,1,1,1,1,1,1,1,1,1,1,1]
-        ];
+      function updateUI() {
+        hpEl.textContent = player.hp;
+        ammoEl.textContent = player.ammo;
+        killsEl.textContent = player.kills;
+      }
 
-        // 玩家状态
-        let player = {
-          x: 1.5, y: 1.5,
-          angle: 0,
-          speed: 0.05,
-          hp: 100,
-          ammo: 30,
-          maxAmmo: 30,
-          isReloading: false,
-          kills: 0
-        };
-
-        let keys = {};
-        let enemies = [];
-        let isRunning = false;
-        let animationId;
-        let zBuffer = new Float32Array(W); // 用于遮挡判断
-        let lastShootTime = 0;
-
-        // 颜色配置
-        const COLORS = {
-          sky: '#87CEEB',
-          floor: '#556B2F',
-          wall1: '#8B4513', // 棕色
-          wall2: '#A9A9A9', // 灰色
-          enemy: '#FF0000',
-          gun: '#333'
-        };
-
-        // 重置游戏
-        function startGame() {
-          player = { x: 1.5, y: 1.5, angle: 0, speed: 0.05, hp: 100, ammo: 30, maxAmmo: 30, isReloading: false, kills: 0 };
-          enemies = [];
-          keys = {};
-          isRunning = true;
-          overlay.style.display = 'none';
+      // 9. 换弹
+      function reload() {
+        if (player.isReloading || player.ammo === player.maxAmmo) return;
+        player.isReloading = true;
+        setTimeout(() => {
+          player.ammo = player.maxAmmo;
+          player.isReloading = false;
           updateUI();
+        }, 1000);
+      }
+
+      // 10. 射击
+      function shoot() {
+        if (!isRunning || document.pointerLockElement !== document.body) return;
+        if (player.ammo <= 0) {
+          reload();
+          return;
+        }
+
+        player.ammo--;
+        updateUI();
+        
+        // 枪械后坐力动画
+        gunGroup.position.z = -0.5; 
+        setTimeout(() => gunGroup.position.z = -0.6, 100);
+
+        // Raycaster 射线检测
+        raycaster.setFromCamera(centerScreen, camera);
+        
+        // 收集所有敌人的 Mesh 进行检测
+        const enemyMeshes = enemies.filter(e => e.alive).map(e => e.mesh.children[0]);
+        const intersects = raycaster.intersectObjects(enemyMeshes);
+
+        if (intersects.length > 0) {
+          // 击中了第一个敌人
+          const hitMesh = intersects[0].object;
+          const enemyObj = enemies.find(e => e.mesh.children[0] === hitMesh);
           
-          // 生成几个敌人
-          spawnEnemy(8, 8);
-          spawnEnemy(10, 2);
-          spawnEnemy(5, 10);
-          spawnEnemy(2, 9);
+          if (enemyObj) {
+            enemyObj.hp -= 15;
+            // 受击变白
+            hitMesh.material.color.setHex(0xffffff);
+            setTimeout(() => hitMesh.material.color.setHex(0xff0000), 100);
 
-          // 锁定鼠标
-          canvas.requestPointerLock();
-          
-          if(animationId) cancelAnimationFrame(animationId);
-          gameLoop();
-        }
-
-        function spawnEnemy(x, y) {
-          enemies.push({ x, y, hp: 30, alive: true, lastShot: 0 });
-        }
-
-        function updateUI() {
-          hpEl.textContent = player.hp;
-          ammoEl.textContent = player.ammo;
-          killsEl.textContent = player.kills;
-        }
-
-        // 鼠标移动控制视角 (Pointer Lock)
-        const onMouseMove = (e) => {
-          if (document.pointerLockElement === canvas) {
-            player.angle += e.movementX * 0.002;
-            // 保证角度在 0 到 2PI 之间
-            if (player.angle < 0) player.angle += Math.PI * 2;
-            if (player.angle > Math.PI * 2) player.angle -= Math.PI * 2;
-          }
-        };
-
-        // 键盘控制
-        const onKeyDown = (e) => {
-          keys[e.key.toLowerCase()] = true;
-          if (e.key.toLowerCase() === 'r' && isRunning) {
-            reload();
-          }
-        };
-        const onKeyUp = (e) => {
-          keys[e.key.toLowerCase()] = false;
-        };
-
-        // 换弹
-        function reload() {
-          if (player.isReloading || player.ammo === player.maxAmmo) return;
-          player.isReloading = true;
-          setTimeout(() => {
-            player.ammo = player.maxAmmo;
-            player.isReloading = false;
-            updateUI();
-          }, 1500);
-        }
-
-        // 射击 (中心射线检测)
-        const onMouseDown = (e) => {
-          if (document.pointerLockElement !== canvas || !isRunning) return;
-          if (e.button !== 0) return; // 只响应左键
-
-          const now = Date.now();
-          if (now - lastShootTime < 150) return; // 射速限制
-          lastShootTime = now;
-
-          if (player.ammo <= 0) {
-            reload();
-            return;
-          }
-
-          player.ammo--;
-          updateUI();
-
-          // 枪械后坐力动画
-          gunEl.classList.add('shoot');
-          setTimeout(() => gunEl.classList.remove('shoot'), 50);
-
-          // 命中检测：在视野正中心 (角度偏差极小)
-          let hitEnemy = null;
-          let minDist = MAX_DEPTH;
-
-          // 计算玩家朝向的射线
-          const rayDirX = Math.cos(player.angle);
-          const rayDirY = Math.sin(player.angle);
-
-          for (let enemy of enemies) {
-            if (!enemy.alive) continue;
-
-            const dx = enemy.x - player.x;
-            const dy = enemy.y - player.y;
-            const dist = Math.hypot(dx, dy);
-
-            // 敌人是否在准星附近 (角度差)
-            const angleToEnemy = Math.atan2(dy, dx);
-            let angleDiff = player.angle - angleToEnemy;
-            // 规范化角度差到 -PI 到 PI
-            while (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
-            while (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
-
-            // 如果敌人在准星正负 5 度内，且距离较近
-            if (Math.abs(angleDiff) < 0.1 && dist < minDist) {
-              // 检查是否有墙壁遮挡
-              if (!isWallBetween(player.x, player.y, enemy.x, enemy.y)) {
-                minDist = dist;
-                hitEnemy = enemy;
-              }
-            }
-          }
-
-          if (hitEnemy) {
-            hitEnemy.hp -= 15;
-            if (hitEnemy.hp <= 0) {
-              hitEnemy.alive = false;
+            if (enemyObj.hp <= 0) {
+              enemyObj.alive = false;
+              scene.remove(enemyObj.mesh);
               player.kills++;
               updateUI();
             }
           }
-        };
+        }
+      }
 
-        // DDA 算法检测两点之间是否有墙 (用于射击遮挡判断)
-        function isWallBetween(x1, y1, x2, y2) {
-          const dx = x2 - x1;
-          const dy = y2 - y1;
-          const dist = Math.hypot(dx, dy);
-          const steps = Math.ceil(dist * 10); // 精度
-          for (let i = 0; i < steps; i++) {
-            const t = i / steps;
-            const cx = Math.floor(x1 + dx * t);
-            const cy = Math.floor(y1 + dy * t);
-            if (MAP[cy] && MAP[cy][cx] > 0) return true;
+      // 11. 碰撞检测 (简易版)
+      function checkCollision(newPos) {
+        // 玩家包围盒 (半径 0.5)
+        const playerBox = new THREE.Box3(
+          new THREE.Vector3(newPos.x - 0.4, 0, newPos.z - 0.4),
+          new THREE.Vector3(newPos.x + 0.4, 2, newPos.z + 0.4)
+        );
+        
+        for (let i = 0; i < obstacles.length; i++) {
+          if (playerBox.intersectsBox(obstacles[i])) {
+            return true; // 发生碰撞
           }
-          return false;
+        }
+        return false;
+      }
+
+      // 12. 游戏循环
+      function animate() {
+        if (!isRunning) return;
+        animationId = requestAnimationFrame(animate);
+
+        const delta = clock.getDelta();
+
+        // 玩家移动
+        if (document.pointerLockElement === document.body) {
+          const speed = 5 * delta;
+          const prevPos = controls.getObject().position.clone();
+
+          // 计算移动向量
+          const forward = new THREE.Vector3();
+          camera.getWorldDirection(forward);
+          forward.y = 0;
+          forward.normalize();
+          
+          const right = new THREE.Vector3();
+          right.crossVectors(forward, camera.up).normalize();
+
+          let moveDir = new THREE.Vector3();
+          if (keys.w) moveDir.add(forward);
+          if (keys.s) moveDir.sub(forward);
+          if (keys.a) moveDir.sub(right);
+          if (keys.d) moveDir.add(right);
+          
+          if (moveDir.lengthSq() > 0) {
+            moveDir.normalize().multiplyScalar(speed);
+            
+            // 尝试移动 X 轴
+            const nextPosX = prevPos.clone();
+            nextPosX.x += moveDir.x;
+            if (!checkCollision(nextPosX)) {
+              controls.getObject().position.x = nextPosX.x;
+            }
+
+            // 尝试移动 Z 轴
+            const nextPosZ = prevPos.clone();
+            nextPosZ.z += moveDir.z;
+            if (!checkCollision(nextPosZ)) {
+              controls.getObject().position.z = nextPosZ.z;
+            }
+          }
         }
 
-        // 主循环渲染
-        function gameLoop() {
-          if (!isRunning) return;
+        // 敌人 AI
+        const playerPos = controls.getObject().position;
+        const now = Date.now();
 
-          // 清屏
-          ctx.fillStyle = COLORS.sky;
-          ctx.fillRect(0, 0, W, H/2);
-          ctx.fillStyle = COLORS.floor;
-          ctx.fillRect(0, H/2, W, H/2);
-
-          // 移动玩家
-          let moveX = 0;
-          let moveY = 0;
-          if (keys['w']) { moveX += Math.cos(player.angle); moveY += Math.sin(player.angle); }
-          if (keys['s']) { moveX -= Math.cos(player.angle); moveY -= Math.sin(player.angle); }
-          if (keys['a']) { moveX += Math.cos(player.angle - Math.PI/2); moveY += Math.sin(player.angle - Math.PI/2); }
-          if (keys['d']) { moveX += Math.cos(player.angle + Math.PI/2); moveY += Math.sin(player.angle + Math.PI/2); }
-
-          // 简单的碰撞检测
-          const nextX = player.x + moveX * player.speed;
-          const nextY = player.y + moveY * player.speed;
-          if (!MAP[Math.floor(player.y)]?.[Math.floor(nextX)]) player.x = nextX;
-          if (!MAP[Math.floor(nextY)]?.[Math.floor(player.x)]) player.y = nextY;
-
-          // Raycasting 渲染墙壁
-          const angleStep = FOV / NUM_RAYS;
-          let rayAngle = player.angle - HALF_FOV;
-
-          for (let i = 0; i < NUM_RAYS; i++) {
-            const cosA = Math.cos(rayAngle);
-            const sinA = Math.sin(rayAngle);
+        enemies.forEach(enemy => {
+          if (!enemy.alive) return;
+          
+          const dist = enemy.mesh.position.distanceTo(playerPos);
+          
+          // 追踪玩家
+          if (dist > 2) {
+            const dir = new THREE.Vector3().subVectors(playerPos, enemy.mesh.position);
+            dir.y = 0;
+            dir.normalize();
+            enemy.mesh.position.addScaledVector(dir, enemy.speed * delta);
             
-            // DDA 投射射线
-            let dist = 0;
-            let hit = false;
-            let wallType = 1;
-
-            // 步进寻找墙壁
-            while (!hit && dist < MAX_DEPTH) {
-              dist += 0.05;
-              const testX = player.x + cosA * dist;
-              const testY = player.y + sinA * dist;
-              
-              const mapX = Math.floor(testX);
-              const mapY = Math.floor(testY);
-
-              if (mapY >= 0 && mapY < MAP.length && mapX >= 0 && mapX < MAP[0].length) {
-                if (MAP[mapY][mapX] > 0) {
-                  hit = true;
-                  wallType = MAP[mapY][mapX];
-                }
-              }
-            }
-
-            // 消除鱼眼效应
-            const correctedDist = dist * Math.cos(rayAngle - player.angle);
-            
-            // 记录 Z-Buffer 用于渲染敌人
-            const screenX = Math.floor(i * (W / NUM_RAYS));
-            zBuffer[screenX] = correctedDist;
-
-            // 计算墙壁高度
-            const wallHeight = H / correctedDist;
-            const drawStart = Math.max(0, (H - wallHeight) / 2);
-            
-            // 绘制墙壁列
-            ctx.fillStyle = wallType === 1 ? COLORS.wall1 : COLORS.wall2;
-            
-            // 简单的阴影效果（根据距离变暗）
-            const brightness = Math.max(0, 1 - correctedDist / MAX_DEPTH);
-            ctx.globalAlpha = 0.4 + brightness * 0.6;
-            
-            // 为了性能，每次画 2 像素宽
-            ctx.fillRect(screenX, drawStart, W / NUM_RAYS + 1, wallHeight);
-            ctx.globalAlpha = 1;
-
-            rayAngle += angleStep;
-          }
-
-          // 渲染敌人 (Sprite 投影)
-          // 从远到近排序，实现正确的遮挡
-          const visibleEnemies = enemies.filter(e => e.alive).map(e => {
-            const dx = e.x - player.x;
-            const dy = e.y - player.y;
-            const dist = Math.hypot(dx, dy);
-            let angle = Math.atan2(dy, dx);
-            
-            // 计算相对角度
-            let angleDiff = angle - player.angle;
-            while (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
-            while (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
-            
-            return { e, dist, angleDiff };
-          }).sort((a, b) => b.dist - a.dist);
-
-          for (let obj of visibleEnemies) {
-            // 如果敌人不在视野内，跳过
-            if (Math.abs(obj.angleDiff) > HALF_FOV + 0.2) continue;
-
-            // 消除鱼眼效应
-            const correctedDist = obj.dist * Math.cos(obj.angleDiff);
-            
-            // 计算屏幕投影位置
-            const spriteScreenX = (obj.angleDiff / FOV + 0.5) * W;
-            const spriteHeight = H / correctedDist;
-            const spriteWidth = H / correctedDist; // 假设敌人是正方形
-            
-            const drawStartY = (H - spriteHeight) / 2;
-            const drawStartX = spriteScreenX - spriteWidth / 2;
-
-            // 遮挡检测 (Z-Buffer)
-            const centerRayIndex = Math.floor(spriteScreenX / (W / NUM_RAYS));
-            if (centerRayIndex >= 0 && centerRayIndex < W) {
-              if (correctedDist < zBuffer[centerRayIndex] + 0.5) { // 避免边缘闪烁
-                // 绘制敌人 (红色方块，加个眼睛)
-                ctx.fillStyle = COLORS.enemy;
-                ctx.fillRect(drawStartX, drawStartY, spriteWidth, spriteHeight);
-                
-                // 绘制简单的面部细节
-                ctx.fillStyle = '#fff';
-                ctx.fillRect(drawStartX + spriteWidth * 0.2, drawStartY + spriteHeight * 0.2, spriteWidth * 0.2, spriteHeight * 0.2);
-                ctx.fillRect(drawStartX + spriteWidth * 0.6, drawStartY + spriteHeight * 0.2, spriteWidth * 0.2, spriteHeight * 0.2);
-                
-                // 阴影
-                ctx.fillStyle = 'rgba(0,0,0,0.3)';
-                ctx.fillRect(drawStartX, drawStartY, spriteWidth, spriteHeight);
-              }
-            }
-
-            // 敌人攻击玩家判定 (距离极近)
-            if (obj.dist < 0.6) {
-              player.hp -= 0.5;
+            // 让敌人面向玩家
+            enemy.mesh.lookAt(playerPos.x, enemy.mesh.position.y, playerPos.z);
+          } else {
+            // 攻击玩家
+            if (now - enemy.lastAttack > 1000) { // 每秒攻击一次
+              player.hp -= 10;
               updateUI();
               damageFlash.style.opacity = '1';
-              setTimeout(() => damageFlash.style.opacity = '0', 100);
-              
+              setTimeout(() => damageFlash.style.opacity = '0', 150);
+              enemy.lastAttack = now;
+
               if (player.hp <= 0) {
                 gameOver();
               }
             }
           }
+        });
 
-          animationId = requestAnimationFrame(gameLoop);
-        }
+        renderer.render(scene, camera);
+      }
 
-        function gameOver() {
+      function gameOver() {
+        isRunning = false;
+        cancelAnimationFrame(animationId);
+        document.exitPointerLock();
+        overlay.style.display = 'flex';
+        overlay.innerHTML = `
+          <h2>YOU DIED</h2>
+          <p>Kills: ${player.kills}</p>
+          <button class="g3d-start-btn" id="g3dRestartBtn">Try Again</button>
+        `;
+        document.getElementById('g3dRestartBtn').onclick = startGame;
+      }
+
+      function startGame() {
+        overlay.style.display = 'none';
+        resetGame();
+        isRunning = true;
+        clock.start();
+        document.body.requestPointerLock();
+        animate();
+      }
+
+      // 13. 事件监听
+      const onKeyDown = (e) => {
+        if (e.key.toLowerCase() in keys) keys[e.key.toLowerCase()] = true;
+        if (e.key.toLowerCase() === 'r') reload();
+      };
+      const onKeyUp = (e) => {
+        if (e.key.toLowerCase() in keys) keys[e.key.toLowerCase()] = false;
+      };
+      const onMouseDown = (e) => {
+        if (e.button === 0) shoot();
+      };
+      const onResize = () => {
+        if (!container) return;
+        camera.aspect = container.clientWidth / container.clientHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(container.clientWidth, container.clientHeight);
+      };
+
+      document.addEventListener('keydown', onKeyDown);
+      document.addEventListener('keyup', onKeyUp);
+      document.addEventListener('mousedown', onMouseDown);
+      window.addEventListener('resize', onResize);
+      
+      // 指针锁定状态变化
+      const onPointerLockChange = () => {
+        if (document.pointerLockElement !== document.body && isRunning) {
+          // 用户按了 ESC
           isRunning = false;
           cancelAnimationFrame(animationId);
-          document.exitPointerLock();
           overlay.style.display = 'flex';
           overlay.innerHTML = `
-            <h2>YOU DIED</h2>
-            <p>Kills: ${player.kills}</p>
-            <button class="cs3d-start-btn" id="cs3dRestartBtn">Try Again</button>
+            <h2>PAUSED</h2>
+            <p>Click Resume to lock mouse again.</p>
+            <button class="g3d-start-btn" id="g3dResumeBtn">Resume</button>
           `;
-          document.getElementById('cs3dRestartBtn').onclick = startGame;
+          document.getElementById('g3dResumeBtn').onclick = () => {
+            overlay.style.display = 'none';
+            isRunning = true;
+            document.body.requestPointerLock();
+            clock.start(); // 重新校准时间
+            animate();
+          };
         }
+      };
+      document.addEventListener('pointerlockchange', onPointerLockChange);
 
-        // 监听指针锁定状态
-        document.addEventListener('pointerlockchange', () => {
-          if (document.pointerLockElement !== canvas && isRunning) {
-            // 如果用户按了 ESC 解锁鼠标，暂停游戏
-            isRunning = false;
-            cancelAnimationFrame(animationId);
-            overlay.style.display = 'flex';
-            overlay.innerHTML = `
-              <h2>PAUSED</h2>
-              <p>Click Resume to lock mouse again.</p>
-              <button class="cs3d-start-btn" id="cs3dResumeBtn">Resume</button>
-            `;
-            document.getElementById('cs3dResumeBtn').onclick = () => {
-              overlay.style.display = 'none';
-              isRunning = true;
-              canvas.requestPointerLock();
-              gameLoop();
-            };
-          }
-        });
+      startBtn.onclick = startGame;
 
-        // 绑定事件和清理
-        window.addEventListener('keydown', onKeyDown);
-        window.addEventListener('keyup', onKeyUp);
-        document.addEventListener('mousemove', onMouseMove);
-        canvas.addEventListener('mousedown', onMouseDown);
-        startBtn.onclick = startGame;
-
-        cleanupFunctions.push(() => {
-          isRunning = false;
-          cancelAnimationFrame(animationId);
-          window.removeEventListener('keydown', onKeyDown);
-          window.removeEventListener('keyup', onKeyUp);
-          document.removeEventListener('mousemove', onMouseMove);
-          canvas.removeEventListener('mousedown', onMouseDown);
-          if (document.pointerLockElement === canvas) {
-            document.exitPointerLock();
-          }
-        });
-      }
-    })();
+      // 14. 清理函数
+      cleanupFunctions.push(() => {
+        isRunning = false;
+        cancelAnimationFrame(animationId);
+        if (document.pointerLockElement === document.body) {
+          document.exitPointerLock();
+        }
+        document.removeEventListener('keydown', onKeyDown);
+        document.removeEventListener('keyup', onKeyUp);
+        document.removeEventListener('mousedown', onMouseDown);
+        document.removeEventListener('pointerlockchange', onPointerLockChange);
+        window.removeEventListener('resize', onResize);
+        
+        // 销毁 Three.js 资源
+        renderer.dispose();
+        scene.clear();
+        container.innerHTML = ''; // 移除 canvas
+      });
+    }
   </script>
 </body>
 </html>
